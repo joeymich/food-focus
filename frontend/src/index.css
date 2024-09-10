@@ -4,10 +4,8 @@
 
 @layer base {
     :root {
-        /* --app-background: theme(colors.gray.100); */
         --app-background: hsl(220 14% 96%);
 
-        /* --background: theme(colors.white); */
         --background: hsl(0 0% 100%);
         --foreground: hsl(0 0% 3.9%);
 
@@ -46,7 +44,6 @@
 
     .dark {
         --app-background: hsl(0 0% 3.9%);
-        /* --app-background: theme(colors.neutral.950); */
 
         --background: hsl(0 0% 8.2%);
         --foreground: hsl(0 0% 98%);
@@ -75,8 +72,7 @@
 
         --border: hsl(0 0% 17.9%);
         --input: hsl(0 0% 17.9%);
-        /* --ring: hsl(0 0% 83.1%); */
-        --ring: theme(colors.indigo.700);
+        --ring: hsl(245, 58%, 51%);
 
         --chart-1: hsl(220 70% 50%);
         --chart-2: hsl(160 60% 45%);
