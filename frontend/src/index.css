@@ -15,7 +15,7 @@
         --popover: hsl(0 0% 100%);
         --popover-foreground: hsl(0 0% 3.9%);
 
-        --primary: hsl(239, 84%, 67%);
+        --primary: hsl(182, 73%, 45%);
         --primary-foreground: hsl(210 20% 98%);
 
         --secondary: hsl(220 14.3% 95.9%);
@@ -40,6 +40,12 @@
         --chart-3: hsl(197 37% 24%);
         --chart-4: hsl(43 74% 66%);
         --chart-5: hsl(27 87% 67%);
+
+        --test-1:hsl(23, 100%, 50%);
+        --test-2:hsl(42, 97%, 55%);
+        --test-3:hsl(183, 31%, 34%);
+        --test-4:hsl(164, 95%, 43%);
+        --test-5:hsl(22, 98%, 56%);
     }
 
     .dark {

@@ -13,7 +13,7 @@ export function Navbar() {
 
     return (
         <nav>
-            <div className='flex items-center justify-between bg-primary p-3'>
+            <div className='flex items-center justify-between bg-test p-3'>
                 <div className='text-black text-2xl font-bold'>FOOD FOCUS</div>
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
@@ -42,11 +42,13 @@ export function Navbar() {
             </div>
 
             {isMenuOpen ?(
-                <ul className='bg-destructive flex md:hidden justify-end space-x-4 px-4 py-1'>
-                    <li><a href='/' className='text-white'>Home</a></li>
-                    <li><a href='#' className='text-white'>Login</a></li>
-                    <li><a href='#' className='text-white'>Register</a></li>
-                </ul>
+                <div className='bg-test5 md:hidden flex flex-col items-end px-4 py-1'>
+                    <ul>
+                        <li><a href='/' className='text-white'>Home</a></li>
+                        <li><a href='#' className='text-white'>Login</a></li>
+                        <li><a href='#' className='text-white'>Register</a></li>
+                    </ul>
+                </div>
             ) : null}
         </nav>
     )
