@@ -18,7 +18,7 @@ export function Navbar() {
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
                 <div className='md:hidden'>
-                    <button className='text-white' onClick={toggleMenu}>
+                    <button className='text-black' onClick={toggleMenu}>
                         <svg 
                             fill='none'
                             stroke='currentColor'
@@ -35,18 +35,18 @@ export function Navbar() {
 
                 {/*The links to the website - only appears when the screen is bigger than half of its size*/}
                 <ul className='hidden md:flex space-x-4'>
-                    <li><a href='/' className='text-white'>Home</a></li>
-                    <li><a href='#' className='text-white'>Login</a></li>
-                    <li><a href='#' className='text-white'>Register</a></li>
+                    <li><a href='/' className='text-black'>Home</a></li>
+                    <li><a href='#' className='text-black'>Login</a></li>
+                    <li><a href='#' className='text-black'>Register</a></li>
                 </ul>
             </div>
 
             {isMenuOpen ?(
-                <div className='bg-test5 md:hidden flex flex-col items-end px-4 py-1'>
+                <div className='bg-test2 md:hidden flex flex-col items-end px-4 py-1'>
                     <ul>
-                        <li><a href='/' className='text-white'>Home</a></li>
-                        <li><a href='#' className='text-white'>Login</a></li>
-                        <li><a href='#' className='text-white'>Register</a></li>
+                        <li><a href='/' className='text-black'>Home</a></li>
+                        <li><a href='#' className='text-black'>Login</a></li>
+                        <li><a href='#' className='text-black'>Register</a></li>
                     </ul>
                 </div>
             ) : null}
