@@ -44,10 +44,7 @@ export default {
                     foreground: 'var(--card-foreground)',
                 },
 
-                test: 'var(--test-1)',
-                test2: 'var(--test-2)',
-                test3: 'var(--test-3)',
-                test4: 'var(--test-4)',
+                defaultText: 'var(--text-color)',
 
             },
         },

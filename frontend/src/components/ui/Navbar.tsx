@@ -13,12 +13,12 @@ export function Navbar() {
 
     return (
         <nav>
-            <div className='flex items-center justify-between bg-test p-3'>
-                <div className='text-black text-2xl font-bold'>FOOD FOCUS</div>
+            <div className='flex items-center bg-background w-screen justify-between p-3 border-2 border-gray-24'>
+                <div className='text-defaultText text-2xl font-bold px-4'>FOOD FOCUS</div>
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
                 <div className='md:hidden'>
-                    <button className='text-black' onClick={toggleMenu}>
+                    <button className='text-defaultText' onClick={toggleMenu}>
                         <svg 
                             fill='none'
                             stroke='currentColor'
@@ -34,19 +34,19 @@ export function Navbar() {
                 </div>
 
                 {/*The links to the website - only appears when the screen is bigger than half of its size*/}
-                <ul className='hidden md:flex space-x-4'>
-                    <li><a href='/' className='text-black'>Home</a></li>
-                    <li><a href='#' className='text-black'>Login</a></li>
-                    <li><a href='#' className='text-black'>Register</a></li>
+                <ul className='hidden md:flex space-x-4 px-4'>
+                    <li><a href='/' className='text-defaultText'>Home</a></li>
+                    <li><a href='#' className='text-defaultText'>Login</a></li>
+                    <li><a href='#' className='text-defaultText'>Register</a></li>
                 </ul>
             </div>
 
             {isMenuOpen ?(
-                <div className='bg-test2 md:hidden flex flex-col items-end px-4 py-1'>
+                <div className='bg-background border-b-2 border-gray-24 md:hidden flex flex-col items-end px-4 py-1'>
                     <ul>
-                        <li><a href='/' className='text-black'>Home</a></li>
-                        <li><a href='#' className='text-black'>Login</a></li>
-                        <li><a href='#' className='text-black'>Register</a></li>
+                        <li><a href='/' className='text-defaultText'>Home</a></li>
+                        <li><a href='#' className='text-defaultText'>Login</a></li>
+                        <li><a href='#' className='text-defaultText'>Register</a></li>
                     </ul>
                 </div>
             ) : null}
