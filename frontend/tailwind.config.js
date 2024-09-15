@@ -43,6 +43,9 @@ export default {
                     DEFAULT: 'var(--card)',
                     foreground: 'var(--card-foreground)',
                 },
+
+                defaultText: 'var(--text-color)',
+
             },
         },
     },
