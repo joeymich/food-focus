@@ -41,7 +41,7 @@ export const Register = () => {
                                 value={formData.username}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Username"
+                                placeholder="Enter your username"
                                 required
                             />
                         </div>
@@ -57,7 +57,7 @@ export const Register = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Email"
+                                placeholder="Enter your email"
                                 required
                             />
                         </div>
@@ -73,7 +73,7 @@ export const Register = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Password"
+                                placeholder="Enter your password"
                                 required
                             />
                         </div>
