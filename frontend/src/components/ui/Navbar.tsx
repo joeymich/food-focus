@@ -36,8 +36,8 @@ export function Navbar() {
                 {/*The links to the website - only appears when the screen is bigger than half of its size*/}
                 <ul className='hidden md:flex space-x-4 px-4'>
                     <li><a href='/' className='text-defaultText'>Home</a></li>
-                    <li><a href='#' className='text-defaultText'>Login</a></li>
-                    <li><a href='#' className='text-defaultText'>Register</a></li>
+                    <li><a href='/login' className='text-defaultText'>Login</a></li>
+                    <li><a href='/register' className='text-defaultText'>Register</a></li>
                 </ul>
             </div>
 
@@ -45,8 +45,8 @@ export function Navbar() {
                 <div className='bg-background border-b-2 border-gray-24 md:hidden flex flex-col items-end px-4 py-1'>
                     <ul>
                         <li><a href='/' className='text-defaultText'>Home</a></li>
-                        <li><a href='#' className='text-defaultText'>Login</a></li>
-                        <li><a href='#' className='text-defaultText'>Register</a></li>
+                        <li><a href='/login' className='text-defaultText'>Login</a></li>
+                        <li><a href='/register' className='text-defaultText'>Register</a></li>
                     </ul>
                 </div>
             ) : null}
