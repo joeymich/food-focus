@@ -31,3 +31,12 @@ If not, follow the [instructions](https://docs.docker.com/compose/install/) from
     - Username: postgres
     - Password: password
     - Database: postgres
+
+
+## Backend - To start Developing
+- Navigate to the backend with `cd backend`
+- run `pip install pipreqs` or `pip install -r requirements.txt` to install the python dependencies
+
+## Frontend - To start Developing
+- Navigate to the frontend with `cd frontend`
+- run `npm i` or `npm install` then run `npm run build`

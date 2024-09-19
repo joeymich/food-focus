@@ -10,6 +10,11 @@ from alembic import context
 from app import Base
 from app.config import settings
 
+from app.db.models import user
+from app.db.models import user_meals
+from app.db.models import nutrition_info
+from app.db.models import food_db
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
