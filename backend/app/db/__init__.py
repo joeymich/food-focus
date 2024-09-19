@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncAttrs
 from app.config import settings
 
+from app.db.models import user
 
 engine = create_async_engine(
     settings.DATABASE_URL,
