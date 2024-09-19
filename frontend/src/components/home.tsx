@@ -16,7 +16,7 @@ export const Home = () => {
                 <h1 className="text-defaultText font-bold text-8xl mt-16 text-center">Welocome to<br/>Food Focus</h1>
                 <Button className="text-defaultText bg-secondary w-1/4 h-16 font-bold text-xl"> Get Started </Button>
 
-                <p className="text-defaultText">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sagittis tellus vel urna accumsan, id rhoncus velit sodales. Nulla dictum vitae lacus ut efficitur. Pellentesque imperdiet a dolor vel iaculis. Aenean non ligula erat. Aenean convallis imperdiet mi, ac molestie libero. Pellentesque turpis sapien, venenatis sit amet lobortis ac, euismod non arcu. Nullam est est, scelerisque nec mauris a, facilisis suscipit urna. Nullam pretium a leo vitae dapibus. Nunc malesuada non lectus ac placerat. Cras convallis urna arcu, nec scelerisque magna egestas cursus. Nam sollicitudin feugiat nibh, ac facilisis mi iaculis sit amet.</p>
+                <p className="text-defaultText text-center text-xl">Keep track of diet your with Food Focus. <br/> We provide ways in which you can easily and convientiently keep track of your meals.</p>
             </div>
 
         </div>
