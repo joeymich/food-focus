@@ -22,7 +22,14 @@ export const createRouter = () => {
                 const { Register } = await import('@/components/register');
                 return { Component: Register };
             },
-        },        
+        },
+        {
+            path: '/dashboard',
+            lazy: async () => {
+                const { Dashboard } = await import('@/components/dashboard');
+                return { Component: Dashboard };
+            },
+        },            
         {
             path: '*',
             lazy: async () => {
