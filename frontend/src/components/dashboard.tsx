@@ -48,7 +48,7 @@ export const Dashboard = () => {
             Current Numbers are place holders
             If the total calories are passed, then the bar and numbers will turn red
           */}
-          <CircularProgressBar numerator="1000" denominator="2500"/>
+          <CircularProgressBar numerator="2700" denominator="2500"/>
           <div className="flex gap-x-4">
             <Button className="text-defaultText bg-secondary font-bold text-sm">Add Meal</Button>
             <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>

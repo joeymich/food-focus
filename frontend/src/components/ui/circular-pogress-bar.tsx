@@ -25,7 +25,7 @@ export function CircularProgressBar(prop) {
     function calulateExtraPercentage() {
         const timesBigger = Math.floor(numerator / denominator);
         const smallerNumerator = numerator/timesBigger;
-        setExtraPercentage((1 - (smallerNumerator/denominator)) * 100);
+        setExtraPercentage(((smallerNumerator/denominator)) * 100);
         console.log("Times bigger: "+ timesBigger + " New numerator " + smallerNumerator);
     }
 
@@ -43,7 +43,7 @@ export function CircularProgressBar(prop) {
             <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-neutral-700" stroke-width="2"></circle>
             <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-accent dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={percentage} stroke-linecap="round"></circle>
             {hasPassedMax ?(
-                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-red-600 dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={extraPercentage} stroke-linecap="round"></circle>
+                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-red-600 dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={-extraPercentage} stroke-linecap="round"></circle>
             ) : null}
         </svg>
         
