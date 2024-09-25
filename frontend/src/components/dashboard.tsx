@@ -22,6 +22,10 @@ export const Dashboard = () => {
 
   return (
     <>
+      {/*
+        Navbar not yet updated to include sessions
+        Once sessions are implemented, the contents of the navbar will change
+      */}
       <Navbar />
 
       <div  className="bg-background h-screen w-screen flex justify-center items-start py-8 space-x-4">
@@ -40,7 +44,10 @@ export const Dashboard = () => {
         </div>
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
           <h1 className="text-4xl font-bold text-defaultText text-center">Today's Total Calories</h1>
-          {/*Current Numbers are place holders*/}
+          {/*
+            Current Numbers are place holders
+            If the total calories are passed, then the bar and numbers will turn red
+          */}
           <CircularProgressBar numerator="1000" denominator="2500"/>
           <div className="flex gap-x-4">
             <Button className="text-defaultText bg-secondary font-bold text-sm">Add Meal</Button>
