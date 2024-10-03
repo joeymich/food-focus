@@ -31,3 +31,17 @@ If not, follow the [instructions](https://docs.docker.com/compose/install/) from
     - Username: postgres
     - Password: password
     - Database: postgres
+
+
+## Production Setup
+Production will be at [foodfocus.pro](https://foodfocus.pro)
+
+### Setup SSH for Digital Ocean VM
+[https://docs.digitalocean.com/products/droplets/how-to/connect-with-ssh/](https://docs.digitalocean.com/products/droplets/how-to/connect-with-ssh/)
+
+### Run deployment script
+Script will
+- (1) Build docker images
+- (2) Push them to docker hub
+- (3) SSH into vm and pull latest images
+- (4) Run newest images
