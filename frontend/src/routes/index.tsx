@@ -1,4 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { DashboardLayout } from '@/components/layouts/dashboard';
+
+import { ProtectedRoute } from './protected';
 
 export const createRouter = () => {
     return createBrowserRouter([
@@ -25,11 +28,21 @@ export const createRouter = () => {
         },
         {
             path: '/dashboard',
-            lazy: async () => {
-                const { Dashboard } = await import('@/components/dashboard');
-                return { Component: Dashboard };
-            },
-        },            
+            element: (
+                <ProtectedRoute>
+                    <DashboardLayout />
+                </ProtectedRoute>
+            ),
+            children: [
+                {
+                    path: '',
+                    lazy: async () => {
+                        const { Dashboard } = await import('@/components/dashboard');
+                        return { Component: Dashboard };
+                    },
+                },
+            ],
+        },
         {
             path: '*',
             lazy: async () => {
