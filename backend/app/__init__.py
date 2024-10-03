@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.auth import auth_router
+from app.middleware import RedisMiddleware
 from app.db import Base  # noqa
 
 
@@ -17,7 +19,7 @@ def create_app() -> FastAPI:
 
 def include_routers(app: FastAPI) -> None:
     """Method to include all routers to FastAPI application."""
-    pass
+    app.include_router(auth_router, prefix='/auth', tags=['auth'])
 
 
 def attach_middleware(app: FastAPI) -> None:
@@ -25,12 +27,16 @@ def attach_middleware(app: FastAPI) -> None:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            'localhost:80',
+            'http://127.0.0.1:80',
+            'http://localhost:80',
+            'http://localhost',
+            'http://127.0.0.1',
         ],
         allow_credentials=True,
         allow_methods=['*'],
         allow_headers=['*'],
     )
+    app.add_middleware(RedisMiddleware)
 
 
 app = create_app()
