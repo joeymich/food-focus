@@ -74,6 +74,13 @@ class GetCurrentUser(SessionCookieSecurity):
 CurrentUser = Annotated[User, Depends(GetCurrentUser())]
 
 
+def get_current_user_id(current_user: CurrentUser) -> UUID:
+    return current_user.id
+
+
+CurrentUserId = Annotated[UUID, Depends(get_current_user_id)]
+
+
 class AuthManager:
     def __init__(
         self,

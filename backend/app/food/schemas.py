@@ -3,21 +3,21 @@ from pydantic import BaseModel, UUID4
 
 class FoodRead(BaseModel):
     id: UUID4
-    brand: str
-    name: str
-    calories: int
-    total_fat: int
-    saturated_fat: int
-    polyunsaturated_fat: int
-    monounsaturated_fat: int
-    trans_fat: int
-    sodium: int
-    potassium: int
-    total_carbs: int
-    dietary_fiber: int
-    sugars: int
-    protein: int
-    vitamin_a: int
-    vitamin_c: int
-    calcium: int
-    iron: int
+    brand: str | None = None
+    name: str | None = None
+    calories: int | None = None
+    total_fat: int | None = None
+    saturated_fat: int | None = None
+    polyunsaturated_fat: int | None = None
+    monounsaturated_fat: int | None = None
+    trans_fat: int | None = None
+    sodium: int | None = None
+    potassium: int | None = None
+    total_carbs: int | None = None
+    dietary_fiber: int | None = None
+    sugars: int | None = None
+    protein: int | None = None
+    vitamin_a: int | None = None
+    vitamin_c: int | None = None
+    calcium: int | None = None
+    iron: int | None = None
