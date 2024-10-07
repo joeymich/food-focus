@@ -44,6 +44,13 @@ export const createRouter = () => {
             ],
         },
         {
+            path: '/d',
+            lazy: async () => {
+                const { Dashboard } = await import('@/components/dashboard');
+                return { Component: Dashboard };
+            },
+        },
+        {
             path: '*',
             lazy: async () => {
                 const { NotFound } = await import('./not-found');
