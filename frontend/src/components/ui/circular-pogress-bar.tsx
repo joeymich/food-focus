@@ -11,8 +11,7 @@ export function CircularProgressBar(prop) {
 
     useEffect(() => {
         setPercentage((1 - (numerator/denominator)) * 100);
-        
-     }, [numerator, denominator, hasPassedMax])
+     }, [numerator, denominator])
 
     useEffect(() => {
         if(percentage < 0) {
@@ -26,7 +25,6 @@ export function CircularProgressBar(prop) {
         const timesBigger = Math.floor(numerator / denominator);
         const smallerNumerator = numerator/timesBigger;
         setExtraPercentage(((smallerNumerator/denominator)) * 100);
-        console.log("Times bigger: "+ timesBigger + " New numerator " + smallerNumerator);
     }
 
     function changeTextColor() {
