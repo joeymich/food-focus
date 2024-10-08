@@ -19,6 +19,39 @@ const HistoryProgress = (prop) => {
   )
 };
 
+const MacronutrientSection = (prop) => {
+  const fat = prop.fat;
+  const protein = prop.protein;
+  const carb = prop.carb;
+  const[fatCal, setFatCal] = useState(0.0);
+  const[carbCal, setCarbCal] = useState(0.0);
+  const[proteinCal, setProteinCal] = useState(0.0);
+
+
+  useEffect(() => {
+      //Using https://help.practicebetter.io/hc/en-us/articles/4921636414107-Calculating-Macronutrient-Percentages for the calculations
+
+    setFatCal(fat * 9);
+    setCarbCal(carb * 4);
+    setProteinCal(protein * 4);
+
+  }, [carb, fat, protein])
+
+  return (
+    <div className='w-full'>
+      <MacronutrientProgressBar fat={prop.fat} carb={prop.carb} protein={prop.protein}/>
+      <div className='font-bold py-4'>
+        <h4 className='text-md'>Out of {prop.calories} total Calories:</h4>
+        <div className='font-bold px-4'>
+          <h4>Out of {fatCal}Cals were from fats</h4>
+          <h4>Out of {proteinCal}Cals were from proteins</h4>
+          <h4>Out of {carbCal}Cals were from carbs</h4>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const Dashboard = () => {
 
   return (
@@ -53,9 +86,7 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Macronutrients</h2>
-              <div className='w-full'>
-                <MacronutrientProgressBar fat="12" carb="70.6" protein="24.8"/>
-              </div>
+              <MacronutrientSection fat="12" carb="70.6" protein="24.8" calories="2500"/>
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
