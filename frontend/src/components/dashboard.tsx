@@ -3,7 +3,7 @@ import { Navbar } from "./ui/Navbar";
 import { CircularProgressBar } from "./ui/circular-pogress-bar";
 import { Button } from "./ui/button";
 import { ProgressBar } from "./ui/progress-bar";
-import { PieChart } from './ui/pie-chart';
+import { MacronutrientProgressBar } from './ui/macronutirents-progressbar';
 
 
 const HistoryProgress = (prop) => {
@@ -15,46 +15,6 @@ const HistoryProgress = (prop) => {
         <span className="font-bold">{prop.calories}/{prop.totalCalories} cals</span>
       </div>
       <ProgressBar numerator={prop.calories} denominator={prop.totalCalories}/>
-    </div>
-  )
-};
-
-const MacronutrientsProgressBar = (prop) => {
-  return (
-    <div className="w-full space-y-3">
-      <div className="text-sm font-bold text-defaultText"> 
-        <h3>{prop.name}: {prop.numerator}/{prop.denominator}g</h3>
-      </div>
-      <ProgressBar numerator={prop.numerator} denominator={prop.denominator}/>
-    </div>
-  )
-};
-
-const Macronutrients = (prop) => {
-  return (
-    <div className='w-full'>
-      <div>
-        <MacronutrientsProgressBar name="Total Fat" numerator={prop.tF} denominator={prop.tFG}/>
-      </div>
-      <div>
-        <MacronutrientsProgressBar name="Sodium" numerator={prop.so} denominator={prop.soG}/>
-      </div>
-      <div>
-        <MacronutrientsProgressBar name="Potassium" numerator={prop.po} denominator={prop.poG}/>
-      </div>
-      <div>
-        <MacronutrientsProgressBar name="Carbs" numerator={prop.car} denominator={prop.carG}/>
-      </div>
-      <div>
-        <MacronutrientsProgressBar name="Fiber" numerator={prop.fi} denominator={prop.fiG}/>
-      </div>
-      <div>
-        <MacronutrientsProgressBar name="Protein" numerator={prop.pr} denominator={prop.prG}/>
-      </div>
-      <div>
-        <MacronutrientsProgressBar name="Calcium" numerator={prop.cal} denominator={prop.calG}/>
-      </div>
- 
     </div>
   )
 };
@@ -84,7 +44,7 @@ export const Dashboard = () => {
                 Current Numbers are place holders
                 If the total calories are passed, then the bar and numbers will turn red
               */}
-              <CircularProgressBar numerator="2700" denominator="2500"/>
+              <CircularProgressBar numerator="2700" denominator="2500" protein="208" carbs="208" fat="92"/>
 
               <div className="flex gap-x-4">
                 <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
@@ -93,16 +53,9 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Macronutrients</h2>
-              {/* <Macronutrients 
-                tF="10" tFG="15"
-                so="24" soG="20"
-                po="28" poG="100"
-                car="10" carG="18"
-                fi="10" fiG="14"
-                pr="20" prG="34"
-                cal="30" calG="20"
-              /> */}
-              <PieChart/>
+              <div className='w-full'>
+                <MacronutrientProgressBar fat="12" carb="70.6" protein="24.8"/>
+              </div>
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
