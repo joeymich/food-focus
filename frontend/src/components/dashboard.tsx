@@ -5,10 +5,11 @@ import { Button } from "./ui/button";
 import { ProgressBar } from "./ui/progress-bar";
 import { MacronutrientProgressBar } from './ui/macronutirents-progressbar';
 // import { AuthApi } from '@/api/AuthApi';
-import { Collapse, CollapseProps } from 'antd';
+import { Collapse, CollapseProps} from 'antd';
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
 
 const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -23,7 +24,7 @@ const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: 
   )
 };
 
-const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; calories: number; satFat: number; polFat: number;
+const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; satFat: number; polFat: number;
                                     monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
                                     sugar: number; vitA: number; vitC: number; calcium: number; iron: number})=> {
   return (
@@ -94,13 +95,120 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
       </ScrollArea>
     </div>
   )
-}
+};
 
-const MealsSection = (prop) => {
+
+const MealsSection = () => {
+
+  const breakfastData = [
+    {food: "Oatmeal", cals: 100},
+    {food: "Apple", cals: 30},
+    {food: "Toast", cals: 50},
+  ];
+
+  const lunchData = [
+    {food: "Coffee", cals: 30},
+    {food: "Rice", cals: 40},
+    {food: "Egg", cals: 90},
+    {food: "Plantain", cals: 70},
+  ];
+
+  const dinnerData = [
+    {food: "Rice", cals: 90},
+    {food: "Steak", cals: 160},
+    {food: "Plantain", cals: 190},
+    {food: "Lentils", cals: 130},
+  ];
+
+  const snackData = [
+    {food: "Apple", cals: 30},
+    {food: "Ice cream", cals: 200},
+    {food: "Pie", cals: 300},
+    {food: "Chocolate", cals: 190},
+  ]
+
+  const ShowDataInRow = (prop: {food: string; cals: number}) => {
+    return (
+      <TableRow className="w-full">
+        <TableCell>{prop.food}</TableCell>
+        <TableCell className="text-right">{prop.cals}g</TableCell>
+      </TableRow>
+    )
+  }
+
+  const DataDisplay = (prop: {mealType: string}) => {
+    const mealType = prop.mealType;
   return (
-    <div></div>
+      <div>
+        <ScrollArea className="h-[275px] w-full rounded-md border p-4 bg-gray">
+          <Table>
+            <TableHeader>
+              <TableRow >
+                <TableHead  className="font-bold">Food</TableHead>
+                <TableHead className="text-right font-bold">Calories</TableHead>
+              </TableRow>
+            </TableHeader>
+              {mealType === "breakfast" ? (
+                <>
+                  {breakfastData.map((data, index) => (
+                    <ShowDataInRow key={index} {...data}/>
+                  ))}
+                </>
+              ): mealType === "lunch" ? (
+                <>
+                  {lunchData.map((data, index) => (
+                    <ShowDataInRow key={index} {...data}/>
+                  ))}
+                </>
+              ): mealType === "dinner" ? (
+                <>
+                  {dinnerData.map((data, index) => (
+                    <ShowDataInRow key={index} {...data}/>
+                  ))}
+                </>
+              ): mealType === "snack" ? (
+                <>
+                  {snackData.map((data, index) => (
+                    <ShowDataInRow key={index} {...data}/>
+                  ))}
+               </>
+              ):null}
+             
+          </Table>
+        </ScrollArea>
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full h-full flex-col">
+      <Tabs defaultValue="breakfast" className='w-full'>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="breakfast">Breakfast</TabsTrigger>
+          <TabsTrigger value="lunch">Lunch</TabsTrigger>
+          <TabsTrigger value="dinner">Dinner</TabsTrigger>
+          <TabsTrigger value="snacks">Snacks</TabsTrigger>
+        </TabsList>
+        <TabsContent value="breakfast"> 
+          <DataDisplay mealType="breakfast"/>
+        </TabsContent>
+        <TabsContent value="lunch">
+          <DataDisplay mealType="lunch"/>
+        </TabsContent>
+        <TabsContent value="dinner">
+          <DataDisplay mealType="dinner"/>
+        </TabsContent>
+        <TabsContent value="snacks">
+          <DataDisplay mealType="snack"/>
+        </TabsContent>
+      </Tabs>
+      <div className="flex justify-between px-4 py-4">
+        <Button className="text-defaultText bg-secondary font-bold text-sm">Add Food</Button>
+        <Button className="text-defaultText bg-secondary font-bold text-sm">Remove Food</Button>
+      </div>
+    </div>
   )
-}
+};
 
 const MoreDataSection =  (prop: {fat: number; protein: number; carb: number; calories: number}) => {
   const fat = prop.fat;
@@ -147,10 +255,11 @@ const MoreDataSection =  (prop: {fat: number; protein: number; carb: number; cal
       <Collapse accordion items={items} defaultActiveKey={['1']} className='w-full'/>
     </div>
   )
-}
+};
 
 export const Dashboard = () => {
   const[totalCal, setTotalCal] = useState(0.0);
+  const[calGoal, setCalGoal] = useState(0.0);
   const[fat, setFat] = useState(0.0);
   const[protein, setProtein] = useState(0.0);
   const[carb, setCarb] = useState(0.0);
@@ -168,10 +277,29 @@ export const Dashboard = () => {
   const[iron, setIron] = useState(0.0);
 
 
-  // const getUserData = async() => {
-  //   const response = await AuthApi.whoami();
-  //   console.log("UserID: " + response?.id)
-  // }
+  useEffect(() => {
+    PlaceHolder();
+  }, [])
+
+  function PlaceHolder() {
+    setTotalCal(2500);
+    setCalGoal(2500);
+    setFat(18);
+    setProtein(29);
+    setCarb(20);
+    setSatFat(16);
+    setPolFat(2);
+    setMonFat(0);
+    setTraFat(0);
+    setSodium(13);
+    setPotassium(19);
+    setFiber(12);
+    setSugar(12);
+    setVitA(13);
+    setVitC(15);
+    setCalcium(17);
+    setIron(16);
+  }
 
   return (
     <>
@@ -196,7 +324,7 @@ export const Dashboard = () => {
                 Current Numbers are place holders
                 If the total calories are passed, then the bar and numbers will turn red
               */}
-              <CircularProgressBar numerator={2700} denominator={2500}/>
+              <CircularProgressBar numerator={totalCal} denominator={calGoal}/>
 
               <div className="flex gap-x-4">
                 <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
@@ -205,19 +333,18 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Nutrients</h2>
-              <MacronutrientSection fat={fat} carb={carb} protein={protein} calories={2500} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
+              <MacronutrientSection fat={fat} carb={carb} protein={protein} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
                                     sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-            <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
-      
-
+              <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
+              <MealsSection/>
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">More Data</h2>
-              <MoreDataSection fat={12} carb={70.6} protein={24.8} calories={2500}/>
+              <MoreDataSection fat={fat} carb={carb} protein={protein} calories={totalCal}/>
             </div>
           </div>
         </div>
