@@ -23,7 +23,9 @@ const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: 
   )
 };
 
-const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; calories: number}) => {
+const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; calories: number; satFat: number; polFat: number;
+                                    monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
+                                    sugar: number; vitA: number; vitC: number; calcium: number; iron: number})=> {
   return (
     <div className='w-full space-y-4'>
       <MacronutrientProgressBar fat={prop.fat} carb={prop.carb} protein={prop.protein}/>  
@@ -31,66 +33,72 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Saturated Fat</p>
-         <p>4g</p>
+         <p>{prop.satFat}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'> 
          <p>Total Polyunsaturaed Fat</p>
-         <p>3g</p>
+         <p>{prop.polFat}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Monounsaturated Fat</p>
-         <p>3g</p>
+         <p>{prop.monFat}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Trans Fat</p>
-         <p>3g</p>
+         <p>{prop.traFat}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Sodium</p>
-         <p>3g</p>
+         <p>{prop.sodium}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Potassium</p>
-         <p>3g</p>
+         <p>{prop.potassium}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Dietray Fiber</p>
-         <p>3g</p>
+         <p>{prop.fiber}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Sugars</p>
-         <p>3g</p>
+         <p>{prop.sugar}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Vitamin A</p>
-         <p>3g</p>
+         <p>{prop.vitA}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Vitamin C</p>
-         <p>3g</p>
+         <p>{prop.vitC}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Calcium</p>
-         <p>3g</p>
+         <p>{prop.calcium}g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Iron</p>
-         <p>3g</p>
+         <p>{prop.iron}g</p>
         </div>
         <Separator orientation="horizontal" />
       </ScrollArea>
     </div>
+  )
+}
+
+const MealsSection = (prop) => {
+  return (
+    <div></div>
   )
 }
 
@@ -142,6 +150,22 @@ const MoreDataSection =  (prop: {fat: number; protein: number; carb: number; cal
 }
 
 export const Dashboard = () => {
+  const[totalCal, setTotalCal] = useState(0.0);
+  const[fat, setFat] = useState(0.0);
+  const[protein, setProtein] = useState(0.0);
+  const[carb, setCarb] = useState(0.0);
+  const[satFat, setSatFat] = useState(0.0);
+  const[polFat, setPolFat] = useState(0.0);
+  const[monFat, setMonFat] = useState(0.0);
+  const[traFat, setTraFat] = useState(0.0);
+  const[sodium, setSodium] = useState(0.0);
+  const[potassium, setPotassium] = useState(0.0);
+  const[fiber, setFiber] = useState(0.0);
+  const[sugar, setSugar] = useState(0.0);
+  const[vitA, setVitA] = useState(0.0);
+  const[vitC, setVitC] = useState(0.0);
+  const[calcium, setCalcium] = useState(0.0);
+  const[iron, setIron] = useState(0.0);
 
 
   // const getUserData = async() => {
@@ -181,7 +205,8 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Nutrients</h2>
-              <MacronutrientSection fat={12} carb={70.6} protein={24.8} calories={2500}/>              
+              <MacronutrientSection fat={fat} carb={carb} protein={protein} calories={2500} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
+                                    sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">

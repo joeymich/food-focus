@@ -9,6 +9,9 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
     const[fatPercentage, setFatPercentage] = useState(0.0);
     const[carbPercentage, setCarbPercentage] = useState(0.0);
     const[proteinPercentage, setProteinPercentage] = useState(0.0);
+    const[fatIsZero, setFatIsZero] = useState(false);
+    const[carbIsZero, setCarIsZero] = useState(false);
+    const[proteinIsZero, setProteinIsZero] = useState(false);
 
     useEffect(() => {
         //Using the math from https://help.practicebetter.io/hc/en-us/articles/4921636414107-Calculating-Macronutrient-Percentages for the calculations
@@ -17,9 +20,25 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
         const carbCal = carb * 4;
         const toatlMacroCal = fatCal + proteinCal + carbCal;
 
-        setFatPercentage(Math.round((fatCal/toatlMacroCal) * 100));
-        setCarbPercentage(Math.round((carbCal/toatlMacroCal) * 100));
-        setProteinPercentage(Math.round((proteinCal/toatlMacroCal) * 100));
+        if(fatCal == 0) {
+            setFatIsZero(true);
+        }
+        if(carbCal == 0) {
+            setCarIsZero(true);
+        }
+        if(proteinCal == 0) {
+            setProteinIsZero(true);
+        }
+
+        if(toatlMacroCal == 0) {
+            setFatPercentage(0);
+            setCarbPercentage(0);
+            setProteinPercentage(0);
+        } else {
+            setFatPercentage(Math.round((fatCal/toatlMacroCal) * 100));
+            setCarbPercentage(Math.round((carbCal/toatlMacroCal) * 100));
+            setProteinPercentage(Math.round((proteinCal/toatlMacroCal) * 100));
+        }
 
         console.log("fat: " + fatPercentage + " carb:" + carbPercentage + " protein: " + proteinPercentage);
     }, [carb, carbPercentage, fat, fatPercentage, protein, proteinPercentage])
@@ -29,9 +48,9 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
         <div className='space-y-4'>
             <div className='flex justify-center item-center border-2 border-gray-400'>
                 <div className="w-full bg-gray-200 sqaure-full h-24 dark:bg-accent-700 flex">
-                    <div className="bg-green-400 h-24 square-full flex justify-center items-center font-bold border border-gray-400" style={{ width: `${carbPercentage}%` }}> {carbPercentage}% </div>
-                    <div className="bg-yellow-400 h-24 square-full flex justify-center items-center font-bold border border-gray-400" style={{ width: `${proteinPercentage}%` }}> {proteinPercentage}% </div>
-                    <div className="bg-blue-400 h-24 sqaure-full flex justify-center items-center font-bold border border-gray-400" style={{ width: `${fatPercentage}%` }}> {fatPercentage}% </div>
+                    {carbIsZero ? null : (<div className="bg-green-400 h-24 square-full flex justify-center items-center font-bold border border-gray-400" style={{ width: `${carbPercentage}%` }}> {carbPercentage}% </div>)}
+                    {proteinIsZero ? null : (<div className="bg-yellow-400 h-24 square-full flex justify-center items-center font-bold border border-gray-400" style={{ width: `${proteinPercentage}%` }}> {proteinPercentage}% </div>)}
+                    {fatIsZero ? null : (<div className="bg-blue-400 h-24 sqaure-full flex justify-center items-center font-bold border border-gray-400" style={{ width: `${fatPercentage}%` }}> {fatPercentage}% </div>)}   
                 </div>
             </div>
 
