@@ -1,8 +1,8 @@
-import React , {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 
 //Code refrecned from preline: https://preline.co/docs/progress.html
-export function CircularProgressBar(prop) {
+export function CircularProgressBar(prop: {numerator:number; denominator:number}) {
     const numerator = prop.numerator;
     const denominator = prop.denominator;
     const[percentage, setPercentage] = useState(0.0);

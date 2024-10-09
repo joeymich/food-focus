@@ -1,8 +1,8 @@
-import React , {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 
 //Code refrecned from https://github.com/whoisseth/progressbar-compoent/blob/master/src/components/ProgressBar.tsx
-export function MacronutrientProgressBar(prop) {
+export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb:number}) {
     const fat = prop.fat;
     const protein = prop.protein;
     const carb = prop.carb;
@@ -11,7 +11,7 @@ export function MacronutrientProgressBar(prop) {
     const[proteinPercentage, setProteinPercentage] = useState(0.0);
 
     useEffect(() => {
-        //Using https://help.practicebetter.io/hc/en-us/articles/4921636414107-Calculating-Macronutrient-Percentages for the calculations
+        //Using the math from https://help.practicebetter.io/hc/en-us/articles/4921636414107-Calculating-Macronutrient-Percentages for the calculations
         const fatCal = fat * 9;
         const proteinCal = protein * 4;
         const carbCal = carb * 4;
@@ -22,7 +22,7 @@ export function MacronutrientProgressBar(prop) {
         setProteinPercentage(Math.round((proteinCal/toatlMacroCal) * 100));
 
         console.log("fat: " + fatPercentage + " carb:" + carbPercentage + " protein: " + proteinPercentage);
-    }, [carb, fat, protein])
+    }, [carb, carbPercentage, fat, fatPercentage, protein, proteinPercentage])
 
 
     return (
