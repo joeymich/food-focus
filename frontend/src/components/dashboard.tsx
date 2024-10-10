@@ -130,7 +130,8 @@ const MealsSection = () => {
 
   const ShowDataInRow = (prop: {food: string; cals: number; fat: number; protein: number; carb: number; satFat: number; polFat: number;
                                 monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
-                                sugar: number; vitA: number; vitC: number; calcium: number; iron: number}) => {
+                                sugar: number; vitA: number; vitC: number; calcium: number; iron: number;
+                                mealType: string; servingSize: number; servingName: string; servingAmount: number}) => {
     return (
       <TableRow className="w-full">
         <TableCell>{prop.food}</TableCell>
@@ -143,9 +144,9 @@ const MealsSection = () => {
               <DialogDescription>
                 <div className="space-y-4 flex-col justify-center items-center">
                   <div className='flex justify-center space-x-4 font-bold'>
-                    <p>Meal Type: Breakfast</p>
-                    <p>Serving Size: 1 fruit</p>
-                    <p>Servings eaten: 2</p>
+                    <p>Meal Type: {prop.mealType}</p>
+                    <p>Serving Size: {prop.servingSize} {prop.servingName}</p>
+                    <p>Servings eaten: {prop.servingAmount}</p>
                   </div>
                   <div className='flex justify-center'>
                     <ScrollArea className="h-full w-[300px] rounded-md border bg-gray-100">
