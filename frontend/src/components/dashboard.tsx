@@ -10,6 +10,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -74,12 +75,12 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Vitamin A</p>
-         <p>{prop.vitA}g</p>
+         <p>{prop.vitA}mg</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Vitamin C</p>
-         <p>{prop.vitC}g</p>
+         <p>{prop.vitC}mg</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
@@ -89,7 +90,7 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Iron</p>
-         <p>{prop.iron}g</p>
+         <p>{prop.iron}mg</p>
         </div>
         <Separator orientation="horizontal" />
       </ScrollArea>
@@ -132,6 +133,105 @@ const MealsSection = () => {
       <TableRow className="w-full">
         <TableCell>{prop.food}</TableCell>
         <TableCell className="text-right">{prop.cals}g</TableCell>
+        <TableCell>
+          <Dialog>
+            <DialogTrigger className="w-[20px] border rounded">+</DialogTrigger>
+            <DialogContent>
+              <DialogTitle className='text-center'>More information on {prop.food}</DialogTitle>
+              <DialogDescription>
+                <div className="space-y-4 flex-col justify-center items-center">
+                  <div className='flex justify-center space-x-4 font-bold'>
+                    <p>Meal Type: Breakfast</p>
+                    <p>Serving Size: 1 fruit</p>
+                    <p>Servings eaten: 2</p>
+                  </div>
+                  <div className='flex justify-center'>
+                    <ScrollArea className="h-full w-[300px] rounded-md border bg-gray-100">
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Total Fat</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-100 px-4'>
+                      <p className='indent-4'>Saturated Fat</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal"/>
+                      <div className='flex justify-between bg-gray-100 px-4'>
+                      <p className='indent-4'>Polyunsaturated Fat</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" />
+                      <div className='flex justify-between bg-gray-100 px-4'>
+                      <p className='indent-4'>Monounsaturated Fat</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" />
+                      <div className='flex justify-between bg-gray-100 px-4'>
+                      <p className='indent-4'>Trans Fat</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Total Carbs:</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-100 px-4'>
+                      <p className='indent-4'>Sugars</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" />
+                      <div className='flex justify-between bg-gray-100 px-4'>
+                      <p className='indent-4'>Fibers</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Protein:</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Sodium:</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Potassium:</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Calcium:</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Iron:</p>
+                      <p>14g</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Vitamin A:</p>
+                      <p>14mg</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                      <div className='flex justify-between bg-gray-200 px-4'>
+                      <p>Vitamin B:</p>
+                      <p>14mg</p>
+                      </div>
+                      <Separator orientation="horizontal" className="bg-gray-300"/>
+                    </ScrollArea>
+                  </div>
+                  <div className='flex justify-center space-x-4 font-bold'>
+                    <Button className="text-defaultText bg-secondary font-bold text-sm">Remove Food</Button>
+                  </div>
+                </div>
+              </DialogDescription>
+            </DialogContent>
+          </Dialog>
+        </TableCell>
       </TableRow>
     )
   }
@@ -173,7 +273,6 @@ const MealsSection = () => {
                   ))}
                </>
               ):null}
-             
           </Table>
         </ScrollArea>
       </div>
@@ -202,9 +301,8 @@ const MealsSection = () => {
           <DataDisplay mealType="snack"/>
         </TabsContent>
       </Tabs>
-      <div className="flex justify-between px-4 py-4">
+      <div className="flex justify-c px-4 py-4">
         <Button className="text-defaultText bg-secondary font-bold text-sm">Add Food</Button>
-        <Button className="text-defaultText bg-secondary font-bold text-sm">Remove Food</Button>
       </div>
     </div>
   )
@@ -349,7 +447,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        <div className='flex:col justify-center space-y-4'>
+        {/* <div className='flex:col justify-center space-y-4'>
 
           <div className='w-full p-4 bg-secondary'>
             <h1 className="text-4xl font-bold text-defaultText text-center"> This Week's Progress </h1>
@@ -358,17 +456,17 @@ export const Dashboard = () => {
           <div className='flex justify-center space-x-4'>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-              <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1>
+              <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1> */}
               {/*Make it gray out when the day not passed*/}
-              <HistoryProgress date="Sunday" calories={2670} totalCalories={2500}/>
+              {/* <HistoryProgress date="Sunday" calories={2670} totalCalories={2500}/>
               <HistoryProgress date="Monday" calories={1400} totalCalories={2500}/>
               <HistoryProgress date="Tuesday" calories={1250} totalCalories={2500}/>
               <HistoryProgress date="Wednesday" calories={0} totalCalories={2500}/>
               <HistoryProgress date="Thursday" calories={0} totalCalories={2500}/>
               <HistoryProgress date="Friday" calories={0} totalCalories={2500}/>
-              <HistoryProgress date="Saturday" calories={0} totalCalories={2500}/>
+              <HistoryProgress date="Saturday" calories={0} totalCalories={2500}/> */}
               {/*Meant to go to a page with the user's full history*/}
-              <Button className="text-defaultText bg-secondary font-bold text-sm">See more</Button>
+              {/* <Button className="text-defaultText bg-secondary font-bold text-sm">See more</Button>
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
@@ -379,7 +477,7 @@ export const Dashboard = () => {
             <h2 className="text-3xl font-bold text-defaultText text-center">This Week's Meals</h2>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
           
     </>
