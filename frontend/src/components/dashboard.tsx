@@ -128,7 +128,9 @@ const MealsSection = () => {
     {food: "Chocolate", cals: 190},
   ]
 
-  const ShowDataInRow = (prop: {food: string; cals: number}) => {
+  const ShowDataInRow = (prop: {food: string; cals: number; fat: number; protein: number; carb: number; satFat: number; polFat: number;
+                                monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
+                                sugar: number; vitA: number; vitC: number; calcium: number; iron: number}) => {
     return (
       <TableRow className="w-full">
         <TableCell>{prop.food}</TableCell>
@@ -149,77 +151,77 @@ const MealsSection = () => {
                     <ScrollArea className="h-full w-[300px] rounded-md border bg-gray-100">
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Total Fat</p>
-                      <p>14g</p>
+                      <p>{prop.fat}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Saturated Fat</p>
-                      <p>14g</p>
+                      <p>{prop.satFat}g</p>
                       </div>
                       <Separator orientation="horizontal"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Polyunsaturated Fat</p>
-                      <p>14g</p>
+                      <p>{prop.polFat}g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Monounsaturated Fat</p>
-                      <p>14g</p>
+                      <p>{prop.monFat}g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Trans Fat</p>
-                      <p>14g</p>
+                      <p>{prop.traFat}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Total Carbs:</p>
-                      <p>14g</p>
+                      <p>{prop.carb}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Sugars</p>
-                      <p>14g</p>
+                      <p>{prop.sugar}g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Fibers</p>
-                      <p>14g</p>
+                      <p>{prop.fiber}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Protein:</p>
-                      <p>14g</p>
+                      <p>{prop.protein}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Sodium:</p>
-                      <p>14g</p>
+                      <p>{prop.sodium}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Potassium:</p>
-                      <p>14g</p>
+                      <p>{prop.potassium}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Calcium:</p>
-                      <p>14g</p>
+                      <p>{prop.calcium}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Iron:</p>
-                      <p>14g</p>
+                      <p>{prop.iron}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Vitamin A:</p>
-                      <p>14mg</p>
+                      <p>{prop.vitA}mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
-                      <p>Vitamin B:</p>
-                      <p>14mg</p>
+                      <p>Vitamin C:</p>
+                      <p>{prop.vitC}mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                     </ScrollArea>
@@ -301,8 +303,10 @@ const MealsSection = () => {
           <DataDisplay mealType="snack"/>
         </TabsContent>
       </Tabs>
-      <div className="flex justify-c px-4 py-4">
-        <Button className="text-defaultText bg-secondary font-bold text-sm">Add Food</Button>
+      <div className="flex justify-center px-4 py-4">
+        <Button className="text-defaultText bg-secondary font-bold text-sm">
+          Add meal
+        </Button>
       </div>
     </div>
   )
