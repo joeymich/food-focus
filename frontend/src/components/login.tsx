@@ -20,7 +20,7 @@ export const Login = () => {
     const [password, setPassword] = useState<string>('')
     const [passwordError, setPasswordError] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [errorMessage, setErrorMessage] = useState<string>('')
+    const [, setErrorMessage] = useState<string>('')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

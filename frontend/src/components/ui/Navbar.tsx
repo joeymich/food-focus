@@ -1,11 +1,16 @@
-import React , {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 /*
     Code refrenced from https://www.youtube.com/watch?v=rla9JZBFbqs&ab_channel=PatrickPan
 */
 
-const ListOfLinks = (prop) => {
+const ListOfLinks = () => {
     const[isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        setIsLoggedIn(false);
+     }, [])
+
 
     return (
         <>
