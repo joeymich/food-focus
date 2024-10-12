@@ -8,6 +8,11 @@ import { Search } from "lucide-react"
 import { cn } from "@/utils/cn"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
+/*
+    The component design from shadcn
+    https://ui.shadcn.com/docs/components/command#installation
+*/
+
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive>

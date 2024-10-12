@@ -11,15 +11,15 @@ import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Input } from './ui/form/input';
-import type { InputNumberProps } from 'antd';
-import { InputNumber } from 'antd';
-import { Select as SelectAntd} from 'antd';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check } from "lucide-react"
 import { cn } from "@/utils/cn"
+import type { DatePickerProps } from 'antd';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -111,13 +111,11 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 const MealsSection = () => {
   const[mealType, setMealType] = useState("");
   const[mealUnit, setMealUnit] = useState("");
-  const[servingAmount, setServingAmount] = useState(0);
+  const[servingAmount, setServingAmount] = useState("");
 
-  const handleChangeServingAmount: InputNumberProps['onChange'] = (value) => {
-    if(value != null) {
-      setServingAmount(value);
+    const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setServingAmount(e.target.value);
     }
-  };
 
   const breakfastData = [
     {food: "Oatmeal", cals: 100},
@@ -412,6 +410,7 @@ const MealsSection = () => {
                       min={1}
                       max={99}
                       defaultValue={1}
+                      onChange={handleChangeServingAmount}
                     />
                   </div>
                   <div className='flex space-x-[55px] items-center'>
@@ -443,6 +442,61 @@ const MealsSection = () => {
     </div>
   )
 };
+
+const SelectDate = () => {
+  const[theDate, setTheDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const dateFormat = 'MM-DD-YYYY';
+
+  //Code refrenced from https://ant.design/components/date-picker
+
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    setTheDate(date)
+    const today = dayjs();
+    const comp = dayjs(date, dateFormat);
+    console.log(comp + " " + today + " " + today.isSame(comp, 'day') + " " + theDate)
+  };
+
+  return (
+    // <Popover>
+    //   <PopoverTrigger asChild>
+    //     <Button
+    //       variant={"outline"}
+    //       className={cn(
+    //         "w-[280px] justify-start text-left font-normal",
+    //         !date && "text-muted-foreground"
+    //       )}
+    //     >
+    //       <CalendarIcon className="mr-2 h-4 w-4" />
+    //       {date ? format(date, "PPP") : <span>Pick a date</span>}
+    //     </Button>
+    //   </PopoverTrigger>
+    //   <PopoverContent className="w-auto p-0">
+    //     <Calendar
+    //       mode="single"
+    //       selected={date}
+    //       onSelect={setDate}
+    //       initialFocus
+    //     />
+    //   </PopoverContent>
+    // </Popover>
+    <div className='w-full bg-secondary space-y-4 text-center'>
+      <DatePicker
+        format="MM-DD-YYYY"
+        defaultValue={dayjs(dayjs(),dateFormat)}
+        minDate={dayjs('02-03-2002', dateFormat)}
+        maxDate={dayjs(dayjs(), dateFormat)}
+        onChange={onChange}
+      />
+
+      {(dayjs().isSame(theDate, 'day')) ? (
+        <h1 className="text-4xl font-bold text-defaultText text-center"> Today's Progress </h1>
+      ): (
+        <h1 className="text-4xl font-bold text-defaultText text-center"> Progress on {theDate?.format(dateFormat)} </h1>
+      )}
+    </div>
+);
+  
+}
 
 export const Dashboard = () => {
   const[totalCal, setTotalCal] = useState(0.0);
@@ -499,8 +553,8 @@ export const Dashboard = () => {
       <div  className="bg-background h-screen w-screen flex:col justify-center items-start py-8 space-x-4 space-y-16">
         <div className='flex:col justify-center space-y-4'>
 
-          <div className='w-full p-4 bg-secondary'>
-            <h1 className="text-4xl font-bold text-defaultText text-center"> Today's Progress </h1>
+          <div className='w-full p-4 bg-secondary space-x-4 text-center'>
+            <SelectDate/>
           </div>
 
           <div className='flex justify-center space-x-4'>
