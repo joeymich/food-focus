@@ -16,6 +16,10 @@ import { Input } from './ui/form/input';
 import type { InputNumberProps } from 'antd';
 import { InputNumber } from 'antd';
 import { Select as SelectAntd} from 'antd';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/utils/cn"
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -142,28 +146,58 @@ const MealsSection = () => {
     {food: "Chocolate", cals: 190},
   ]
 
-  const foodOptions = [
-    {value: '1' , food: "Apple"},
-    {value: '2', food: "Banana"},
-    {value: '3', food: "Cabbage"}
-  ]
+  const SelectSearch = () => {
+    const[open, setOpen] = useState(false);
+    const[value, setValue] = useState("");
 
-  const SelectSearch = (prop: {value: string, food: string}) => {
+    const foodOptions = [
+      {value: 'apple' , food: "Apple"},
+      {value: 'banana', food: "Banana"},
+      {value: 'cabbage', food: "Cabbage"}
+    ]
     return (
       <div >
-        <SelectAntd
-          className="bg-gray-100"
-          showSearch
-          placeholder="Select a Meal"
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-
-          options={[
-            {value: '1', label: "Apple"},
-            {value: '2', label: "Banana"},
-          ]}
-        />
+        {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild >
+            <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-[200px] justify-between bg-gray-100 font-normal"
+            >
+              {value ? foodOptions.find((foodOptions) => foodOptions.value === value)?.food : "Select Meal"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <Command>
+              <CommandInput aria-placeholder="Search meals..."/>
+              <CommandList>
+                <CommandEmpty>No Foods Found</CommandEmpty>
+                <CommandGroup>
+                  {foodOptions.map((foodOption) => (
+                    <CommandItem
+                      key={foodOption.value}
+                      value={foodOption.value}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue)
+                        setOpen(false)
+                      }}  
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === foodOption.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {foodOption.food}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
     )
   }
@@ -355,10 +389,6 @@ const MealsSection = () => {
             </DialogHeader>
             <div className="flex justify-center">
               <div className="space-y-4 justify-center items-center">
-                <div className='flex items-center space-x-[70px]'>
-                  <p>Select Meal</p>
-                  <SelectSearch/>
-                </div>
                 <div  className="flex space-x-8 items-center">
                   <p>Select Meal Type</p>
                   <Select onValueChange={(value) => {setMealType(value);}}>
@@ -376,7 +406,13 @@ const MealsSection = () => {
                
                 <div className='flex space-x-[35px] items-center'>
                     <p>Serving Amount</p>
-                    <InputNumber min={1} max={99} defaultValue={1} onChange={handleChangeServingAmount} className='bg-gray-100 w-[60px]'/>
+                    <Input
+                      className='bg-gray-100 w-[70px]'
+                      type="number"
+                      min={1}
+                      max={99}
+                      defaultValue={1}
+                    />
                   </div>
                   <div className='flex space-x-[55px] items-center'>
                     <p>Serving Units</p>
@@ -392,7 +428,10 @@ const MealsSection = () => {
                       </SelectContent>  
                     </Select>
                   </div>
-                
+                  <div className='flex items-center space-x-[65px]'>
+                    <p>Select Meal</p>
+                    <SelectSearch/>
+                  </div>
                 <div className='w-full flex justify-center'>
                   <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>
                 </div>
