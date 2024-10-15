@@ -20,6 +20,7 @@ import { cn } from "@/utils/cn"
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import { FoodApi, Foods} from '@/api/FoodApi';
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -108,7 +109,7 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 };
 
 
-const MealsSection = () => {
+const MealsSection = (prop: {foodData: Foods[]}) => {
   const[mealType, setMealType] = useState("");
   const[mealUnit, setMealUnit] = useState("");
   const[servingAmount, setServingAmount] = useState("");
@@ -164,7 +165,7 @@ const MealsSection = () => {
             aria-expanded={open}
             className="w-[200px] justify-between bg-gray-100 font-normal"
             >
-              {value ? foodOptions.find((foodOptions) => foodOptions.value === value)?.food : "Select Meal"}
+              {value ? prop.foodData.find((foodOptions) => foodOptions.id === value)?.name : "Select Meal"}
             </Button>
           </PopoverTrigger>
           <PopoverContent>
@@ -173,10 +174,10 @@ const MealsSection = () => {
               <CommandList>
                 <CommandEmpty>No Foods Found</CommandEmpty>
                 <CommandGroup>
-                  {foodOptions.map((foodOption) => (
+                  {prop.foodData.map((foodOption) => (
                     <CommandItem
-                      key={foodOption.value}
-                      value={foodOption.value}
+                      key={foodOption.name}
+                      value={foodOption.id}
                       onSelect={(currentValue) => {
                         setValue(currentValue === value ? "" : currentValue)
                         setOpen(false)
@@ -185,10 +186,10 @@ const MealsSection = () => {
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          value === foodOption.value ? "opacity-100" : "opacity-0"
+                          value === foodOption.id ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {foodOption.food}
+                      {foodOption.name}
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -498,6 +499,7 @@ const SelectDate = () => {
   
 }
 
+
 export const Dashboard = () => {
   const[totalCal, setTotalCal] = useState(0.0);
   const[calGoal, setCalGoal] = useState(0.0);
@@ -516,31 +518,47 @@ export const Dashboard = () => {
   const[vitC, setVitC] = useState(0.0);
   const[calcium, setCalcium] = useState(0.0);
   const[iron, setIron] = useState(0.0);
+  const[foodData, setFoodData] = useState<Foods[]>([]);
+
+
 
 
   useEffect(() => {
+    const getFoodOptions = async () => {
+      try {
+        const response = await FoodApi.food();
+        setFoodData(response);
+      } catch (e) {
+       console.log(e);
+      }
+    };
+    
+    function PlaceHolder() {
+      setTotalCal(2500);
+      setCalGoal(2500);
+      setFat(18);
+      setProtein(29);
+      setCarb(20);
+      setSatFat(16);
+      setPolFat(2);
+      setMonFat(0);
+      setTraFat(0);
+      setSodium(13);
+      setPotassium(19);
+      setFiber(12);
+      setSugar(12);
+      setVitA(13);
+      setVitC(15);
+      setCalcium(17);
+      setIron(16);
+    }
+
     PlaceHolder();
+    getFoodOptions();
   }, [])
 
-  function PlaceHolder() {
-    setTotalCal(2500);
-    setCalGoal(2500);
-    setFat(18);
-    setProtein(29);
-    setCarb(20);
-    setSatFat(16);
-    setPolFat(2);
-    setMonFat(0);
-    setTraFat(0);
-    setSodium(13);
-    setPotassium(19);
-    setFiber(12);
-    setSugar(12);
-    setVitA(13);
-    setVitC(15);
-    setCalcium(17);
-    setIron(16);
-  }
+
+ 
 
   return (
     <>
@@ -580,7 +598,7 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
-              <MealsSection/>
+              <MealsSection foodData={foodData}/>
             </div>
 
           </div>

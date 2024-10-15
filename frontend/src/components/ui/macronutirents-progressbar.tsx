@@ -26,8 +26,6 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
             setCarbPercentage(((carbCal/toatlMacroCal) * 100));
             setProteinPercentage(((proteinCal/toatlMacroCal) * 100));
         }
-
-        console.log("fat: " + fatCal + " carb:" + carbCal + " protein: " + proteinCal);
     }, [carb, carbPercentage, fat, fatPercentage, protein, proteinPercentage])
 
 
