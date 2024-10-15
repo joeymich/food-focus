@@ -148,6 +148,7 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
   const SelectSearch = () => {
     const[open, setOpen] = useState(false);
     const[value, setValue] = useState("");
+    const[mealID, setMealID] = useState("");
 
     const foodOptions = [
       {value: 'apple' , food: "Apple"},
@@ -165,7 +166,7 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
             aria-expanded={open}
             className="w-[200px] justify-between bg-gray-100 font-normal"
             >
-              {value ? prop.foodData.find((foodOptions) => foodOptions.id === value)?.name : "Select Meal"}
+              {value ? prop.foodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
             </Button>
           </PopoverTrigger>
           <PopoverContent>
@@ -176,10 +177,11 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
                 <CommandGroup>
                   {prop.foodData.map((foodOption) => (
                     <CommandItem
-                      key={foodOption.name}
-                      value={foodOption.id}
+                      key={foodOption.id}
+                      value={foodOption.name}
                       onSelect={(currentValue) => {
                         setValue(currentValue === value ? "" : currentValue)
+                        setMealID(foodOption.id);
                         setOpen(false)
                       }}  
                     >
@@ -189,7 +191,7 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
                           value === foodOption.id ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {foodOption.name}
+                      {foodOption.name.toLowerCase()}
                     </CommandItem>
                   ))}
                 </CommandGroup>
