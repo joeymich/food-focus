@@ -5,10 +5,12 @@ from uuid import UUID
 from fastapi import Depends
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.auth.deps import CurrentUserId
 from app.db.service import BaseService
 from app.deps import DbSession
+from app.serving_size.models import ServingSize
 
 from .models import FoodLog
 from .schemas import FoodLogUpdate, FoodLogCreate
@@ -48,6 +50,23 @@ class FoodLogService(BaseService[FoodLog]):
         query = select(self.model)
         query = query.filter(self.model.user_id == self.user_id)
         query = query.filter(self.model.date == date)
+        return (await self.db_session.scalars(query)).all()
+
+    async def get_nested_by_date(
+        self,
+        *,
+        date: datetime.date,
+    ) -> Sequence[FoodLog]:
+        query = select(self.model)
+        query = query.filter(self.model.user_id == self.user_id)
+        query = query.filter(self.model.date == date)
+        query = query.options(
+            selectinload(
+                self.model.serving_size
+            ).selectinload(
+                ServingSize.food
+            )
+        )
         return (await self.db_session.scalars(query)).all()
 
     async def delete(

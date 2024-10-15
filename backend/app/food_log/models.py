@@ -1,7 +1,10 @@
 from app.db import Base
 from app.db.mixins import IdMixin
 
-from sqlalchemy import Column, ForeignKey, UUID, String, Float, Date, Enum
+from sqlalchemy import Column, ForeignKey, UUID, Float, Date, Enum
+from sqlalchemy.orm import relationship
+
+from app.serving_size.models import ServingSize
 
 from .enums import MealEnum
 
@@ -25,3 +28,4 @@ class FoodLog(IdMixin, Base):
         Enum(MealEnum),
         default=MealEnum.BREAKFAST,
     )
+    serving_size = relationship(ServingSize, uselist=False)

@@ -1,7 +1,10 @@
-from app.db import Base
-from app.db.mixins import IdMixin
 
 from sqlalchemy import Column, Float, UUID, ForeignKey, String
+from sqlalchemy.orm import relationship
+
+from app.db import Base
+from app.db.mixins import IdMixin
+from app.food.models import Food
 
 
 class ServingSize(IdMixin, Base):
@@ -11,5 +14,6 @@ class ServingSize(IdMixin, Base):
         index=True,
         nullable=False
     )
+    food = relationship(Food, uselist=False)
     name = Column(String, nullable=False)
     ratio = Column(Float, nullable=False)

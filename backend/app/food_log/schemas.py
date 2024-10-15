@@ -2,6 +2,9 @@ import datetime
 
 from pydantic import BaseModel, UUID4
 
+from app.serving_size.schemas import ServingSizeNestedRead
+
+
 from .enums import MealEnum
 
 
@@ -25,3 +28,13 @@ class FoodLogCreate(BaseModel):
     serving_count: float
     date: datetime.date
     meal: MealEnum
+
+
+class FoodLogNestedRead(BaseModel):
+
+    id: UUID4
+    serving_count: float
+    date: datetime.date
+    meal: MealEnum
+
+    serving_size: ServingSizeNestedRead
