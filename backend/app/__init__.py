@@ -7,6 +7,7 @@ from app.food import router as food_router
 from app.food_log import router as food_log_router
 from app.middleware import RedisMiddleware
 from app.serving_size import router as serving_size_router
+from app.summary import router as summary_router
 from app.db import Base  # noqa
 
 
@@ -34,6 +35,11 @@ def include_routers(app: FastAPI) -> None:
         serving_size_router,
         prefix='/serving-sizes',
         tags=['serving-sizes'],
+    )
+    app.include_router(
+        summary_router,
+        prefix='/summaries',
+        tags=['summaries']
     )
 
 
