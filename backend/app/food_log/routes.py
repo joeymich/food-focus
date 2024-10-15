@@ -7,22 +7,19 @@ from pydantic import UUID4
 from app.deps import DbSession
 
 from . import router
-from .schemas import FoodLogUpdate, FoodLogRead, FoodLogCreate
+from .schemas import FoodLogUpdate, FoodLogRead, FoodLogCreate, FoodLogNestedRead
 from .services import FoodLogServiceDep
 
 
 @router.get(
     '',
-    response_model=list[FoodLogRead],
+    response_model=list[FoodLogNestedRead],
 )
 async def get_all_by_user_id(
     food_log_service: FoodLogServiceDep,
-    date: Annotated[datetime.date | None, Query()] = None
+    date: Annotated[datetime.date | None, Query()] = datetime.date.today()
 ):
-    if date is None:
-        return await food_log_service.get_all_by_user_id()
-    else:
-        return await food_log_service.get_by_date(date=date)
+    return await food_log_service.get_nested_by_date(date=date)
 
 
 @router.post(
