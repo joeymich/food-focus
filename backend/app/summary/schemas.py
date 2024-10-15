@@ -1,5 +1,6 @@
 import datetime
 from pydantic import BaseModel
+from sqlalchemy import Row
 
 
 class NutritionSummary(BaseModel):
@@ -20,3 +21,25 @@ class NutritionSummary(BaseModel):
     vitamin_c: float | None = None
     calcium: float | None = None
     iron: float | None = None
+
+
+def row_to_nutrition_summary(date: datetime.date, row: Row) -> NutritionSummary:
+    return NutritionSummary(
+        date=date,
+        calories=row[0],
+        total_fat=row[1],
+        saturated_fat=row[2],
+        polyunsaturated_fat=row[3],
+        monounsaturated_fat=row[4],
+        trans_fat=row[5],
+        sodium=row[6],
+        potassium=row[7],
+        total_carbs=row[8],
+        dietary_fiber=row[9],
+        sugars=row[10],
+        protein=row[11],
+        vitamin_a=row[12],
+        vitamin_c=row[13],
+        calcium=row[14],
+        iron=row[15]
+    )
