@@ -6,13 +6,13 @@ const api = createApi('')
 export type FoodLogRequest = {
     serving_size_id: string,
     serving_count: number,
-    date: Date,
+    date: string,
     meal: string
 }
 
 export type FoodLogPatchRequest = {
     serving_count: number,
-    date: Date,
+    date: string,
     meal: string
 }
 
@@ -48,15 +48,15 @@ export const FoodLogApi = {
         return response.data
     },
     postFoodLog: async (foodLogRequest: FoodLogRequest) => {
-        const response = await api.post<FoodLog[]>('/food-logs', foodLogRequest)
+        const response = await api.post('/food-logs', foodLogRequest)
         return response.data
     },
     deleteFoodLog: async (foodLogID: string) => {
-        const response = await api.delete<FoodLog[]>('/food-logs/' + foodLogID)
+        const response = await api.delete('/food-logs/' + foodLogID)
         return response.data
     },
     patchFoodLog: async (foodLogID: string, foodLogPatchRequest: FoodLogPatchRequest) => {
-        const response = await api.patch<FoodLog[]>('/food-logs/' + foodLogID, foodLogPatchRequest)
+        const response = await api.patch('/food-logs/' + foodLogID, foodLogPatchRequest)
         return response.data
     },
 }

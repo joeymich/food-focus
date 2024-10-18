@@ -10,7 +10,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Input } from './ui/form/input';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
@@ -22,7 +22,7 @@ import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { FoodApi, Foods} from '@/api/FoodApi';
 import { ServingSizeApi, ServingSize } from '@/api/ServingSizeApi';
-import { FoodLogApi, FoodLogAll, FoodLog, FLServingSize } from '@/api/FoodLogApi';
+import { FoodLogApi, FoodLogAll, FoodLog, FLServingSize, FoodLogRequest } from '@/api/FoodLogApi';
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -113,20 +113,28 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 
 const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) => {
   const[mealType, setMealType] = useState("");
-  const[servingAmount, setServingAmount] = useState("");
+  const[servingAmount, setServingAmount] = useState(0);
   const[open, setOpen] = useState(false);
   const[value, setValue] = useState("");
   const[mealID, setMealID] = useState("");
+  const[dialogOpen, setDialogOpen] = useState(false);
 
   const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setServingAmount(e.target.value);
+    setServingAmount(Number(e.target.value));
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log("HELLO");
-    console.log(mealType + " " + servingAmount + " " + mealID + " " + value);
-    console.log(prop.servingSizes);
+    const serving_size_id = prop.servingSizes.find((foodOptions) => foodOptions.food_id === mealID)?.id.toLowerCase() || ""
+    const serving_count = servingAmount;
+    const date =  dayjs().format("YYYY-MM-DD");
+    const meal = mealType.toUpperCase();
+    setDialogOpen(false);
+    try {
+      const response = await FoodLogApi.postFoodLog({serving_size_id, serving_count, date, meal});
+    } catch (e) {
+     console.log(e);
+    }
   }
 
   const breakfastData = [
@@ -333,7 +341,7 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
         </TabsContent>
       </Tabs>
       <div className="flex justify-center py-4">
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger>
             <Button className="text-defaultText bg-secondary font-bold text-sm">Add meal</Button>
           </DialogTrigger>
@@ -354,7 +362,7 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
                         <SelectItem value='BREAKFAST'>Breakfast</SelectItem>
                         <SelectItem value='LUNCH'>Lunch</SelectItem>
                         <SelectItem value='DINNER'>Dinner</SelectItem>
-                        <SelectItem value='SNACK'>Snack</SelectItem>
+                        <SelectItem value='SNACKS'>Snack</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -368,54 +376,54 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
                         defaultValue={1}
                         onChange={handleChangeServingAmount}
                       />
+                  </div>
+                  <div className='flex items-center space-x-[65px]'>
+                    <p>Select Meal</p>
+                      <div >
+                      {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild >
+                          <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={open}
+                          className="w-[200px] justify-between bg-gray-100 font-normal"
+                          >
+                            {value ? prop.foodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Command>
+                            <CommandInput aria-placeholder="Search meals..."/>
+                            <CommandList>
+                              <CommandEmpty>No Foods Found</CommandEmpty>
+                              <CommandGroup>
+                                {prop.foodData.map((foodOption) => (
+                                  <CommandItem
+                                    key={foodOption.id}
+                                    value={foodOption.name}
+                                    onSelect={(currentValue) => {
+                                      setValue(currentValue === value ? "" : currentValue)
+                                      setMealID(foodOption.id);
+                                      setOpen(false)
+                                    }}  
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        value === foodOption.name ? "opacity-100" : "opacity-0"
+                                      )}
+                                    />
+                                    {foodOption.name.toLowerCase()}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                     </div>
-                    <div className='flex items-center space-x-[65px]'>
-                      <p>Select Meal</p>
-                       <div >
-                        {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
-                        <Popover open={open} onOpenChange={setOpen}>
-                          <PopoverTrigger asChild >
-                            <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="w-[200px] justify-between bg-gray-100 font-normal"
-                            >
-                              {value ? prop.foodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent>
-                            <Command>
-                              <CommandInput aria-placeholder="Search meals..."/>
-                              <CommandList>
-                                <CommandEmpty>No Foods Found</CommandEmpty>
-                                <CommandGroup>
-                                  {prop.foodData.map((foodOption) => (
-                                    <CommandItem
-                                      key={foodOption.id}
-                                      value={foodOption.name}
-                                      onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        setMealID(foodOption.id);
-                                        setOpen(false)
-                                      }}  
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          value === foodOption.name ? "opacity-100" : "opacity-0"
-                                        )}
-                                      />
-                                      {foodOption.name.toLowerCase()}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
+                  </div>
                   <div className='w-full flex justify-center'>
                     <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>
                   </div>
