@@ -111,12 +111,20 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 
 const MealsSection = (prop: {foodData: Foods[]}) => {
   const[mealType, setMealType] = useState("");
-  const[mealUnit, setMealUnit] = useState("");
   const[servingAmount, setServingAmount] = useState("");
+  const[open, setOpen] = useState(false);
+  const[value, setValue] = useState("");
+  const[mealID, setMealID] = useState("");
 
-    const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setServingAmount(e.target.value);
-    }
+  const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setServingAmount(e.target.value);
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log("HELLO");
+    console.log(mealType + " " + servingAmount + " " + mealID + " " + value);
+  }
 
   const breakfastData = [
     {food: "Oatmeal", cals: 100},
@@ -144,64 +152,6 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
     {food: "Pie", cals: 300},
     {food: "Chocolate", cals: 190},
   ]
-
-  const SelectSearch = () => {
-    const[open, setOpen] = useState(false);
-    const[value, setValue] = useState("");
-    const[mealID, setMealID] = useState("");
-
-    const foodOptions = [
-      {value: 'apple' , food: "Apple"},
-      {value: 'banana', food: "Banana"},
-      {value: 'cabbage', food: "Cabbage"}
-    ]
-    return (
-      <div >
-        {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild >
-            <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between bg-gray-100 font-normal"
-            >
-              {value ? prop.foodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Command>
-              <CommandInput aria-placeholder="Search meals..."/>
-              <CommandList>
-                <CommandEmpty>No Foods Found</CommandEmpty>
-                <CommandGroup>
-                  {prop.foodData.map((foodOption) => (
-                    <CommandItem
-                      key={foodOption.id}
-                      value={foodOption.name}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue)
-                        setMealID(foodOption.id);
-                        setOpen(false)
-                      }}  
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === foodOption.id ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {foodOption.name.toLowerCase()}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
-    )
-  }
 
   const ShowDataInRow = (prop: {food: string; cals: number; fat: number; protein: number; carb: number; satFat: number; polFat: number;
                                 monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
@@ -388,57 +338,87 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
             <DialogHeader>
               <DialogTitle className='text-center'>Add Meal</DialogTitle>
             </DialogHeader>
-            <div className="flex justify-center">
-              <div className="space-y-4 justify-center items-center">
-                <div  className="flex space-x-8 items-center">
-                  <p>Select Meal Type</p>
-                  <Select onValueChange={(value) => {setMealType(value);}}>
-                    <SelectTrigger className="w-[170px] bg-gray-100">
-                      <SelectValue placeholder='Choose a Meal Type'/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='BREAKFAST'>Breakfast</SelectItem>
-                      <SelectItem value='LUNCH'>Lunch</SelectItem>
-                      <SelectItem value='DINNER'>Dinner</SelectItem>
-                      <SelectItem value='SNACK'>Snack</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-               
-                <div className='flex space-x-[35px] items-center'>
-                    <p>Serving Amount</p>
-                    <Input
-                      className='bg-gray-100 w-[70px]'
-                      type="number"
-                      min={1}
-                      max={99}
-                      defaultValue={1}
-                      onChange={handleChangeServingAmount}
-                    />
-                  </div>
-                  <div className='flex space-x-[55px] items-center'>
-                    <p>Serving Units</p>
-                    <Select onValueChange={(value) => {setMealUnit(value);}}>
+            <form className="flex flex-col space-y-4 w-full" onSubmit={handleSubmit}>
+              <div className="flex justify-center">
+                <div className="space-y-4 justify-center items-center">
+                  <div  className="flex space-x-8 items-center">
+                    <p>Select Meal Type</p>
+                    <Select onValueChange={(value) => {setMealType(value);}}>
                       <SelectTrigger className="w-[170px] bg-gray-100">
-                        <SelectValue placeholder='Choose a Unit'/>
+                        <SelectValue placeholder='Choose a Meal Type'/>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value='CUP'>Cup</SelectItem>
-                        <SelectItem value='LITRE'>Litre</SelectItem>
-                        <SelectItem value='GRAMS'>Gram</SelectItem>
-                        <SelectItem value='OZ'>Ounce</SelectItem>
-                      </SelectContent>  
+                        <SelectItem value='BREAKFAST'>Breakfast</SelectItem>
+                        <SelectItem value='LUNCH'>Lunch</SelectItem>
+                        <SelectItem value='DINNER'>Dinner</SelectItem>
+                        <SelectItem value='SNACK'>Snack</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
-                  <div className='flex items-center space-x-[65px]'>
-                    <p>Select Meal</p>
-                    <SelectSearch/>
+                  <div className='flex space-x-[10px] items-center'>
+                      <p>Amount of Servings</p>
+                      <Input
+                        className='bg-gray-100 w-[70px]'
+                        type="number"
+                        min={1}
+                        max={99}
+                        defaultValue={1}
+                        onChange={handleChangeServingAmount}
+                      />
+                    </div>
+                    <div className='flex items-center space-x-[65px]'>
+                      <p>Select Meal</p>
+                       <div >
+                        {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
+                        <Popover open={open} onOpenChange={setOpen}>
+                          <PopoverTrigger asChild >
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-[200px] justify-between bg-gray-100 font-normal"
+                            >
+                              {value ? prop.foodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <Command>
+                              <CommandInput aria-placeholder="Search meals..."/>
+                              <CommandList>
+                                <CommandEmpty>No Foods Found</CommandEmpty>
+                                <CommandGroup>
+                                  {prop.foodData.map((foodOption) => (
+                                    <CommandItem
+                                      key={foodOption.id}
+                                      value={foodOption.name}
+                                      onSelect={(currentValue) => {
+                                        setValue(currentValue === value ? "" : currentValue)
+                                        setMealID(foodOption.id);
+                                        setOpen(false)
+                                      }}  
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          value === foodOption.name ? "opacity-100" : "opacity-0"
+                                        )}
+                                      />
+                                      {foodOption.name.toLowerCase()}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                  <div className='w-full flex justify-center'>
+                    <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>
                   </div>
-                <div className='w-full flex justify-center'>
-                  <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>
-                </div>
-              </div>             
-            </div>
+                </div>             
+              </div>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
@@ -460,28 +440,6 @@ const SelectDate = () => {
   };
 
   return (
-    // <Popover>
-    //   <PopoverTrigger asChild>
-    //     <Button
-    //       variant={"outline"}
-    //       className={cn(
-    //         "w-[280px] justify-start text-left font-normal",
-    //         !date && "text-muted-foreground"
-    //       )}
-    //     >
-    //       <CalendarIcon className="mr-2 h-4 w-4" />
-    //       {date ? format(date, "PPP") : <span>Pick a date</span>}
-    //     </Button>
-    //   </PopoverTrigger>
-    //   <PopoverContent className="w-auto p-0">
-    //     <Calendar
-    //       mode="single"
-    //       selected={date}
-    //       onSelect={setDate}
-    //       initialFocus
-    //     />
-    //   </PopoverContent>
-    // </Popover>
     <div className='w-full bg-secondary space-y-4 text-center'>
       <DatePicker
         format="MM-DD-YYYY"
