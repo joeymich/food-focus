@@ -534,6 +534,16 @@ export const Dashboard = () => {
     }
   };
 
+  const getFoodLogs = async (date: string) => {
+    try {
+      const response = await FoodLogApi.getFoodLogDate(date);
+      console.log(response);
+      setFoodLogs(response);
+    } catch (e) {
+     console.log(e);
+    }
+  };
+
   useEffect(() => {
     const getFoodOptions = async () => {
       try {
@@ -553,19 +563,11 @@ export const Dashboard = () => {
       }
     };
 
-    const getFoodLogs = async () => {
-      try {
-        const response = await FoodLogApi.getFoodLogAll();
-        setFoodLogs(response);
-      } catch (e) {
-       console.log(e);
-      }
-    };
-
+    const today = dayjs().format(dateDBFormat);
     getFoodOptions();
     getServingSizes();
-    getFoodLogs();
-    getSummary(dayjs().format(dateDBFormat));
+    getFoodLogs(today);
+    getSummary(today);
   }, [])
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -573,6 +575,7 @@ export const Dashboard = () => {
     if(date != null) {
       setTheDate(date)
       getSummary(date.format(dateDBFormat));
+      getFoodLogs(date.format(dateDBFormat));
     }
   };
  

@@ -12,7 +12,6 @@ export function CircularProgressBar(prop: {numerator:number; denominator:number}
 
     useEffect(() => {
         const percent = (1 - (numerator/denominator)) * 100;
-        console.log(percent);
         setPercentage(percent);
         if(percent < 0) {
             setHasPassedMax(true);

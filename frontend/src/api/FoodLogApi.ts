@@ -43,8 +43,12 @@ export const FoodLogApi = {
         const response = await api.get<FoodLog[]>('/food-logs/' + foodLogID)
         return response.data
     },
-    getFoodLogAll: async () => {
-        const response = await api.get<FoodLogAll[]>('/food-logs')
+    getFoodLogDate: async (date: string) => {
+        const response = await api.get<FoodLogAll[]>('/food-logs', {
+            params: {
+                date: date
+            }
+        })
         return response.data
     },
     postFoodLog: async (foodLogRequest: FoodLogRequest) => {
