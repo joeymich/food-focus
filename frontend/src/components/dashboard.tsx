@@ -21,6 +21,8 @@ import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { FoodApi, Foods} from '@/api/FoodApi';
+import { ServingSizeApi, ServingSize } from '@/api/ServingSizeApi';
+import { FoodLogApi, FoodLogAll, FoodLog, FLServingSize } from '@/api/FoodLogApi';
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -109,7 +111,7 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 };
 
 
-const MealsSection = (prop: {foodData: Foods[]}) => {
+const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) => {
   const[mealType, setMealType] = useState("");
   const[servingAmount, setServingAmount] = useState("");
   const[open, setOpen] = useState(false);
@@ -124,6 +126,7 @@ const MealsSection = (prop: {foodData: Foods[]}) => {
     e.preventDefault()
     console.log("HELLO");
     console.log(mealType + " " + servingAmount + " " + mealID + " " + value);
+    console.log(prop.servingSizes);
   }
 
   const breakfastData = [
@@ -479,8 +482,8 @@ export const Dashboard = () => {
   const[calcium, setCalcium] = useState(0.0);
   const[iron, setIron] = useState(0.0);
   const[foodData, setFoodData] = useState<Foods[]>([]);
-
-
+  const[servingSizes, setServingSizes] = useState<ServingSize[]>([]);
+  const[foodLogs, setFoodLogs] = useState<FoodLogAll[]>([]);
 
 
   useEffect(() => {
@@ -488,6 +491,24 @@ export const Dashboard = () => {
       try {
         const response = await FoodApi.food();
         setFoodData(response);
+      } catch (e) {
+       console.log(e);
+      }
+    };
+
+    const getServingSizes = async () => {
+      try {
+        const response = await ServingSizeApi.getServingSizeAll();
+        setServingSizes(response);
+      } catch (e) {
+       console.log(e);
+      }
+    };
+
+    const getFoodLogs = async () => {
+      try {
+        const response = await FoodLogApi.getFoodLogAll();
+        setFoodLogs(response);
       } catch (e) {
        console.log(e);
       }
@@ -515,6 +536,8 @@ export const Dashboard = () => {
 
     PlaceHolder();
     getFoodOptions();
+    getServingSizes();
+    getFoodLogs();
   }, [])
 
 
@@ -558,7 +581,7 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
-              <MealsSection foodData={foodData}/>
+              <MealsSection foodData={foodData} servingSizes={servingSizes}/>
             </div>
 
           </div>
