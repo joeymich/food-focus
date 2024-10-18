@@ -24,7 +24,7 @@ import { FoodApi, Foods} from '@/api/FoodApi';
 import { ServingSizeApi, ServingSize } from '@/api/ServingSizeApi';
 import { FoodLogApi, FoodLogAll, FoodLog, FLServingSize, FoodLogRequest } from '@/api/FoodLogApi';
 import { BiError } from 'react-icons/bi';
-
+import { SummariesApi, Summary } from '@/api/SummariesApi';
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -458,61 +458,81 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
 };
 
 const SelectDate = () => {
-  const[theDate, setTheDate] = useState<dayjs.Dayjs | null>(dayjs());
-  const dateFormat = 'MM-DD-YYYY';
+  
 
-  //Code refrenced from https://ant.design/components/date-picker
+  
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    setTheDate(date)
-    const today = dayjs();
-    const comp = dayjs(date, dateFormat);
-    console.log(comp + " " + today + " " + today.isSame(comp, 'day') + " " + theDate)
-  };
+  
 
   return (
-    <div className='w-full bg-secondary space-y-4 text-center'>
-      <DatePicker
-        format="MM-DD-YYYY"
-        defaultValue={dayjs(dayjs(),dateFormat)}
-        minDate={dayjs('02-03-2002', dateFormat)}
-        maxDate={dayjs(dayjs(), dateFormat)}
-        onChange={onChange}
-      />
-
-      {(dayjs().isSame(theDate, 'day')) ? (
-        <h1 className="text-4xl font-bold text-defaultText text-center"> Today's Progress </h1>
-      ): (
-        <h1 className="text-4xl font-bold text-defaultText text-center"> Progress on {theDate?.format(dateFormat)} </h1>
-      )}
-    </div>
+    <></>
 );
   
 }
 
 
 export const Dashboard = () => {
-  const[totalCal, setTotalCal] = useState(0.0);
-  const[calGoal, setCalGoal] = useState(0.0);
-  const[fat, setFat] = useState(0.0);
-  const[protein, setProtein] = useState(0.0);
-  const[carb, setCarb] = useState(0.0);
-  const[satFat, setSatFat] = useState(0.0);
-  const[polFat, setPolFat] = useState(0.0);
-  const[monFat, setMonFat] = useState(0.0);
-  const[traFat, setTraFat] = useState(0.0);
-  const[sodium, setSodium] = useState(0.0);
-  const[potassium, setPotassium] = useState(0.0);
-  const[fiber, setFiber] = useState(0.0);
-  const[sugar, setSugar] = useState(0.0);
-  const[vitA, setVitA] = useState(0.0);
-  const[vitC, setVitC] = useState(0.0);
-  const[calcium, setCalcium] = useState(0.0);
-  const[iron, setIron] = useState(0.0);
+  const[calGoal, setCalGoal] = useState(2500);
   const[foodData, setFoodData] = useState<Foods[]>([]);
   const[servingSizes, setServingSizes] = useState<ServingSize[]>([]);
   const[foodLogs, setFoodLogs] = useState<FoodLogAll[]>([]);
+  const[summary, setSummary] = useState<Summary>({
+    date: "",
+    calories: 0,
+    total_fat: 0,
+    saturated_fat: 0,
+    polyunsaturated_fat: 0,
+    monounsaturated_fat: 0,
+    trans_fat: 0,
+    sodium: 0,
+    potassium: 0,
+    total_carbs: 0,
+    dietary_fiber: 0,
+    sugars: 0,
+    protein: 0,
+    vitamin_a: 0,
+    vitamin_c: 0,
+    calcium: 0,
+    iron: 0
+  });
+  const[theDate, setTheDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const dateFormat = 'MM-DD-YYYY';
+  const dateDBFormat = 'YYYY-MM-DD';
 
+  function prepSummary(sum : Summary) {
+    setSummary(
+      {
+        date: sum.date,
+        calories: sum.calories ?? 0,
+        total_fat: sum.total_fat ?? 0,
+        saturated_fat: sum.saturated_fat ?? 0,
+        polyunsaturated_fat: sum.polyunsaturated_fat ?? 0,
+        monounsaturated_fat: sum.monounsaturated_fat ?? 0,
+        trans_fat: sum.trans_fat ?? 0,
+        sodium: sum.sodium ?? 0,
+        potassium: sum.potassium ?? 0,
+        total_carbs: sum.total_carbs ?? 0,
+        dietary_fiber: sum.dietary_fiber ?? 0,
+        sugars: sum.sugars ?? 0,
+        protein: sum.protein ?? 0,
+        vitamin_a: sum.vitamin_a ?? 0,
+        vitamin_c: sum.vitamin_c ?? 0,
+        calcium: sum.calcium ?? 0,
+        iron: sum.iron ?? 0
+      }
+    )
+  }
+
+  const getSummary = async (date: string) => {
+    try {
+      const response = await SummariesApi.getFoodLogAll(date);
+      if(response !== undefined) {
+        prepSummary(response);
+      }
+    } catch (e) {
+     console.log(e);
+    }
+  };
 
   useEffect(() => {
     const getFoodOptions = async () => {
@@ -541,34 +561,20 @@ export const Dashboard = () => {
        console.log(e);
       }
     };
-    
-    function PlaceHolder() {
-      setTotalCal(2500);
-      setCalGoal(2500);
-      setFat(18);
-      setProtein(29);
-      setCarb(20);
-      setSatFat(16);
-      setPolFat(2);
-      setMonFat(0);
-      setTraFat(0);
-      setSodium(13);
-      setPotassium(19);
-      setFiber(12);
-      setSugar(12);
-      setVitA(13);
-      setVitC(15);
-      setCalcium(17);
-      setIron(16);
-    }
 
-    PlaceHolder();
     getFoodOptions();
     getServingSizes();
     getFoodLogs();
+    getSummary(dayjs().format(dateDBFormat));
   }, [])
 
-
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    //Code for the date picker refrenced from https://ant.design/components/date-picker
+    if(date != null) {
+      setTheDate(date)
+      getSummary(date.format(dateDBFormat));
+    }
+  };
  
 
   return (
@@ -584,6 +590,20 @@ export const Dashboard = () => {
 
           <div className='w-full p-4 bg-secondary space-x-4 text-center'>
             <SelectDate/>
+            <div className='w-full bg-secondary space-y-4 text-center'>
+            <DatePicker
+              format="MM-DD-YYYY"
+              defaultValue={dayjs(dayjs(),dateFormat)}
+              minDate={dayjs('02-03-2002', dateFormat)}
+              maxDate={dayjs(dayjs(), dateFormat)}
+              onChange={onChange}
+            />
+              {(dayjs().isSame(theDate, 'day')) ? (
+                <h1 className="text-4xl font-bold text-defaultText text-center"> Today's Progress </h1>
+              ): (
+                <h1 className="text-4xl font-bold text-defaultText text-center"> Progress on {theDate?.format(dateFormat)} </h1>
+              )}
+            </div>
           </div>
 
           <div className='flex justify-center space-x-4'>
@@ -594,7 +614,7 @@ export const Dashboard = () => {
                 Current Numbers are place holders
                 If the total calories are passed, then the bar and numbers will turn red
               */}
-              <CircularProgressBar numerator={totalCal} denominator={calGoal}/>
+              <CircularProgressBar numerator={summary.calories} denominator={calGoal}/>
 
               <div className="flex gap-x-4">
                 <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
@@ -603,8 +623,8 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Nutrients</h2>
-              <MacronutrientSection fat={fat} carb={carb} protein={protein} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
-                                    sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
+              <MacronutrientSection fat={summary.total_fat} carb={summary.total_carbs} protein={summary.protein} satFat={summary.saturated_fat} polFat={summary.polyunsaturated_fat} monFat={summary.monounsaturated_fat} traFat={summary.trans_fat}
+                                    sodium={summary.sodium} potassium={summary.potassium} fiber={summary.dietary_fiber} sugar={summary.sugars} vitA={summary.vitamin_a} vitC={summary.vitamin_c} calcium={summary.calcium} iron={summary.iron}/>              
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">

@@ -3,8 +3,8 @@ import { createApi } from '.'
 const api = createApi('')
 
 
-export interface FoodLogAll {
-    date: Date,
+export interface Summary {
+    date: string,
     calories: number,
     total_fat: number,
     saturated_fat: number,
@@ -23,11 +23,13 @@ export interface FoodLogAll {
     iron: number
 }
 
+export const SummariesApi = {
 
-export const FoodLogApi = {
-
-    getFoodLogAll: async () => {
-        const response = await api.get<FoodLogAll[]>('/summaries/total')
+    getFoodLogAll: async (date: string) => {
+        const response = await api.get<Summary>('/summaries/total', {
+            params: {
+                date: date
+            }})
         return response.data
     },
 }
