@@ -23,6 +23,8 @@ import dayjs from 'dayjs';
 import { FoodApi, Foods} from '@/api/FoodApi';
 import { ServingSizeApi, ServingSize } from '@/api/ServingSizeApi';
 import { FoodLogApi, FoodLogAll, FoodLog, FLServingSize, FoodLogRequest } from '@/api/FoodLogApi';
+import { BiError } from 'react-icons/bi';
+
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -113,11 +115,12 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 
 const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) => {
   const[mealType, setMealType] = useState("");
-  const[servingAmount, setServingAmount] = useState(0);
+  const[servingAmount, setServingAmount] = useState(1);
   const[open, setOpen] = useState(false);
   const[value, setValue] = useState("");
   const[mealID, setMealID] = useState("");
   const[dialogOpen, setDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     setServingAmount(Number(e.target.value));
@@ -129,11 +132,20 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
     const serving_count = servingAmount;
     const date =  dayjs().format("YYYY-MM-DD");
     const meal = mealType.toUpperCase();
-    setDialogOpen(false);
-    try {
-      const response = await FoodLogApi.postFoodLog({serving_size_id, serving_count, date, meal});
-    } catch (e) {
-     console.log(e);
+
+    if(serving_size_id === "" || meal === "") {
+      setErrorMessage("Please fill out the empty field(s)");
+    } else {
+      setDialogOpen(false);
+      setValue("");
+      setMealID("");
+      setMealType("");
+      setErrorMessage("")
+      try {
+        const response = await FoodLogApi.postFoodLog({serving_size_id, serving_count, date, meal});
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 
@@ -423,6 +435,14 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
                         </PopoverContent>
                       </Popover>
                     </div>
+                  </div>
+                  <div className='w-full flex justify-center'>
+                    {errorMessage && (
+                          <div className='flex items-center gap-x-2 rounded-lg bg-destructive/20 px-3 py-2 text-sm font-semibold text-destructive'>
+                              <BiError className='text-destructive' />
+                              <p>{errorMessage}</p>
+                          </div>
+                      )}
                   </div>
                   <div className='w-full flex justify-center'>
                     <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>

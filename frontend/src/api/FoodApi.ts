@@ -7,25 +7,25 @@ export type FoodRequest = {
 }
 
 export interface Foods {
-    id: string,
-    brand: string,
-    name: string,
-    calories: 0,
-    total_fat: 0,
-    saturated_fat: 0,
-    polyunsaturated_fat: 0,
-    monounsaturated_fat: 0,
-    trans_fat: 0,
-    sodium: 0,
-    potassium: 0,
-    total_carbs: 0,
-    dietary_fiber: 0,
-    sugars: 0,
-    protein: 0,
-    vitamin_a: 0,
-    vitamin_c: 0,
-    calcium: 0,
-    iron: 0
+    id: string | "",
+    brand: string | "",
+    name: string | "",
+    calories: number | 0,
+    total_fat: number | 0,
+    saturated_fat: number | 0,
+    polyunsaturated_fat: number | 0,
+    monounsaturated_fat: number | 0,
+    trans_fat: number | 0,
+    sodium: number | 0,
+    potassium: number | 0,
+    total_carbs: number | 0,
+    dietary_fiber: number | 0,
+    sugars: number | 0,
+    protein: number | 0,
+    vitamin_a: number | 0,
+    vitamin_c: number | 0,
+    calcium: number | 0,
+    iron: number | 0
 }
 
 
