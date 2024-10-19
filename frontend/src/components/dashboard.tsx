@@ -158,13 +158,25 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
   const snackData = prop.daysData.filter((val) => (val.meal === "SNACKS"));
 
 
-  const ShowDataInRow = (prop: {meal: string; serving_count: number; serving_size: FLServingSize;}) => {
+  const ShowDataInRow = (prop: {id: string,meal: string; serving_count: number; serving_size: FLServingSize;}) => {
+    const [tDialogOpen, setTDialogOPen] = useState(false);
+    const handleRemoveFood = async () => {
+      console.log("FOODLOG ID: " + prop.id);
+      try {
+        await FoodLogApi.deleteFoodLog(prop.id);
+      } catch (e) {
+        console.log(e);
+      }
+
+      setTDialogOPen(false);
+    }
+
     return (
       <TableRow className="w-full">
         <TableCell>{prop.serving_size.food.name.toLowerCase()}</TableCell>
         <TableCell className="text-right">{(prop.serving_size.food.calories * prop.serving_count)}g</TableCell>
         <TableCell>
-          <Dialog>
+          <Dialog open={tDialogOpen} onOpenChange={setTDialogOPen}>
             <DialogTrigger className="w-[20px] border rounded">+</DialogTrigger>
             <DialogContent>
               <DialogTitle className='text-center'>More information on {prop.serving_size.food.name.toLowerCase()}</DialogTitle>
@@ -255,7 +267,7 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
                     </ScrollArea>
                   </div>
                   <div className='flex justify-center space-x-4 font-bold'>
-                    <Button className="text-defaultText bg-secondary font-bold text-sm">Remove Food</Button>
+                    <Button className="text-defaultText bg-secondary font-bold text-sm" onClick={handleRemoveFood}>Remove Food</Button>
                   </div>
                 </div>
               </DialogDescription>
@@ -488,11 +500,6 @@ export const Dashboard = () => {
     )
   }
 
-  function test() {
-    const breakFast = foodLogs.filter((val) => (val.meal === "DINNER"))
-    console.log(breakFast);
-  }
-
   const getSummary = async (date: string) => {
     try {
       const response = await SummariesApi.getFoodLogAll(date);
@@ -508,7 +515,6 @@ export const Dashboard = () => {
     try {
       const response = await FoodLogApi.getFoodLogDate(date);
       setFoodLogs(response);
-      test();
     } catch (e) {
      console.log(e);
     }

@@ -55,8 +55,7 @@ export const FoodLogApi = {
         return response.data
     },
     deleteFoodLog: async (foodLogID: string) => {
-        const response = await api.delete('/food-logs/' + foodLogID)
-        return response.data
+        await api.delete('/food-logs/' + foodLogID)
     },
     patchFoodLog: async (foodLogID: string, foodLogPatchRequest: FoodLogPatchRequest) => {
         const response = await api.patch('/food-logs/' + foodLogID, foodLogPatchRequest)
