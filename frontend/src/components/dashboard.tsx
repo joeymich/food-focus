@@ -142,6 +142,7 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
       setErrorMessage("")
       try {
         const response = await FoodLogApi.postFoodLog({serving_size_id, serving_count, date, meal});
+        window.location.reload();
       } catch (e) {
         console.log(e);
       }
@@ -166,7 +167,7 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
       } catch (e) {
         console.log(e);
       }
-
+      //window.location.reload();
       setTDialogOPen(false);
     }
 
@@ -451,6 +452,9 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
 
 export const Dashboard = () => {
   const[calGoal, setCalGoal] = useState(2500);
+  const[proteinGoal, setProteinGoal] = useState(60);
+  const[carbGoal, setCarbGoal] = useState(225);
+  const[fatGoal, setFatGoal] = useState(78)
   const[allFoodData, setAllFoodData] = useState<Foods[]>([]);
   const[servingSizes, setServingSizes] = useState<ServingSize[]>([]);
   const[foodLogs, setFoodLogs] = useState<FoodLogAll[]>([]);
@@ -476,6 +480,27 @@ export const Dashboard = () => {
   const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs());
   const dateFormat = 'MM-DD-YYYY';
   const dateDBFormat = 'YYYY-MM-DD';
+
+  const goalData = [
+    {calGoal: 2600, proteinGoal: 400, carbGoal: 200, fatGoal: 100, goalStart: "2024-10-01", goalEnd: "2024-10-10"},
+    {calGoal: 2300, proteinGoal: 400, carbGoal: 200, fatGoal: 100, goalStart: "2024-10-10", goalEnd: null},
+  ]
+
+  function prepGoalInfo(day: dayjs.Dayjs) {
+    const data = goalData.filter((data) => (dayjs(day).format(dateDBFormat) >= data.goalStart) && (data.goalEnd === null || dayjs(day).format(dateDBFormat) < data.goalEnd));
+    if(data.length != 0) {
+      setCalGoal(data[0].calGoal);
+      setProteinGoal(data[0].proteinGoal);
+      setCarbGoal(data[0].carbGoal);
+      setFatGoal(data[0].fatGoal);
+    } else {
+      //The default values for the goals
+      setCalGoal(2500);
+      setProteinGoal(60);
+      setCarbGoal(225);
+      setFatGoal(78);
+    }
+  }
 
   function prepSummary(sum : Summary) {
     setSummary(
@@ -545,17 +570,22 @@ export const Dashboard = () => {
     getServingSizes();
     getFoodLogs(today);
     getSummary(today);
+    prepGoalInfo(today);
   }, [])
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     //Code for the date picker refrenced from https://ant.design/components/date-picker
     if(date != null) {
       setTheDate(date)
+      prepGoalInfo(date);
       getSummary(date.format(dateDBFormat));
       getFoodLogs(date.format(dateDBFormat));
-      console.log(dateString);
     }
   };
+
+  const handleCalorieGoal = () => {
+    
+  }
  
 
   return (
@@ -597,12 +627,12 @@ export const Dashboard = () => {
               <CircularProgressBar numerator={summary.calories} denominator={calGoal}/>
 
               <div className="flex gap-x-4">
-                {theDate.format("MM-DD-YYYY") === dayjs().format("MM-DD-YYYY") ? (
-                  <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
+                {/* {theDate.format("MM-DD-YYYY") === dayjs().format("MM-DD-YYYY") ? (
+                  <Button className="text-defaultText bg-secondary font-bold text-sm" onClick={handleCalorieGoal}>Adjust Calorie Goal</Button>
                 ) : (
                   <Button disabled className="text-defaultText bg-gray-200 font-bold text-sm">Adjust Calorie Goal</Button>
-                )}
-                
+                )} */}
+                  <Button className="text-defaultText bg-secondary font-bold text-sm" onClick={handleCalorieGoal}>Adjust Calorie Goal</Button>
               </div>
             </div>
 
