@@ -113,7 +113,7 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 };
 
 
-const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], daysData: FoodLogAll[]}) => {
+const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], daysData: FoodLogAll[], day: dayjs.Dayjs}) => {
   const[mealType, setMealType] = useState("");
   const[servingAmount, setServingAmount] = useState(1);
   const[open, setOpen] = useState(false);
@@ -132,7 +132,6 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
     const serving_count = servingAmount;
     const date =  dayjs().format("YYYY-MM-DD");
     const meal = mealType.toUpperCase();
-
     if(serving_size_id === "" || meal === "") {
       setErrorMessage("Please fill out the empty field(s)");
     } else {
@@ -346,7 +345,9 @@ const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], 
       <div className="flex justify-center py-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger>
-            <Button className="text-defaultText bg-secondary font-bold text-sm">Add meal</Button>
+            {prop.day.format("MM-DD-YYYY") === dayjs().format("MM-DD-YYYY") ? (
+              <Button className="text-defaultText bg-secondary font-bold text-sm">Add meal</Button>
+            ) : <Button disabled className="text-defaultText bg-gray-200 font-bold text-sm">Add meal</Button>}
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -472,7 +473,7 @@ export const Dashboard = () => {
     calcium: 0,
     iron: 0
   });
-  const[theDate, setTheDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs());
   const dateFormat = 'MM-DD-YYYY';
   const dateDBFormat = 'YYYY-MM-DD';
 
@@ -552,6 +553,7 @@ export const Dashboard = () => {
       setTheDate(date)
       getSummary(date.format(dateDBFormat));
       getFoodLogs(date.format(dateDBFormat));
+      console.log(dateString);
     }
   };
  
@@ -595,7 +597,12 @@ export const Dashboard = () => {
               <CircularProgressBar numerator={summary.calories} denominator={calGoal}/>
 
               <div className="flex gap-x-4">
-                <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
+                {theDate.format("MM-DD-YYYY") === dayjs().format("MM-DD-YYYY") ? (
+                  <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
+                ) : (
+                  <Button disabled className="text-defaultText bg-gray-200 font-bold text-sm">Adjust Calorie Goal</Button>
+                )}
+                
               </div>
             </div>
 
@@ -607,7 +614,7 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
-              <MealsSection allFoodData={allFoodData} servingSizes={servingSizes} daysData={foodLogs}/>
+              <MealsSection allFoodData={allFoodData} servingSizes={servingSizes} daysData={foodLogs} day={theDate}/>
             </div>
 
           </div>
