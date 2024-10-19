@@ -16,7 +16,7 @@ export const Home = () => {
 
     return (
         <>
-        <Navbar/>
+        <Navbar isAuth={false}/>
         
         <div  className="bg-background h-screen w-screen flex justify-center"> 
 

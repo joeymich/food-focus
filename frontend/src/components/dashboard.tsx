@@ -570,7 +570,7 @@ export const Dashboard = () => {
     getServingSizes();
     getFoodLogs(today);
     getSummary(today);
-    prepGoalInfo(today);
+    prepGoalInfo(dayjs());
   }, [])
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -594,7 +594,7 @@ export const Dashboard = () => {
         Navbar not yet updated to include sessions
         Once sessions are implemented, the contents of the navbar will change
       */}
-      <Navbar />
+      <Navbar isAuth={true}/>
 
       <div  className="bg-background h-screen w-screen flex:col justify-center items-start py-8 space-x-4 space-y-16">
         <div className='flex:col justify-center space-y-4'>
