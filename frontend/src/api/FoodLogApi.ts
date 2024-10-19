@@ -19,24 +19,23 @@ export type FoodLogPatchRequest = {
 export interface FLServingSize {
     name: string,
     ratio: 0,
-    food: Foods[]
+    food: Foods
 }
 
 export interface FoodLog {
-  serving_size_id: string,
+  id: string,
   serving_count: number,
   date: Date,
   meal: string
 }
 
 export interface FoodLogAll {
-    serving_size_id: string,
+    id: string,
     serving_count: number,
     date: Date,
     meal: string,
-    serving_size: FLServingSize[]
+    serving_size: FLServingSize
 }
-
 
 export const FoodLogApi = {
     getFoodLogWithID: async (foodLogID: string) => {

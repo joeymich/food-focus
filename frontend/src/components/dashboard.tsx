@@ -49,42 +49,42 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Saturated Fat</p>
-         <p>{prop.satFat}g</p>
+         <p>{prop.satFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'> 
          <p>Total Polyunsaturaed Fat</p>
-         <p>{prop.polFat}g</p>
+         <p>{prop.polFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Monounsaturated Fat</p>
-         <p>{prop.monFat}g</p>
+         <p>{prop.monFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Trans Fat</p>
-         <p>{prop.traFat}g</p>
+         <p>{prop.traFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Sodium</p>
-         <p>{prop.sodium}g</p>
+         <p>{prop.sodium ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Potassium</p>
-         <p>{prop.potassium}g</p>
+         <p>{prop.potassium ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Dietray Fiber</p>
-         <p>{prop.fiber}g</p>
+         <p>{prop.fiber ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Sugars</p>
-         <p>{prop.sugar}g</p>
+         <p>{prop.sugar ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
@@ -99,12 +99,12 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Calcium</p>
-         <p>{prop.calcium}g</p>
+         <p>{prop.calcium ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Iron</p>
-         <p>{prop.iron}mg</p>
+         <p>{prop.iron ?? 0n}mg</p>
         </div>
         <Separator orientation="horizontal" />
       </ScrollArea>
@@ -113,7 +113,7 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 };
 
 
-const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) => {
+const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], daysData: FoodLogAll[]}) => {
   const[mealType, setMealType] = useState("");
   const[servingAmount, setServingAmount] = useState(1);
   const[open, setOpen] = useState(false);
@@ -149,128 +149,107 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
     }
   }
 
-  const breakfastData = [
-    {food: "Oatmeal", cals: 100},
-    {food: "Apple", cals: 30},
-    {food: "Toast", cals: 50},
-  ];
+  const breakfastData = prop.daysData.filter((val) => (val.meal === "BREAKFAST"));
 
-  const lunchData = [
-    {food: "Coffee", cals: 30},
-    {food: "Rice", cals: 40},
-    {food: "Egg", cals: 90},
-    {food: "Plantain", cals: 70},
-  ];
+  const lunchData = prop.daysData.filter((val) => (val.meal === "LUNCH"));
 
-  const dinnerData = [
-    {food: "Rice", cals: 90},
-    {food: "Steak", cals: 160},
-    {food: "Plantain", cals: 190},
-    {food: "Lentils", cals: 130},
-  ];
+  const dinnerData = prop.daysData.filter((val) => (val.meal === "DINNER"));
 
-  const snackData = [
-    {food: "Apple", cals: 30},
-    {food: "Ice cream", cals: 200},
-    {food: "Pie", cals: 300},
-    {food: "Chocolate", cals: 190},
-  ]
+  const snackData = prop.daysData.filter((val) => (val.meal === "SNACKS"));
 
-  const ShowDataInRow = (prop: {food: string; cals: number; fat: number; protein: number; carb: number; satFat: number; polFat: number;
-                                monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
-                                sugar: number; vitA: number; vitC: number; calcium: number; iron: number;
-                                mealType: string; servingSize: number; servingName: string; servingAmount: number}) => {
+
+  const ShowDataInRow = (prop: {meal: string; serving_count: number; serving_size: FLServingSize;}) => {
     return (
       <TableRow className="w-full">
-        <TableCell>{prop.food}</TableCell>
-        <TableCell className="text-right">{prop.cals}g</TableCell>
+        <TableCell>{prop.serving_size.food.name.toLowerCase()}</TableCell>
+        <TableCell className="text-right">{(prop.serving_size.food.calories * prop.serving_count)}g</TableCell>
         <TableCell>
           <Dialog>
             <DialogTrigger className="w-[20px] border rounded">+</DialogTrigger>
             <DialogContent>
-              <DialogTitle className='text-center'>More information on {prop.food}</DialogTitle>
+              <DialogTitle className='text-center'>More information on {prop.serving_size.food.name.toLowerCase()}</DialogTitle>
               <DialogDescription>
                 <div className="space-y-4 flex-col justify-center items-center">
                   <div className='flex justify-center space-x-4 font-bold'>
-                    <p>Meal Type: {prop.mealType}</p>
-                    <p>Serving Size: {prop.servingSize} {prop.servingName}</p>
-                    <p>Servings eaten: {prop.servingAmount}</p>
+                    <p>Meal Type: {prop.meal.toLowerCase()}</p>
+                    <p>Serving Size: {prop.serving_size.ratio} {prop.serving_size.name}</p>
+                    <p>Servings eaten: {prop.serving_count}</p>
                   </div>
                   <div className='flex justify-center'>
                     <ScrollArea className="h-full w-[300px] rounded-md border bg-gray-100">
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Total Fat</p>
-                      <p>{prop.fat}g</p>
+                      <p>{prop.serving_size.food.total_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Saturated Fat</p>
-                      <p>{prop.satFat}g</p>
+                      <p>{prop.serving_size.food.saturated_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Polyunsaturated Fat</p>
-                      <p>{prop.polFat}g</p>
+                      <p>{prop.serving_size.food.polyunsaturated_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Monounsaturated Fat</p>
-                      <p>{prop.monFat}g</p>
+                      <p>{prop.serving_size.food.monounsaturated_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Trans Fat</p>
-                      <p>{prop.traFat}g</p>
+                      <p>{prop.serving_size.food.trans_fat ?? 0}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Total Carbs:</p>
-                      <p>{prop.carb}g</p>
+                      <p>{prop.serving_size.food.total_carbs ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Sugars</p>
-                      <p>{prop.sugar}g</p>
+                      <p>{prop.serving_size.food.sugars ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Fibers</p>
-                      <p>{prop.fiber}g</p>
+                      <p>{prop.serving_size.food.dietary_fiber ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Protein:</p>
-                      <p>{prop.protein}g</p>
+                      <p>{prop.serving_size.food.protein ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Sodium:</p>
-                      <p>{prop.sodium}g</p>
+                      <p>{prop.serving_size.food.sodium ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Potassium:</p>
-                      <p>{prop.potassium}g</p>
+                      <p>{prop.serving_size.food.potassium ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Calcium:</p>
-                      <p>{prop.calcium}g</p>
+                      <p>{prop.serving_size.food.calcium ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Iron:</p>
-                      <p>{prop.iron}g</p>
+                      <p>{prop.serving_size.food.iron ?? 0 }mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Vitamin A:</p>
-                      <p>{prop.vitA}mg</p>
+                      <p>{prop.serving_size.food.vitamin_a ?? 0}mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Vitamin C:</p>
-                      <p>{prop.vitC}mg</p>
+                      <p>{prop.serving_size.food.vitamin_c ?? 0}mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                     </ScrollArea>
@@ -317,7 +296,7 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
                     <ShowDataInRow key={index} {...data}/>
                   ))}
                 </>
-              ): mealType === "snack" ? (
+              ): mealType === "snacks" ? (
                 <>
                   {snackData.map((data, index) => (
                     <ShowDataInRow key={index} {...data}/>
@@ -349,7 +328,7 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
           <DataDisplay mealType="dinner"/>
         </TabsContent>
         <TabsContent value="snacks">
-          <DataDisplay mealType="snack"/>
+          <DataDisplay mealType="snacks"/>
         </TabsContent>
       </Tabs>
       <div className="flex justify-center py-4">
@@ -401,7 +380,7 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
                           aria-expanded={open}
                           className="w-[200px] justify-between bg-gray-100 font-normal"
                           >
-                            {value ? prop.foodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
+                            {value ? prop.allFoodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent>
@@ -410,7 +389,7 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
                             <CommandList>
                               <CommandEmpty>No Foods Found</CommandEmpty>
                               <CommandGroup>
-                                {prop.foodData.map((foodOption) => (
+                                {prop.allFoodData.map((foodOption) => (
                                   <CommandItem
                                     key={foodOption.id}
                                     value={foodOption.name}
@@ -457,23 +436,9 @@ const MealsSection = (prop: {foodData: Foods[], servingSizes: ServingSize[]}) =>
   )
 };
 
-const SelectDate = () => {
-  
-
-  
-
-  
-
-  return (
-    <></>
-);
-  
-}
-
-
 export const Dashboard = () => {
   const[calGoal, setCalGoal] = useState(2500);
-  const[foodData, setFoodData] = useState<Foods[]>([]);
+  const[allFoodData, setAllFoodData] = useState<Foods[]>([]);
   const[servingSizes, setServingSizes] = useState<ServingSize[]>([]);
   const[foodLogs, setFoodLogs] = useState<FoodLogAll[]>([]);
   const[summary, setSummary] = useState<Summary>({
@@ -523,6 +488,11 @@ export const Dashboard = () => {
     )
   }
 
+  function test() {
+    const breakFast = foodLogs.filter((val) => (val.meal === "DINNER"))
+    console.log(breakFast);
+  }
+
   const getSummary = async (date: string) => {
     try {
       const response = await SummariesApi.getFoodLogAll(date);
@@ -537,8 +507,8 @@ export const Dashboard = () => {
   const getFoodLogs = async (date: string) => {
     try {
       const response = await FoodLogApi.getFoodLogDate(date);
-      console.log(response);
       setFoodLogs(response);
+      test();
     } catch (e) {
      console.log(e);
     }
@@ -548,7 +518,7 @@ export const Dashboard = () => {
     const getFoodOptions = async () => {
       try {
         const response = await FoodApi.food();
-        setFoodData(response);
+        setAllFoodData(response);
       } catch (e) {
        console.log(e);
       }
@@ -592,7 +562,6 @@ export const Dashboard = () => {
         <div className='flex:col justify-center space-y-4'>
 
           <div className='w-full p-4 bg-secondary space-x-4 text-center'>
-            <SelectDate/>
             <div className='w-full bg-secondary space-y-4 text-center'>
             <DatePicker
               format="MM-DD-YYYY"
@@ -632,7 +601,7 @@ export const Dashboard = () => {
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
-              <MealsSection foodData={foodData} servingSizes={servingSizes}/>
+              <MealsSection allFoodData={allFoodData} servingSizes={servingSizes} daysData={foodLogs}/>
             </div>
 
           </div>
