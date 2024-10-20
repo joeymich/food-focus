@@ -41,8 +41,8 @@ export function Navbar() {
     }
 
     return (
-        <nav>
-            <div className='flex items-center bg-background w-screen justify-between p-3 border-2 border-gray-24'>
+        <nav className='bg-background w-screen p-3 border-2 border-gray-24'>
+            <div className='flex items-center bg-background justify-between'>
                 <div className='text-defaultText text-2xl font-bold px-4'>FOOD FOCUS</div>
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
