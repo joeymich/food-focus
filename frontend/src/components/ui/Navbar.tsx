@@ -16,9 +16,10 @@ const ListOfLinks = () => {
         <>
             {isLoggedIn ? (
                 <>
-                    <li><a href='/dashboard' className='text-defaultText'>Dashboard</a></li>
-                    <li><a href='#' className='text-defaultText'>Settings</a></li>
-                    <li><a href='/#' className='text-defaultText'>Logout</a></li>
+                    <li><a href='/dashboard' className='text-defaultText underline'>Dashboard</a></li>
+                    <li><a href='/create-goals' className='text-defaultText underline'>Set Goals</a></li>
+                    <li><a href='#' className='text-defaultText underline'>Settings</a></li>
+                    <li><a href='/#' className='text-defaultText underline'>Logout</a></li>
                 </>
             ) : (
                 <>
