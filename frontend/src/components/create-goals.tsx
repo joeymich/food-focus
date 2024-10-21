@@ -2,6 +2,7 @@ import { Navbar } from "./ui/Navbar"
 import { Input } from './ui/form/input';
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'; 
 import { BiError } from 'react-icons/bi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
@@ -18,7 +19,14 @@ export const CreateGoals = () => {
     const [gender, setGender] = useState("");
     const [lifestyle, setLifestyle] = useState("");
     const [calcCal, setCalcCal] = useState(0);
+    const [calcProtein, setCalcProtein] = useState(0);
+    const [calcFat, setCalcFat] = useState(0);
+    const [calcCarbs, setCalcCarbs] = useState(0);
     const [calcErrorMessage, setCalcErrorMessage] = useState("");
+    const [open, setOpen] = useState(false);
+    const [searchParams, _] = useSearchParams()
+    const navigate = useNavigate()
+    const redirect = searchParams.get('redirect')
 
     const handleChangeCalGoal = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCalGoal(Number(e.target.value));
@@ -55,6 +63,7 @@ export const CreateGoals = () => {
     const handleGoalForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //Save goal information into the backend
+        navigate(redirect || '/dashboard')
     }
 
  
@@ -87,20 +96,33 @@ export const CreateGoals = () => {
             } else if(lifestyle === "very-active") {
                 calc * 1.725;
             } else if(lifestyle === "extra-active") {
-                calc = calcCal * 1.9;
+                calc = calc * 1.9;
             }
 
-            setCalGoal(Math.round(calc));
+            setCalcCal(Math.round(calc));
             
             if(age <= 18) {
-                setProteinGoal(Math.round(calc * 0.30));
+                setCalcProtein(Math.round(calc * 0.30));
             } else {
-                setProteinGoal(Math.round(calc * .35));
+                setCalcProtein(Math.round(calc * .35));
             }
 
-            setFatsGoal(Math.round(calc * .35));
-            setCarbGoal(Math.round(calc * .65));
+            setCalcFat(Math.round(calc * .35));
+            setCalcCarbs(Math.round(calc * .65));
         }
+    }
+
+    const handleYes = async () => {
+        setCalGoal(calcCal);
+        setProteinGoal(calcProtein);
+        setFatsGoal(calcFat);
+        setCarbGoal(calcCarbs);
+        //save goal information into the backend
+        navigate(redirect || '/dashboard')
+    }
+
+    const handleNo = async () => {
+        setOpen(false);
     }
 
     return (
@@ -163,7 +185,7 @@ export const CreateGoals = () => {
                                 </div>
                             </div>
                            
-                            <Button className="w-1/3">Set Goals</Button>
+                            <Button className="w-1/3 bg-secondary text-black">Set Goals</Button>
                         </form>
                      </div>
                     <div className="bg-blue-100 w-1/2 h-full flex flex-col justify-start items-center space-y-4">
@@ -248,19 +270,34 @@ export const CreateGoals = () => {
                                 </div>
                             )}
                             
-                            <Dialog>
+                            <Dialog open={open} onOpenChange={setOpen}>
                                 <DialogTrigger className="w-full flex justify-center items-center">
-                                    <Button className="w-1/3">Calculate</Button>
+                                    {(weight == 0 || heightFeet == 0 || HeightInches == 0 || age == 0 || gender === "" || lifestyle == "") ?
+                                        (
+                                            <Button disabled className="w-1/3 bg-gray-300 text-black">Calculate</Button>
+                                        ) : (
+                                            <Button className="w-1/3 bg-secondary text-black">Calculate</Button>
+                                        )}
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                    <DialogTitle className="text-center">Calulated Results</DialogTitle>
-                                    <DialogDescription>
+                                    <DialogTitle className="text-center text-3xl">Calulated Results</DialogTitle>
+                                    <DialogDescription className="flex flex-col justify-center items-center space-y-4">
+                                        <div className="text-black text-xl">
+                                            <p>Calories: {calcCal} kcals</p>
+                                            <div className="flex space-x-1">
+                                                <p>Protein: {calcProtein} grams</p>
+                                                {age >= 18 ? (<p>{("(30% of caloric intake)")}</p>) :(<p>{("(35% of caloric intake)")}</p>)}
+                                            </div>
+                                            <p>Total Fats: {calcFat} grams {"(35% of caloric intake)"}</p>
+                                            <p>Total Carbs: {calcCarbs} grams {"(65% of caloric intake)"}</p>
+                                        </div>
                                         <div>
-                                            <p>Calories: {calGoal}</p>
-                                            <p>Protien: {proteinGoal}</p>
-                                            <p>Total Fats: {fatsGoal}</p>
-                                            <p>Total Carbs: {carbGoal}</p>
+                                            <p className="text-black text-xl">Do you want to set these values as your goals?</p>
+                                            <div className="flex space-x-4 justify-center items-center">
+                                                <Button className="bg-secondary text-black" onClick={handleYes}> Yes </Button>
+                                                <Button className="bg-secondary text-black" onClick={handleNo}> No </Button>                                                
+                                            </div>
                                         </div>
                                     </DialogDescription>
                                     </DialogHeader>
