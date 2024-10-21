@@ -16,9 +16,10 @@ const ListOfLinks = () => {
         <>
             {isLoggedIn ? (
                 <>
-                    <li><a href='/dashboard' className='text-defaultText'>Dashboard</a></li>
-                    <li><a href='#' className='text-defaultText'>Settings</a></li>
-                    <li><a href='/#' className='text-defaultText'>Logout</a></li>
+                    <li><a href='/dashboard' className='text-defaultText underline'>Dashboard</a></li>
+                    <li><a href='/create-goals' className='text-defaultText underline'>Set Goals</a></li>
+                    <li><a href='#' className='text-defaultText underline'>Settings</a></li>
+                    <li><a href='/#' className='text-defaultText underline'>Logout</a></li>
                 </>
             ) : (
                 <>
@@ -41,8 +42,8 @@ export function Navbar() {
     }
 
     return (
-        <nav>
-            <div className='flex items-center bg-background w-screen justify-between p-3 border-2 border-gray-24'>
+        <nav className='bg-background w-screen p-3 border-2 border-gray-24'>
+            <div className='flex items-center bg-background justify-between'>
                 <div className='text-defaultText text-2xl font-bold px-4'>FOOD FOCUS</div>
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
