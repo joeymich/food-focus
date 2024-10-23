@@ -91,13 +91,13 @@ export const WeeklyProgress = () => {
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1> 
                 {/* Make it gray out when the day not passed */}
-                <HistoryProgress date="Sunday" calories={2670} totalCalories={2500}/>
-                <HistoryProgress date="Monday" calories={1400} totalCalories={2500}/>
-                <HistoryProgress date="Tuesday" calories={1250} totalCalories={2500}/>
-                <HistoryProgress date="Wednesday" calories={0} totalCalories={2500}/>
-                <HistoryProgress date="Thursday" calories={0} totalCalories={2500}/>
-                <HistoryProgress date="Friday" calories={0} totalCalories={2500}/>
-                <HistoryProgress date="Saturday" calories={0} totalCalories={2500}/> 
+                <HistoryProgress date={DayOfTheWeek(theDate)} calories={2670} totalCalories={2500}/>
+                <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={1400} totalCalories={2500}/>
+                <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={1250} totalCalories={2500}/>
+                <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={0} totalCalories={2500}/>
+                <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={0} totalCalories={2500}/>
+                <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={0} totalCalories={2500}/>
+                <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={0} totalCalories={2500}/> 
               </div>
   
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
