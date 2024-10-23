@@ -44,10 +44,10 @@ export const createRouter = () => {
             ],
         },
         {
-            path: '/d',
+            path: '/weekly-progress',
             lazy: async () => {
-                const { Dashboard } = await import('@/components/dashboard');
-                return { Component: Dashboard };
+                const { WeeklyProgress } = await import('@/components/weekly-progress');
+                return { Component: WeeklyProgress};
             },
         },
         {
