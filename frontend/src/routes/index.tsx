@@ -44,10 +44,10 @@ export const createRouter = () => {
             ],
         },
         {
-            path: '/d',
+            path: '/create-goals',
             lazy: async () => {
-                const { Dashboard } = await import('@/components/dashboard');
-                return { Component: Dashboard };
+                const { CreateGoals } = await import('@/components/create-goals');
+                return { Component: CreateGoals };
             },
         },
         {
