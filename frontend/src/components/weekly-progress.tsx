@@ -4,24 +4,44 @@ import { Button } from "./ui/button";
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
-import type { Dayjs } from 'dayjs';
 import {SetStateAction, useEffect, useState} from 'react'
 import { MacronutrientProgressBar } from "./ui/macronutirents-progressbar";
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
 
-const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
+const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number; dateActual : string}) => {
     //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
     return (
         <div className="w-full">
         <div className="flex justify-between"> 
-            <h3 className="font-bold" >{prop.date}</h3>
+            <h3 className="font-bold" >{prop.date}: {prop.dateActual}</h3>
             <span className="font-bold">{prop.calories}/{prop.totalCalories} cals</span>
         </div>
         <ProgressBar numerator={prop.calories} denominator={prop.totalCalories}/>
         </div>
     )
     };
+
+  const WeekMeals = () => {
+    return (
+      <div>
+        <Tabs defaultValue="account" className="w-[400px]">
+          <TabsList>
+            <TabsTrigger value="mon">Mon</TabsTrigger>
+            <TabsTrigger value="tue">Tue</TabsTrigger>
+            <TabsTrigger value="wed">Wed</TabsTrigger>
+            <TabsTrigger value="thu">Thu</TabsTrigger>
+            <TabsTrigger value="fri">Fri</TabsTrigger>
+            <TabsTrigger value="sat">Sat</TabsTrigger>
+            <TabsTrigger value="sun">Sun</TabsTrigger>
+          </TabsList>
+            
+        </Tabs>
+      </div>
+    )
+  }
 
 export const WeeklyProgress = () => {
     const[totalCal, setTotalCal] = useState(0.0);
@@ -195,7 +215,7 @@ export const WeeklyProgress = () => {
 
             </div>
 
-                < h1 className="text-4xl font-bold text-defaultText text-center"> Progress from <br/> {DayOfTheWeek(theDate)} ({theDate.format(dateFormat)}) - {DayOfTheWeek(theDate.add(6, 'days'))} ({theDate.add(6, 'days').format(dateFormat)}) </h1>
+                < h1 className="text-3xl font-bold text-defaultText text-center"> Progress from <br/> {DayOfTheWeek(theDate)} ({theDate.format(dateFormat)}) - {DayOfTheWeek(theDate.add(6, 'days'))} ({theDate.add(6, 'days').format(dateFormat)}) </h1>
           </div>
   
             <div className='flex justify-center space-x-4'>
@@ -205,18 +225,18 @@ export const WeeklyProgress = () => {
                 {/* Make it gray out when the day not passed */}
                 <p className="font-bold ">Daily Average: {totalCal} kcals</p>
                 <div className="w-full max-w-md  space-y-6">
-                  <HistoryProgress date={DayOfTheWeek(theDate)} calories={2670} totalCalories={2500}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={1400} totalCalories={2500}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={1250} totalCalories={2500}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={0} totalCalories={2500}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={0} totalCalories={2500}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={0} totalCalories={2500}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={0} totalCalories={2500}/> 
+                  <HistoryProgress date={DayOfTheWeek(theDate)} calories={2670} totalCalories={2500} dateActual={theDate.format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={1400} totalCalories={2500} dateActual={theDate.add(1, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={1250} totalCalories={2500} dateActual={theDate.add(2, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(3, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(4, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(5, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(6, 'days').format(dateFormat)}/> 
                 </div>
               </div>
   
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-                <h2 className="text-3xl font-bold text-defaultText text-center">Daily Average Macronutrients</h2>
+                <h2 className="text-4xl font-bold text-defaultText text-center">Daily Average Macronutrients</h2>
                 <div className="w-full h-full">
                   <MacronutrientSection fat={fat} carb={carb} protein={protein} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
                                     sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
@@ -224,7 +244,8 @@ export const WeeklyProgress = () => {
               </div>
   
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-              <h2 className="text-3xl font-bold text-defaultText text-center">This Week's Meals</h2>
+                <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Meals</h2>
+                <WeekMeals/>
               </div>
             </div>
           </div>
