@@ -7,7 +7,7 @@ class BaseConfig:
         'DATABASE_URL',
         'postgresql+asyncpg://postgres:password@db/postgres',
     )
-    SQLALCHEMY_LOGGING: bool = True
+    SQLALCHEMY_LOGGING: bool = False
     SQLALCHEMY_POOL_SIZE: int = os.getenv('SQLALCHEMY_POOL_SIZE', 20)
 
     REDIS_HOST: str = os.getenv('REDIS_HOST', 'redis')

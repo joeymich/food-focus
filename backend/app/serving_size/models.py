@@ -14,6 +14,6 @@ class ServingSize(IdMixin, Base):
         index=True,
         nullable=False
     )
-    food = relationship(Food, uselist=False)
+    food = relationship(Food, uselist=False, viewonly=True)
     name = Column(String, nullable=False)
     ratio = Column(Float, nullable=False)
