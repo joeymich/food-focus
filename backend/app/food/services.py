@@ -5,7 +5,7 @@ from app.db.service import BaseService
 from app.deps import DbSession
 
 from fastapi import Depends
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import Food
@@ -17,6 +17,10 @@ class FoodService(BaseService[Food]):
         db_session: AsyncSession,
     ):
         super().__init__(db_session, Food)
+
+    async def delete_all(self) -> None:
+        query = delete(self.model)
+        await self.db_session.execute(query)
 
     async def get(self, *, food_id: UUID) -> Food | None:
         query = select(self.model)
