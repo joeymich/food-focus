@@ -19,7 +19,7 @@ If not, follow the [instructions](https://docs.docker.com/compose/install/) from
 `docker compose logs -f`
 
 ### Setup Database
-- Download and extract `brandedDownload.json` from US Department of Agriculture JSON [file of branded foods](https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_foundation_food_json_2024-04-18.zip)
+- Download and extract `brandedDownload.json` from US Department of Agriculture JSON [file of branded foods](https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_branded_food_json_2024-04-18.zip)
 - Copy `brandedDownload.json` to `backend/data/brandedDownload.json`
 - `docker compose exec -it backend sh`
 - `python scripts/setup_db.py`
