@@ -87,4 +87,4 @@ async def delete_by_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Food log not found.'
         )
-    db_session.delete(food_log)
+    await db_session.delete(food_log)
