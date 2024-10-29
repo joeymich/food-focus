@@ -198,7 +198,7 @@ export const WeeklyProgress = () => {
           Once sessions are implemented, the contents of the navbar will change
         */}
         <div className="w-screen h-screen bg-background">
-        <Navbar />
+        <Navbar isAuth={true}/>
 
           <div className='flex-1 justify-center space-y-4'>
   

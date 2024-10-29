@@ -51,6 +51,13 @@ export const createRouter = () => {
             },
         },
         {
+            path: '/weekly-progress',
+            lazy: async () => {
+                const { WeeklyProgress } = await import('@/components/weekly-progress');
+                return { Component: WeeklyProgress };
+            },
+        },
+        {
             path: '*',
             lazy: async () => {
                 const { NotFound } = await import('./not-found');

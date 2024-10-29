@@ -18,6 +18,7 @@ const ListOfLinks = (prop: {isAuth: boolean}) => {
                 <>
                     <li><a href='/dashboard' className='text-defaultText underline'>Dashboard</a></li>
                     <li><a href='/create-goals' className='text-defaultText underline'>Set Goals</a></li>
+                    <li><a href='/weekly-progress' className='text-defaultText underline'>Weekly Progress</a></li>
                     <li><a href='#' className='text-defaultText underline'>Settings</a></li>
                     <li><a href='/#' className='text-defaultText underline'>Logout</a></li>
                 </>
