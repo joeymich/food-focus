@@ -10,6 +10,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
+import { FoodLogApi, FoodLogAll } from "@/api/FoodLogApi";
 
 const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number; dateActual : string}) => {
     //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -62,11 +63,32 @@ export const WeeklyProgress = () => {
     const[calcium, setCalcium] = useState(0.0);
     const[iron, setIron] = useState(0.0);
     const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs().add(-6, "days"));
+    const[theWeek, setTheWeek] = useState<dayjs.Dayjs[]>([]);
     const dateFormat = 'MM-DD-YYYY';
     const dateDBFormat = 'YYYY-MM-DD';
 
+    const getFoodData = async (date: string) => {
+      try {
+        const results = await FoodLogApi.getFoodLogDate(date);
+        console.log(results);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    function fillInTheWeek() {
+      setTheWeek([...theWeek, dayjs()]);
+      
+      for(let i = 1; i < 7; i++) {
+        setTheWeek([...theWeek, dayjs().add(-i, "days")]);
+      }
+    }
+
     useEffect(() => {
       PlaceHolder();
+      getFoodData(dayjs().format(dateDBFormat).toString());
+      fillInTheWeek();
+      console.log(theWeek);
     }, [])
   
     function PlaceHolder() {
