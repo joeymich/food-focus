@@ -8,18 +8,24 @@ export function CircularProgressBar(prop: {numerator:number; denominator:number}
     const[percentage, setPercentage] = useState(0.0);
     const[hasPassedMax, setHasPassedMax] = useState(false);
     const[extraPercentage, setExtraPercentage] = useState(0.0);
+    const[hasNoCals, setHasNoCals] = useState(false);
 
     useEffect(() => {
-        setPercentage((1 - (numerator/denominator)) * 100);
-     }, [numerator, denominator])
-
-    useEffect(() => {
-        if(percentage < 0) {
+        const percent = (1 - (numerator/denominator)) * 100;
+        setPercentage(percent);
+        if(percent < 0) {
             setHasPassedMax(true);
+            setHasNoCals(false);
             setPercentage(0);
             calulateExtraPercentage();
+        } else if(numerator == 0) {
+            setHasNoCals(true);
+            setHasPassedMax(false);
+        } else {
+            setHasPassedMax(false);
+            setHasNoCals(false);
         }
-    }, [percentage])
+    }, [percentage, numerator, denominator])
 
     function calulateExtraPercentage() {
         const timesBigger = Math.floor(numerator / denominator);
@@ -39,7 +45,9 @@ export function CircularProgressBar(prop: {numerator:number; denominator:number}
         <div className="relative size-80">
         <svg className="size-full -rotate-90" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
             <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-neutral-700" stroke-width="2"></circle>
-            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-accent dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={percentage} stroke-linecap="round"></circle>
+            {hasNoCals ? null : (
+                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-accent dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={percentage} stroke-linecap="round"></circle>
+            )}
             {hasPassedMax ?(
                 <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-red-600 dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={-extraPercentage} stroke-linecap="round"></circle>
             ) : null}

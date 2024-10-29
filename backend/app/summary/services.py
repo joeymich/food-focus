@@ -22,52 +22,52 @@ class SummaryService:
 
         query = select(
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.calories
+                FoodLog.serving_count * Food.calories
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.total_fat
+                FoodLog.serving_count * Food.total_fat
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.saturated_fat
+                FoodLog.serving_count * Food.saturated_fat
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.polyunsaturated_fat
+                FoodLog.serving_count * Food.polyunsaturated_fat
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.monounsaturated_fat
+                FoodLog.serving_count * Food.monounsaturated_fat
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.trans_fat
+                FoodLog.serving_count * Food.trans_fat
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.sodium
+                FoodLog.serving_count * Food.sodium
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.potassium
+                FoodLog.serving_count * Food.potassium
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.total_carbs
+                FoodLog.serving_count * Food.total_carbs
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.dietary_fiber
+                FoodLog.serving_count * Food.dietary_fiber
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.sugars
+                FoodLog.serving_count * Food.sugars
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.protein
+                FoodLog.serving_count * Food.protein
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.vitamin_a
+                FoodLog.serving_count * Food.vitamin_a
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.vitamin_c
+                FoodLog.serving_count * Food.vitamin_c
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.calcium
+                FoodLog.serving_count * Food.calcium
             ),
             func.sum(
-                FoodLog.serving_count * ServingSize.ratio * Food.iron
+                FoodLog.serving_count * Food.iron
             ),
         ).join(
             ServingSize, ServingSize.id == FoodLog.serving_size_id

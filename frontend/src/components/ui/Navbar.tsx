@@ -4,11 +4,11 @@ import {useEffect, useState} from 'react'
     Code refrenced from https://www.youtube.com/watch?v=rla9JZBFbqs&ab_channel=PatrickPan
 */
 
-const ListOfLinks = () => {
+const ListOfLinks = (prop: {isAuth: boolean}) => {
     const[isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        setIsLoggedIn(false);
+        setIsLoggedIn(prop.isAuth);
      }, [])
 
 
@@ -16,9 +16,10 @@ const ListOfLinks = () => {
         <>
             {isLoggedIn ? (
                 <>
-                    <li><a href='/dashboard' className='text-defaultText'>Dashboard</a></li>
-                    <li><a href='#' className='text-defaultText'>Settings</a></li>
-                    <li><a href='/#' className='text-defaultText'>Logout</a></li>
+                    <li><a href='/dashboard' className='text-defaultText underline'>Dashboard</a></li>
+                    <li><a href='/create-goals' className='text-defaultText underline'>Set Goals</a></li>
+                    <li><a href='#' className='text-defaultText underline'>Settings</a></li>
+                    <li><a href='/#' className='text-defaultText underline'>Logout</a></li>
                 </>
             ) : (
                 <>
@@ -32,7 +33,7 @@ const ListOfLinks = () => {
     )
 }
 
-export function Navbar() {
+export function Navbar(prop: {isAuth: boolean}) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -41,8 +42,8 @@ export function Navbar() {
     }
 
     return (
-        <nav>
-            <div className='flex items-center bg-background w-screen justify-between p-3 border-2 border-gray-24'>
+        <nav className='bg-background w-screen p-3 border-2 border-gray-24'>
+            <div className='flex items-center bg-background justify-between'>
                 <div className='text-defaultText text-2xl font-bold px-4'>FOOD FOCUS</div>
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
@@ -64,14 +65,14 @@ export function Navbar() {
 
                 {/*The links to the website - only appears when the screen is bigger than half of its size*/}
                 <ul className='hidden md:flex space-x-4 px-4'>
-                    <ListOfLinks/>
+                    <ListOfLinks isAuth={prop.isAuth}/>
                 </ul>
             </div>
 
             {isMenuOpen ?(
                 <div className='bg-background border-b-2 border-gray-24 md:hidden flex flex-col items-end px-4 py-1'>
                     <ul>
-                        <ListOfLinks/>
+                        <ListOfLinks isAuth={prop.isAuth}/>
                     </ul>
                 </div>
             ) : null}

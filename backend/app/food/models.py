@@ -1,25 +1,30 @@
 from app.db import Base
 from app.db.mixins import IdMixin
 
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Float
+from sqlalchemy.orm import relationship
 
 
 class Food(IdMixin, Base):
-    brand = Column(String)
-    name = Column(String)
-    calories = Column(Integer)
-    total_fat = Column(Integer)
-    saturated_fat = Column(Integer)
-    polyunsaturated_fat = Column(Integer)
-    monounsaturated_fat = Column(Integer)
-    trans_fat = Column(Integer)
-    sodium = Column(Integer)
-    potassium = Column(Integer)
-    total_carbs = Column(Integer)
-    dietary_fiber = Column(Integer)
-    sugars = Column(Integer)
-    protein = Column(Integer)
-    vitamin_a = Column(Integer)
-    vitamin_c = Column(Integer)
-    calcium = Column(Integer)
-    iron = Column(Integer)
+    brand = Column(String, index=True)
+    name = Column(String, nullable=False, index=True)
+    calories = Column(Float)
+    total_fat = Column(Float)
+    saturated_fat = Column(Float)
+    polyunsaturated_fat = Column(Float)
+    monounsaturated_fat = Column(Float)
+    trans_fat = Column(Float)
+    sodium = Column(Float)
+    potassium = Column(Float)
+    total_carbs = Column(Float)
+    dietary_fiber = Column(Float)
+    sugars = Column(Float)
+    added_sugars = Column(Float)
+    added_sugars = Column(Float)
+    protein = Column(Float)
+    vitamin_a = Column(Float)
+    vitamin_c = Column(Float)
+    calcium = Column(Float)
+    iron = Column(Float)
+
+    serving_sizes = relationship('ServingSize')

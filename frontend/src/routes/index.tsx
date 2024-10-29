@@ -44,10 +44,10 @@ export const createRouter = () => {
             ],
         },
         {
-            path: '/weekly-progress',
+            path: '/create-goals',
             lazy: async () => {
-                const { WeeklyProgress } = await import('@/components/weekly-progress');
-                return { Component: WeeklyProgress};
+                const { CreateGoals } = await import('@/components/create-goals');
+                return { Component: CreateGoals };
             },
         },
         {

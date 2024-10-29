@@ -26,8 +26,9 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
             setCarbPercentage(((carbCal/toatlMacroCal) * 100));
             setProteinPercentage(((proteinCal/toatlMacroCal) * 100));
         }
-
-        console.log("fat: " + fatCal + " carb:" + carbCal + " protein: " + proteinCal);
+        console.log(((fatCal/toatlMacroCal) * 100) + " " + fat);
+        console.log(((carbCal/toatlMacroCal) * 100));
+        console.log(((proteinCal/toatlMacroCal) * 100));
     }, [carb, carbPercentage, fat, fatPercentage, protein, proteinPercentage])
 
 
@@ -36,8 +37,8 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
             <div className='flex justify-center item-center border-2 border-gray-400'>
                 <div className="w-full bg-gray-200 sqaure-full h-24 dark:bg-accent-700 flex">
                     {carb === 0 ? null : (<div className="bg-green-400 h-24 square-full flex justify-center items-center font-bold border-r-2 border-gray-400" style={{ width: `${carbPercentage}%`}}> {Math.round(carbPercentage )}% </div>)}
-                    {fat === 0 ? null : (<div className="bg-yellow-400 h-24 square-full flex justify-center items-center font-bold" style={{ width: `${proteinPercentage}%`}}> {Math.round(proteinPercentage)}% </div>)}
-                    {protein === 0 ? null : (<div className="bg-blue-400 h-24 sqaure-full flex justify-center items-center font-bold border-l-2 border-gray-400" style={{ width: `${fatPercentage}%`}}> {Math.round(fatPercentage)}% </div>)}
+                    {protein === 0 ? null : (<div className="bg-yellow-400 h-24 square-full flex justify-center items-center font-bold" style={{ width: `${proteinPercentage}%`}}> {Math.round(proteinPercentage)}% </div>)}
+                    {fat === 0 ? null : (<div className="bg-blue-400 h-24 sqaure-full flex justify-center items-center font-bold border-l-2 border-gray-400" style={{ width: `${fatPercentage}%`}}> {Math.round(fatPercentage)}% </div>)}
                 </div>
             </div>
 
