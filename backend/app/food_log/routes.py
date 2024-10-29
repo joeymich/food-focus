@@ -27,10 +27,13 @@ async def get_all_by_user_id(
     response_model=FoodLogRead,
 )
 async def create(
+    db_session: DbSession,
     food_log_service: FoodLogServiceDep,
     food_log_in: FoodLogCreate,
 ):
-    return food_log_service.create(food_log_in=food_log_in)
+    food = food_log_service.create(food_log_in=food_log_in)
+    await db_session.begin_nested()
+    return food
 
 
 @router.get(

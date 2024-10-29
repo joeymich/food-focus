@@ -4,11 +4,11 @@ import {useEffect, useState} from 'react'
     Code refrenced from https://www.youtube.com/watch?v=rla9JZBFbqs&ab_channel=PatrickPan
 */
 
-const ListOfLinks = () => {
+const ListOfLinks = (prop: {isAuth: boolean}) => {
     const[isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        setIsLoggedIn(false);
+        setIsLoggedIn(prop.isAuth);
      }, [])
 
 
@@ -33,7 +33,7 @@ const ListOfLinks = () => {
     )
 }
 
-export function Navbar() {
+export function Navbar(prop: {isAuth: boolean}) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -65,14 +65,14 @@ export function Navbar() {
 
                 {/*The links to the website - only appears when the screen is bigger than half of its size*/}
                 <ul className='hidden md:flex space-x-4 px-4'>
-                    <ListOfLinks/>
+                    <ListOfLinks isAuth={prop.isAuth}/>
                 </ul>
             </div>
 
             {isMenuOpen ?(
                 <div className='bg-background border-b-2 border-gray-24 md:hidden flex flex-col items-end px-4 py-1'>
                     <ul>
-                        <ListOfLinks/>
+                        <ListOfLinks isAuth={prop.isAuth}/>
                     </ul>
                 </div>
             ) : null}

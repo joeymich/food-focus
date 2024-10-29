@@ -10,7 +10,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Input } from './ui/form/input';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
@@ -20,6 +20,11 @@ import { cn } from "@/utils/cn"
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import { FoodApi, Foods} from '@/api/FoodApi';
+import { ServingSizeApi, ServingSize } from '@/api/ServingSizeApi';
+import { FoodLogApi, FoodLogAll, FoodLog, FLServingSize, FoodLogRequest } from '@/api/FoodLogApi';
+import { BiError } from 'react-icons/bi';
+import { SummariesApi, Summary } from '@/api/SummariesApi';
 
 // const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number}) => {
 //   //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -44,42 +49,42 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Saturated Fat</p>
-         <p>{prop.satFat}g</p>
+         <p>{prop.satFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'> 
          <p>Total Polyunsaturaed Fat</p>
-         <p>{prop.polFat}g</p>
+         <p>{prop.polFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Monounsaturated Fat</p>
-         <p>{prop.monFat}g</p>
+         <p>{prop.monFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Trans Fat</p>
-         <p>{prop.traFat}g</p>
+         <p>{prop.traFat ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Sodium</p>
-         <p>{prop.sodium}g</p>
+         <p>{prop.sodium ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Potassium</p>
-         <p>{prop.potassium}g</p>
+         <p>{prop.potassium ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Dietray Fiber</p>
-         <p>{prop.fiber}g</p>
+         <p>{prop.fiber ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Sugars</p>
-         <p>{prop.sugar}g</p>
+         <p>{prop.sugar ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
@@ -94,12 +99,12 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
          <p>Total Calcium</p>
-         <p>{prop.calcium}g</p>
+         <p>{prop.calcium ?? 0 }g</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
          <p>Total Iron</p>
-         <p>{prop.iron}mg</p>
+         <p>{prop.iron ?? 0n}mg</p>
         </div>
         <Separator orientation="horizontal" />
       </ScrollArea>
@@ -108,199 +113,161 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 };
 
 
-const MealsSection = () => {
+const MealsSection = (prop: {allFoodData: Foods[], servingSizes: ServingSize[], daysData: FoodLogAll[], day: dayjs.Dayjs}) => {
   const[mealType, setMealType] = useState("");
-  const[mealUnit, setMealUnit] = useState("");
-  const[servingAmount, setServingAmount] = useState("");
+  const[servingAmount, setServingAmount] = useState(1);
+  const[open, setOpen] = useState(false);
+  const[value, setValue] = useState("");
+  const[mealID, setMealID] = useState("");
+  const[dialogOpen, setDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
-    const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setServingAmount(e.target.value);
-    }
-
-  const breakfastData = [
-    {food: "Oatmeal", cals: 100},
-    {food: "Apple", cals: 30},
-    {food: "Toast", cals: 50},
-  ];
-
-  const lunchData = [
-    {food: "Coffee", cals: 30},
-    {food: "Rice", cals: 40},
-    {food: "Egg", cals: 90},
-    {food: "Plantain", cals: 70},
-  ];
-
-  const dinnerData = [
-    {food: "Rice", cals: 90},
-    {food: "Steak", cals: 160},
-    {food: "Plantain", cals: 190},
-    {food: "Lentils", cals: 130},
-  ];
-
-  const snackData = [
-    {food: "Apple", cals: 30},
-    {food: "Ice cream", cals: 200},
-    {food: "Pie", cals: 300},
-    {food: "Chocolate", cals: 190},
-  ]
-
-  const SelectSearch = () => {
-    const[open, setOpen] = useState(false);
-    const[value, setValue] = useState("");
-
-    const foodOptions = [
-      {value: 'apple' , food: "Apple"},
-      {value: 'banana', food: "Banana"},
-      {value: 'cabbage', food: "Cabbage"}
-    ]
-    return (
-      <div >
-        {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild >
-            <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between bg-gray-100 font-normal"
-            >
-              {value ? foodOptions.find((foodOptions) => foodOptions.value === value)?.food : "Select Meal"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Command>
-              <CommandInput aria-placeholder="Search meals..."/>
-              <CommandList>
-                <CommandEmpty>No Foods Found</CommandEmpty>
-                <CommandGroup>
-                  {foodOptions.map((foodOption) => (
-                    <CommandItem
-                      key={foodOption.value}
-                      value={foodOption.value}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue)
-                        setOpen(false)
-                      }}  
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === foodOption.value ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {foodOption.food}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
-    )
+  const handleChangeServingAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setServingAmount(Number(e.target.value));
   }
 
-  const ShowDataInRow = (prop: {food: string; cals: number; fat: number; protein: number; carb: number; satFat: number; polFat: number;
-                                monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
-                                sugar: number; vitA: number; vitC: number; calcium: number; iron: number;
-                                mealType: string; servingSize: number; servingName: string; servingAmount: number}) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const serving_size_id = prop.servingSizes.find((foodOptions) => foodOptions.food_id === mealID)?.id.toLowerCase() || ""
+    const serving_count = servingAmount;
+    const date =  dayjs().format("YYYY-MM-DD");
+    const meal = mealType.toUpperCase();
+    if(serving_size_id === "" || meal === "") {
+      setErrorMessage("Please fill out the empty field(s)");
+    } else {
+      setDialogOpen(false);
+      setValue("");
+      setMealID("");
+      setMealType("");
+      setErrorMessage("")
+      try {
+        const response = await FoodLogApi.postFoodLog({serving_size_id, serving_count, date, meal});
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  const breakfastData = prop.daysData.filter((val) => (val.meal === "BREAKFAST"));
+
+  const lunchData = prop.daysData.filter((val) => (val.meal === "LUNCH"));
+
+  const dinnerData = prop.daysData.filter((val) => (val.meal === "DINNER"));
+
+  const snackData = prop.daysData.filter((val) => (val.meal === "SNACKS"));
+
+
+  const ShowDataInRow = (prop: {id: string,meal: string; serving_count: number; serving_size: FLServingSize;}) => {
+    const [tDialogOpen, setTDialogOPen] = useState(false);
+    const handleRemoveFood = async () => {
+      console.log("FOODLOG ID: " + prop.id);
+      try {
+        await FoodLogApi.deleteFoodLog(prop.id);
+      } catch (e) {
+        console.log(e);
+      }
+      //window.location.reload();
+      setTDialogOPen(false);
+    }
+
     return (
       <TableRow className="w-full">
-        <TableCell>{prop.food}</TableCell>
-        <TableCell className="text-right">{prop.cals}g</TableCell>
+        <TableCell>{prop.serving_size.food.name.toLowerCase()}</TableCell>
+        <TableCell className="text-right">{(prop.serving_size.food.calories * prop.serving_count)}g</TableCell>
         <TableCell>
-          <Dialog>
+          <Dialog open={tDialogOpen} onOpenChange={setTDialogOPen}>
             <DialogTrigger className="w-[20px] border rounded">+</DialogTrigger>
             <DialogContent>
-              <DialogTitle className='text-center'>More information on {prop.food}</DialogTitle>
+              <DialogTitle className='text-center'>More information on {prop.serving_size.food.name.toLowerCase()}</DialogTitle>
               <DialogDescription>
                 <div className="space-y-4 flex-col justify-center items-center">
                   <div className='flex justify-center space-x-4 font-bold'>
-                    <p>Meal Type: {prop.mealType}</p>
-                    <p>Serving Size: {prop.servingSize} {prop.servingName}</p>
-                    <p>Servings eaten: {prop.servingAmount}</p>
+                    <p>Meal Type: {prop.meal.toLowerCase()}</p>
+                    <p>Serving Size: {prop.serving_size.ratio} {prop.serving_size.name}</p>
+                    <p>Servings eaten: {prop.serving_count}</p>
                   </div>
                   <div className='flex justify-center'>
                     <ScrollArea className="h-full w-[300px] rounded-md border bg-gray-100">
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Total Fat</p>
-                      <p>{prop.fat}g</p>
+                      <p>{prop.serving_size.food.total_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Saturated Fat</p>
-                      <p>{prop.satFat}g</p>
+                      <p>{prop.serving_size.food.saturated_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Polyunsaturated Fat</p>
-                      <p>{prop.polFat}g</p>
+                      <p>{prop.serving_size.food.polyunsaturated_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Monounsaturated Fat</p>
-                      <p>{prop.monFat}g</p>
+                      <p>{prop.serving_size.food.monounsaturated_fat ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Trans Fat</p>
-                      <p>{prop.traFat}g</p>
+                      <p>{prop.serving_size.food.trans_fat ?? 0}g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Total Carbs:</p>
-                      <p>{prop.carb}g</p>
+                      <p>{prop.serving_size.food.total_carbs ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Sugars</p>
-                      <p>{prop.sugar}g</p>
+                      <p>{prop.serving_size.food.sugars ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" />
                       <div className='flex justify-between bg-gray-100 px-4'>
                       <p className='indent-4'>Fibers</p>
-                      <p>{prop.fiber}g</p>
+                      <p>{prop.serving_size.food.dietary_fiber ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Protein:</p>
-                      <p>{prop.protein}g</p>
+                      <p>{prop.serving_size.food.protein ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Sodium:</p>
-                      <p>{prop.sodium}g</p>
+                      <p>{prop.serving_size.food.sodium ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Potassium:</p>
-                      <p>{prop.potassium}g</p>
+                      <p>{prop.serving_size.food.potassium ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Calcium:</p>
-                      <p>{prop.calcium}g</p>
+                      <p>{prop.serving_size.food.calcium ?? 0 }g</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Iron:</p>
-                      <p>{prop.iron}g</p>
+                      <p>{prop.serving_size.food.iron ?? 0 }mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Vitamin A:</p>
-                      <p>{prop.vitA}mg</p>
+                      <p>{prop.serving_size.food.vitamin_a ?? 0}mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                       <div className='flex justify-between bg-gray-200 px-4'>
                       <p>Vitamin C:</p>
-                      <p>{prop.vitC}mg</p>
+                      <p>{prop.serving_size.food.vitamin_c ?? 0}mg</p>
                       </div>
                       <Separator orientation="horizontal" className="bg-gray-300"/>
                     </ScrollArea>
                   </div>
                   <div className='flex justify-center space-x-4 font-bold'>
-                    <Button className="text-defaultText bg-secondary font-bold text-sm">Remove Food</Button>
+                    <Button className="text-defaultText bg-secondary font-bold text-sm" onClick={handleRemoveFood}>Remove Food</Button>
                   </div>
                 </div>
               </DialogDescription>
@@ -341,7 +308,7 @@ const MealsSection = () => {
                     <ShowDataInRow key={index} {...data}/>
                   ))}
                 </>
-              ): mealType === "snack" ? (
+              ): mealType === "snacks" ? (
                 <>
                   {snackData.map((data, index) => (
                     <ShowDataInRow key={index} {...data}/>
@@ -373,69 +340,109 @@ const MealsSection = () => {
           <DataDisplay mealType="dinner"/>
         </TabsContent>
         <TabsContent value="snacks">
-          <DataDisplay mealType="snack"/>
+          <DataDisplay mealType="snacks"/>
         </TabsContent>
       </Tabs>
       <div className="flex justify-center py-4">
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger>
-            <Button className="text-defaultText bg-secondary font-bold text-sm">Add meal</Button>
+            {prop.day.format("MM-DD-YYYY") === dayjs().format("MM-DD-YYYY") ? (
+              <Button className="text-defaultText bg-secondary font-bold text-sm">Add meal</Button>
+            ) : <Button disabled className="text-defaultText bg-gray-200 font-bold text-sm">Add meal</Button>}
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className='text-center'>Add Meal</DialogTitle>
             </DialogHeader>
-            <div className="flex justify-center">
-              <div className="space-y-4 justify-center items-center">
-                <div  className="flex space-x-8 items-center">
-                  <p>Select Meal Type</p>
-                  <Select onValueChange={(value) => {setMealType(value);}}>
-                    <SelectTrigger className="w-[170px] bg-gray-100">
-                      <SelectValue placeholder='Choose a Meal Type'/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='BREAKFAST'>Breakfast</SelectItem>
-                      <SelectItem value='LUNCH'>Lunch</SelectItem>
-                      <SelectItem value='DINNER'>Dinner</SelectItem>
-                      <SelectItem value='SNACK'>Snack</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-               
-                <div className='flex space-x-[35px] items-center'>
-                    <p>Serving Amount</p>
-                    <Input
-                      className='bg-gray-100 w-[70px]'
-                      type="number"
-                      min={1}
-                      max={99}
-                      defaultValue={1}
-                      onChange={handleChangeServingAmount}
-                    />
-                  </div>
-                  <div className='flex space-x-[55px] items-center'>
-                    <p>Serving Units</p>
-                    <Select onValueChange={(value) => {setMealUnit(value);}}>
+            <form className="flex flex-col space-y-4 w-full" onSubmit={handleSubmit}>
+              <div className="flex justify-center">
+                <div className="space-y-4 justify-center items-center">
+                  <div  className="flex space-x-8 items-center">
+                    <p>Select Meal Type</p>
+                    <Select onValueChange={(value) => {setMealType(value);}}>
                       <SelectTrigger className="w-[170px] bg-gray-100">
-                        <SelectValue placeholder='Choose a Unit'/>
+                        <SelectValue placeholder='Choose a Meal Type'/>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value='CUP'>Cup</SelectItem>
-                        <SelectItem value='LITRE'>Litre</SelectItem>
-                        <SelectItem value='GRAMS'>Gram</SelectItem>
-                        <SelectItem value='OZ'>Ounce</SelectItem>
-                      </SelectContent>  
+                        <SelectItem value='BREAKFAST'>Breakfast</SelectItem>
+                        <SelectItem value='LUNCH'>Lunch</SelectItem>
+                        <SelectItem value='DINNER'>Dinner</SelectItem>
+                        <SelectItem value='SNACKS'>Snack</SelectItem>
+                      </SelectContent>
                     </Select>
+                  </div>
+                  <div className='flex space-x-[10px] items-center'>
+                      <p>Amount of Servings</p>
+                      <Input
+                        className='bg-gray-100 w-[70px]'
+                        type="number"
+                        min={1}
+                        max={99}
+                        defaultValue={1}
+                        onChange={handleChangeServingAmount}
+                      />
                   </div>
                   <div className='flex items-center space-x-[65px]'>
                     <p>Select Meal</p>
-                    <SelectSearch/>
+                      <div >
+                      {/* Code referenced from  https://ui.shadcn.com/docs/components/combobox*/}
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild >
+                          <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={open}
+                          className="w-[200px] justify-between bg-gray-100 font-normal"
+                          >
+                            {value ? prop.allFoodData.find((foodOptions) => foodOptions.name === value)?.name.toLowerCase() : "Select Meal"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Command>
+                            <CommandInput aria-placeholder="Search meals..."/>
+                            <CommandList>
+                              <CommandEmpty>No Foods Found</CommandEmpty>
+                              <CommandGroup>
+                                {prop.allFoodData.map((foodOption) => (
+                                  <CommandItem
+                                    key={foodOption.id}
+                                    value={foodOption.name}
+                                    onSelect={(currentValue) => {
+                                      setValue(currentValue === value ? "" : currentValue)
+                                      setMealID(foodOption.id);
+                                      setOpen(false)
+                                    }}  
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        value === foodOption.name ? "opacity-100" : "opacity-0"
+                                      )}
+                                    />
+                                    {foodOption.name.toLowerCase()}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
-                <div className='w-full flex justify-center'>
-                  <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>
-                </div>
-              </div>             
-            </div>
+                  <div className='w-full flex justify-center'>
+                    {errorMessage && (
+                          <div className='flex items-center gap-x-2 rounded-lg bg-destructive/20 px-3 py-2 text-sm font-semibold text-destructive'>
+                              <BiError className='text-destructive' />
+                              <p>{errorMessage}</p>
+                          </div>
+                      )}
+                  </div>
+                  <div className='w-full flex justify-center'>
+                    <Button className="text-defaultText bg-secondary font-bold text-sm">Add</Button>
+                  </div>
+                </div>             
+              </div>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
@@ -443,104 +450,143 @@ const MealsSection = () => {
   )
 };
 
-const SelectDate = () => {
-  const[theDate, setTheDate] = useState<dayjs.Dayjs | null>(dayjs());
+export const Dashboard = () => {
+  const[calGoal, setCalGoal] = useState(2500);
+  const[proteinGoal, setProteinGoal] = useState(60);
+  const[carbGoal, setCarbGoal] = useState(225);
+  const[fatGoal, setFatGoal] = useState(78)
+  const[allFoodData, setAllFoodData] = useState<Foods[]>([]);
+  const[servingSizes, setServingSizes] = useState<ServingSize[]>([]);
+  const[foodLogs, setFoodLogs] = useState<FoodLogAll[]>([]);
+  const[summary, setSummary] = useState<Summary>({
+    date: "",
+    calories: 0,
+    total_fat: 0,
+    saturated_fat: 0,
+    polyunsaturated_fat: 0,
+    monounsaturated_fat: 0,
+    trans_fat: 0,
+    sodium: 0,
+    potassium: 0,
+    total_carbs: 0,
+    dietary_fiber: 0,
+    sugars: 0,
+    protein: 0,
+    vitamin_a: 0,
+    vitamin_c: 0,
+    calcium: 0,
+    iron: 0
+  });
+  const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs());
   const dateFormat = 'MM-DD-YYYY';
+  const dateDBFormat = 'YYYY-MM-DD';
 
-  //Code refrenced from https://ant.design/components/date-picker
+  const goalData = [
+    {calGoal: 2600, proteinGoal: 400, carbGoal: 200, fatGoal: 100, goalStart: "2024-10-01", goalEnd: "2024-10-10"},
+    {calGoal: 2300, proteinGoal: 400, carbGoal: 200, fatGoal: 100, goalStart: "2024-10-10", goalEnd: null},
+  ]
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    setTheDate(date)
-    const today = dayjs();
-    const comp = dayjs(date, dateFormat);
-    console.log(comp + " " + today + " " + today.isSame(comp, 'day') + " " + theDate)
+  function prepGoalInfo(day: dayjs.Dayjs) {
+    const data = goalData.filter((data) => (dayjs(day).format(dateDBFormat) >= data.goalStart) && (data.goalEnd === null || dayjs(day).format(dateDBFormat) < data.goalEnd));
+    if(data.length != 0) {
+      setCalGoal(data[0].calGoal);
+      setProteinGoal(data[0].proteinGoal);
+      setCarbGoal(data[0].carbGoal);
+      setFatGoal(data[0].fatGoal);
+    } else {
+      //The default values for the goals
+      setCalGoal(2500);
+      setProteinGoal(60);
+      setCarbGoal(225);
+      setFatGoal(78);
+    }
+  }
+
+  function prepSummary(sum : Summary) {
+    setSummary(
+      {
+        date: sum.date,
+        calories: sum.calories ?? 0,
+        total_fat: sum.total_fat ?? 0,
+        saturated_fat: sum.saturated_fat ?? 0,
+        polyunsaturated_fat: sum.polyunsaturated_fat ?? 0,
+        monounsaturated_fat: sum.monounsaturated_fat ?? 0,
+        trans_fat: sum.trans_fat ?? 0,
+        sodium: sum.sodium ?? 0,
+        potassium: sum.potassium ?? 0,
+        total_carbs: sum.total_carbs ?? 0,
+        dietary_fiber: sum.dietary_fiber ?? 0,
+        sugars: sum.sugars ?? 0,
+        protein: sum.protein ?? 0,
+        vitamin_a: sum.vitamin_a ?? 0,
+        vitamin_c: sum.vitamin_c ?? 0,
+        calcium: sum.calcium ?? 0,
+        iron: sum.iron ?? 0
+      }
+    )
+  }
+
+  const getSummary = async (date: string) => {
+    try {
+      const response = await SummariesApi.getFoodLogAll(date);
+      if(response !== undefined) {
+        prepSummary(response);
+      }
+    } catch (e) {
+     console.log(e);
+    }
   };
 
-  return (
-    // <Popover>
-    //   <PopoverTrigger asChild>
-    //     <Button
-    //       variant={"outline"}
-    //       className={cn(
-    //         "w-[280px] justify-start text-left font-normal",
-    //         !date && "text-muted-foreground"
-    //       )}
-    //     >
-    //       <CalendarIcon className="mr-2 h-4 w-4" />
-    //       {date ? format(date, "PPP") : <span>Pick a date</span>}
-    //     </Button>
-    //   </PopoverTrigger>
-    //   <PopoverContent className="w-auto p-0">
-    //     <Calendar
-    //       mode="single"
-    //       selected={date}
-    //       onSelect={setDate}
-    //       initialFocus
-    //     />
-    //   </PopoverContent>
-    // </Popover>
-    <div className='w-full bg-secondary space-y-4 text-center'>
-      <DatePicker
-        format="MM-DD-YYYY"
-        defaultValue={dayjs(dayjs(),dateFormat)}
-        minDate={dayjs('02-03-2002', dateFormat)}
-        maxDate={dayjs(dayjs(), dateFormat)}
-        onChange={onChange}
-      />
-
-      {(dayjs().isSame(theDate, 'day')) ? (
-        <h1 className="text-4xl font-bold text-defaultText text-center"> Today's Progress </h1>
-      ): (
-        <h1 className="text-4xl font-bold text-defaultText text-center"> Progress on {theDate?.format(dateFormat)} </h1>
-      )}
-    </div>
-);
-  
-}
-
-export const Dashboard = () => {
-  const[totalCal, setTotalCal] = useState(0.0);
-  const[calGoal, setCalGoal] = useState(0.0);
-  const[fat, setFat] = useState(0.0);
-  const[protein, setProtein] = useState(0.0);
-  const[carb, setCarb] = useState(0.0);
-  const[satFat, setSatFat] = useState(0.0);
-  const[polFat, setPolFat] = useState(0.0);
-  const[monFat, setMonFat] = useState(0.0);
-  const[traFat, setTraFat] = useState(0.0);
-  const[sodium, setSodium] = useState(0.0);
-  const[potassium, setPotassium] = useState(0.0);
-  const[fiber, setFiber] = useState(0.0);
-  const[sugar, setSugar] = useState(0.0);
-  const[vitA, setVitA] = useState(0.0);
-  const[vitC, setVitC] = useState(0.0);
-  const[calcium, setCalcium] = useState(0.0);
-  const[iron, setIron] = useState(0.0);
-
+  const getFoodLogs = async (date: string) => {
+    try {
+      const response = await FoodLogApi.getFoodLogDate(date);
+      setFoodLogs(response);
+    } catch (e) {
+     console.log(e);
+    }
+  };
 
   useEffect(() => {
-    PlaceHolder();
+    const getFoodOptions = async () => {
+      try {
+        const response = await FoodApi.food();
+        setAllFoodData(response);
+      } catch (e) {
+       console.log(e);
+      }
+    };
+
+    const getServingSizes = async () => {
+      try {
+        const response = await ServingSizeApi.getServingSizeAll();
+        setServingSizes(response);
+      } catch (e) {
+       console.log(e);
+      }
+    };
+
+    const today = dayjs().format(dateDBFormat);
+    getFoodOptions();
+    getServingSizes();
+    getFoodLogs(today);
+    getSummary(today);
+    prepGoalInfo(dayjs());
   }, [])
 
-  function PlaceHolder() {
-    setTotalCal(2500);
-    setCalGoal(2500);
-    setFat(18);
-    setProtein(29);
-    setCarb(20);
-    setSatFat(16);
-    setPolFat(2);
-    setMonFat(0);
-    setTraFat(0);
-    setSodium(13);
-    setPotassium(19);
-    setFiber(12);
-    setSugar(12);
-    setVitA(13);
-    setVitC(15);
-    setCalcium(17);
-    setIron(16);
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    //Code for the date picker refrenced from https://ant.design/components/date-picker
+    if(date != null) {
+      setTheDate(date)
+      prepGoalInfo(date);
+      getSummary(date.format(dateDBFormat));
+      getFoodLogs(date.format(dateDBFormat));
+    }
+  };
+
+  const handleCalorieGoal = () => {
+    
   }
+ 
 
   return (
     <>
@@ -548,13 +594,26 @@ export const Dashboard = () => {
         Navbar not yet updated to include sessions
         Once sessions are implemented, the contents of the navbar will change
       */}
-      <Navbar />
+      <Navbar isAuth={true}/>
 
       <div  className="bg-background h-screen w-screen flex:col justify-center items-start py-8 space-x-4 space-y-16">
         <div className='flex:col justify-center space-y-4'>
 
           <div className='w-full p-4 bg-secondary space-x-4 text-center'>
-            <SelectDate/>
+            <div className='w-full bg-secondary space-y-4 text-center'>
+            <DatePicker
+              format="MM-DD-YYYY"
+              defaultValue={dayjs(dayjs(),dateFormat)}
+              minDate={dayjs('02-03-2002', dateFormat)}
+              maxDate={dayjs(dayjs(), dateFormat)}
+              onChange={onChange}
+            />
+              {(dayjs().isSame(theDate, 'day')) ? (
+                <h1 className="text-4xl font-bold text-defaultText text-center"> Today's Progress </h1>
+              ): (
+                <h1 className="text-4xl font-bold text-defaultText text-center"> Progress on {theDate?.format(dateFormat)} </h1>
+              )}
+            </div>
           </div>
 
           <div className='flex justify-center space-x-4'>
@@ -565,22 +624,27 @@ export const Dashboard = () => {
                 Current Numbers are place holders
                 If the total calories are passed, then the bar and numbers will turn red
               */}
-              <CircularProgressBar numerator={totalCal} denominator={calGoal}/>
+              <CircularProgressBar numerator={summary.calories} denominator={calGoal}/>
 
               <div className="flex gap-x-4">
-                <Button className="text-defaultText bg-secondary font-bold text-sm">Adjust Calorie Goal</Button>
+                {/* {theDate.format("MM-DD-YYYY") === dayjs().format("MM-DD-YYYY") ? (
+                  <Button className="text-defaultText bg-secondary font-bold text-sm" onClick={handleCalorieGoal}>Adjust Calorie Goal</Button>
+                ) : (
+                  <Button disabled className="text-defaultText bg-gray-200 font-bold text-sm">Adjust Calorie Goal</Button>
+                )} */}
+                  <Button className="text-defaultText bg-secondary font-bold text-sm" onClick={handleCalorieGoal}>Adjust Calorie Goal</Button>
               </div>
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Nutrients</h2>
-              <MacronutrientSection fat={fat} carb={carb} protein={protein} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
-                                    sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
+              <MacronutrientSection fat={summary.total_fat} carb={summary.total_carbs} protein={summary.protein} satFat={summary.saturated_fat} polFat={summary.polyunsaturated_fat} monFat={summary.monounsaturated_fat} traFat={summary.trans_fat}
+                                    sodium={summary.sodium} potassium={summary.potassium} fiber={summary.dietary_fiber} sugar={summary.sugars} vitA={summary.vitamin_a} vitC={summary.vitamin_c} calcium={summary.calcium} iron={summary.iron}/>              
             </div>
 
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
               <h2 className="text-3xl font-bold text-defaultText text-center">Today's Meals</h2>
-              <MealsSection/>
+              <MealsSection allFoodData={allFoodData} servingSizes={servingSizes} daysData={foodLogs} day={theDate}/>
             </div>
 
           </div>
