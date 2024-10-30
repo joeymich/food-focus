@@ -142,6 +142,7 @@ export const WeeklyProgress = () => {
     const[day5, setDay5] = useState<Summary>();
     const[day6, setDay6] = useState<Summary>();
     const[day7, setDay7] = useState<Summary>();
+    const[summedData, setSummedData] = useState<Summary>();
     const dateFormat = 'MM-DD-YYYY';
     const dateDBFormat = 'YYYY-MM-DD';
 
@@ -177,6 +178,28 @@ export const WeeklyProgress = () => {
       promise.then(val => setDay7(val))
     }
 
+    function SumAll() {
+      setSummedData({
+        date: "",
+        calories: (day1?.calories ?? 0) + (day2?.calories ?? 0) + (day3?.calories ?? 0) + (day4?.calories ?? 0) + (day5?.calories ?? 0) + (day6?.calories ?? 0) + (day7?.calories ?? 0),
+        total_fat: (day1?.total_fat ?? 0) + (day2?.total_fat ?? 0) + (day3?.total_fat ?? 0) + (day4?.total_fat ?? 0) + (day5?.total_fat ?? 0) + (day6?.total_fat ?? 0) + (day7?.total_fat ?? 0),
+        saturated_fat: (day1?.saturated_fat ?? 0) + (day2?.saturated_fat ?? 0) + (day3?.saturated_fat ?? 0) + (day4?.saturated_fat ?? 0) + (day5?.saturated_fat ?? 0) + (day6?.saturated_fat ?? 0) + (day7?.saturated_fat ?? 0),
+        polyunsaturated_fat: (day1?.polyunsaturated_fat ?? 0) + (day2?.polyunsaturated_fat ?? 0) + (day3?.polyunsaturated_fat ?? 0) + (day4?.polyunsaturated_fat ?? 0) + (day5?.polyunsaturated_fat ?? 0) + (day6?.polyunsaturated_fat ?? 0) + (day7?.polyunsaturated_fat ?? 0),
+        monounsaturated_fat: (day1?.monounsaturated_fat ?? 0) + (day2?.monounsaturated_fat ?? 0) + (day3?.monounsaturated_fat ?? 0) + (day4?.monounsaturated_fat ?? 0) + (day5?.monounsaturated_fat ?? 0) + (day6?.monounsaturated_fat ?? 0) + (day7?.monounsaturated_fat ?? 0),
+        trans_fat: (day1?.trans_fat ?? 0) + (day2?.trans_fat ?? 0) + (day3?.trans_fat ?? 0) + (day4?.trans_fat ?? 0) + (day5?.trans_fat ?? 0) + (day6?.trans_fat ?? 0) + (day7?.trans_fat ?? 0),
+        sodium: (day1?.sodium ?? 0) + (day2?.sodium ?? 0) + (day3?.sodium ?? 0) + (day4?.sodium ?? 0) + (day5?.sodium ?? 0) + (day6?.sodium ?? 0) + (day7?.sodium ?? 0),
+        potassium: (day1?.potassium ?? 0) + (day2?.potassium ?? 0) + (day3?.potassium ?? 0) + (day4?.potassium ?? 0) + (day5?.potassium ?? 0) + (day6?.potassium ?? 0) + (day7?.potassium ?? 0),
+        total_carbs: (day1?.total_carbs ?? 0) + (day2?.total_carbs ?? 0) + (day3?.total_carbs ?? 0) + (day4?.total_carbs ?? 0) + (day5?.total_carbs ?? 0) + (day6?.total_carbs ?? 0) + (day7?.total_carbs ?? 0),
+        dietary_fiber: (day1?.dietary_fiber ?? 0) + (day2?.dietary_fiber ?? 0) + (day3?.dietary_fiber ?? 0) + (day4?.dietary_fiber ?? 0) + (day5?.dietary_fiber ?? 0) + (day6?.dietary_fiber ?? 0) + (day7?.dietary_fiber ?? 0),
+        sugars: (day1?.sugars ?? 0) + (day2?.sugars ?? 0) + (day3?.sugars ?? 0) + (day4?.sugars ?? 0) + (day5?.sugars ?? 0) + (day6?.sugars ?? 0) + (day7?.sugars ?? 0),
+        protein: (day1?.protein ?? 0) + (day2?.protein ?? 0) + (day3?.protein ?? 0) + (day4?.protein ?? 0) + (day5?.protein ?? 0) + (day6?.protein ?? 0) + (day7?.protein ?? 0),
+        vitamin_a:(day1?.vitamin_a ?? 0) + (day2?.vitamin_a ?? 0) + (day3?.vitamin_a ?? 0) + (day4?.vitamin_a ?? 0) + (day5?.vitamin_a ?? 0) + (day6?.vitamin_a ?? 0) + (day7?.vitamin_a ?? 0),
+        vitamin_c: (day1?.vitamin_c ?? 0) + (day2?.vitamin_c ?? 0) + (day3?.vitamin_c ?? 0) + (day4?.vitamin_c ?? 0) + (day5?.vitamin_c ?? 0) + (day6?.vitamin_c ?? 0) + (day7?.vitamin_c ?? 0),
+        calcium: (day1?.calcium ?? 0) + (day2?.calcium ?? 0) + (day3?.calcium ?? 0) + (day4?.calcium ?? 0) + (day5?.calcium ?? 0) + (day6?.calcium ?? 0) + (day7?.calcium ?? 0),
+        iron: (day1?.iron ?? 0) + (day2?.iron ?? 0) + (day3?.iron ?? 0) + (day4?.iron ?? 0) + (day5?.iron ?? 0) + (day6?.iron ?? 0) + (day7?.iron ?? 0)
+      })
+    }
+
     function SetUpChart(date: dayjs.Dayjs) {
       const selectDate = DayOfTheWeek(dayjs(date))
       console.log(selectDate);
@@ -198,6 +221,7 @@ export const WeeklyProgress = () => {
 
     useEffect(() => {
       SetUpChart(theDate);
+      SumAll();
     })
   
     function PlaceHolder() {
@@ -298,15 +322,16 @@ export const WeeklyProgress = () => {
               <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1> 
                 {/* Make it gray out when the day not passed */}
-                <p className="font-bold ">Daily Average: {totalCal} kcals</p>
+                {/* The weekly calories */}
+                <p className="font-bold ">Daily Average: {Math.round((summedData?.calories ?? 0) / 7)} kcals</p>
                 <div className="w-full max-w-md  space-y-6">
-                  <HistoryProgress date={DayOfTheWeek(theDate)} calories={2670} totalCalories={2500} dateActual={theDate.format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={1400} totalCalories={2500} dateActual={theDate.add(1, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={1250} totalCalories={2500} dateActual={theDate.add(2, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(3, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(4, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(5, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={0} totalCalories={2500} dateActual={theDate.add(6, 'days').format(dateFormat)}/> 
+                  <HistoryProgress date={DayOfTheWeek(theDate)} calories={day1?.calories ?? 0} totalCalories={2500} dateActual={theDate.format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={day2?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(1, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={day3?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(2, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={day4?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(3, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={day5?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(4, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={day6?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(5, 'days').format(dateFormat)}/>
+                  <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={day7?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(6, 'days').format(dateFormat)}/> 
                 </div>
               </div>
   
@@ -319,55 +344,63 @@ export const WeeklyProgress = () => {
               </div>
 
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-                <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Trends</h2>
-                <div className="w-full h-full flex flex-col items-center">
+                <div className="w-full h-fulls">
                   {/*
                     Code refrenced from shadui
                     https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
                   */}
-                  <h3 className="font-bold">Macronutirent Trends</h3>
-                  <ChartContainer config={chartConfig}>
-                        <LineChart
-                          accessibilityLayer
-                          data={chartData}
-                          margin={{
-                            left: 12,
-                            right: 12,
-                          }}
-                        >
-                          <CartesianGrid vertical={false} />
-                          <XAxis
-                            dataKey="day"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            interval="preserveStartEnd"
-                            tickFormatter={(value) => (value.slice(0, 3))}
-                          />
-                          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                          <Line
-                            dataKey="protein"
-                            type="monotone"
-                            stroke="var(--color-protein)"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                          <Line
-                            dataKey="carbs"
-                            type="monotone"
-                            stroke="var(--color-carb)"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                           <Line
-                            dataKey="fat"
-                            type="monotone"
-                            stroke="var(--color-fat)"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                        </LineChart>
-                      </ChartContainer>
+                  <Card className="w-full">
+                    <CardHeader>
+                      <CardTitle>Macronutirent Trends</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer config={chartConfig}>
+                          <LineChart
+                            accessibilityLayer
+                            data={chartData}
+                            margin={{
+                              left: 12,
+                              right: 12,
+                            }}
+                          >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                              dataKey="day"
+                              tickLine={false}
+                              axisLine={false}
+                              tickMargin={8}
+                              interval="preserveStartEnd"
+                              tickFormatter={(value) => (value.slice(0, 3))}
+                            />
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                            <Line
+                              dataKey="protein"
+                              type="monotone"
+                              stroke="var(--color-protein)"
+                              strokeWidth={2}
+                              dot={false}
+                            />
+                            <Line
+                              dataKey="carbs"
+                              type="monotone"
+                              stroke="var(--color-carb)"
+                              strokeWidth={2}
+                              dot={false}
+                            />
+                            <Line
+                              dataKey="fat"
+                              type="monotone"
+                              stroke="var(--color-fat)"
+                              strokeWidth={2}
+                              dot={false}
+                            />
+                          </LineChart>
+                        </ChartContainer>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div>
+                  
                 </div>
               </div>
             </div>
