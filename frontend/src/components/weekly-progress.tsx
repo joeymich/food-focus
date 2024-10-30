@@ -14,6 +14,7 @@ import {ChartConfig,  ChartContainer, ChartTooltip, ChartTooltipContent,  } from
 import { Test } from "./ui/test";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "./ui/card";
 import { Summary, SummariesApi } from "@/api/SummariesApi";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, } from "./ui/carousel";
 
 const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number; dateActual : string}) => {
     //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -101,11 +102,174 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
 )               
 };  
 
+const TrendsSection =  (prop: {chartData: ChartLayout[]})=> {
+  const chartConfig = {
+    protein: {
+      label: "Protein",
+      color: "orange",
+    },
+    carb: {
+      label: "Carbs",
+      color: "green",
+    },
+    fat: {
+      label: "Fat",
+      color: "blue",
+    },
+  } satisfies ChartConfig
+
+    return (
+      <>
+        <div className="w-full h-1/2">
+          {/*
+            Code refrenced from shadui
+            https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
+          */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Macronutirent Trends</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig} className="w-full h-[150px]">
+                  <LineChart
+                    accessibilityLayer
+                    data={prop.chartData}
+                    margin={{
+                      left: 12,
+                      right: 12,
+                    }}
+                  >
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                      dataKey="day"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      interval="preserveStartEnd"
+                      tickFormatter={(value) => (value.slice(0, 3))}
+                    />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                    <Line
+                      dataKey="protein"
+                      type="monotone"
+                      stroke="var(--color-protein)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="carbs"
+                      type="monotone"
+                      stroke="var(--color-carb)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="fat"
+                      type="monotone"
+                      stroke="var(--color-fat)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  </LineChart>
+                </ChartContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="w-full h-1/2 flex justify-center">
+        <Carousel className="w-[92%]">
+          <CarouselContent>
+            <CarouselItem>
+            <Card>
+            <CardHeader>
+              <CardTitle>Macronutirent Trends</CardTitle>
+            </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="w-full h-[150px]">
+                    <LineChart
+                      accessibilityLayer
+                      data={prop.chartData}
+                      margin={{
+                        left: 12,
+                        right: 12,
+                      }}
+                    >
+                      <CartesianGrid vertical={false} />
+                      <XAxis
+                        dataKey="day"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        interval="preserveStartEnd"
+                        tickFormatter={(value) => (value.slice(0, 3))}
+                      />
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                      <Line
+                        dataKey="protein"
+                        type="monotone"
+                        stroke="var(--color-protein)"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line
+                        dataKey="carbs"
+                        type="monotone"
+                        stroke="var(--color-carb)"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line
+                        dataKey="fat"
+                        type="monotone"
+                        stroke="var(--color-fat)"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ChartContainer>
+              </CardContent>
+            </Card>
+            </CarouselItem>
+            <CarouselItem>...</CarouselItem>
+            <CarouselItem>...</CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious className="bg-gray-100"/>
+          <CarouselNext className="bg-gray-100"/>
+        </Carousel>
+        </div>
+      </>
+    )
+  }
+
 type ChartLayout = {
   day: string,
   carbs: number,
   protein: number, 
   fat: number,
+}
+
+type CarbDataLayout = {
+  day: string,
+  dietary_fibers: number,
+  sugar: number,
+}
+
+type FatDataLayout = {
+  day: string,
+  saturated_fat: number,
+  polyunsaturated_fat: number,
+  monounsaturated_fat: number,
+  trans_fat: number,
+}
+
+type OtherDataLayout = {
+  day: string,
+  sodium: number,
+  potassium: number,
+  vitamin_a: number,
+  vitamin_c: number,
+  calcium: number,
+  iron: number
 }
 
 export const WeeklyProgress = () => {
@@ -127,14 +291,10 @@ export const WeeklyProgress = () => {
     const[calcium, setCalcium] = useState(0.0);
     const[iron, setIron] = useState(0.0);
     const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs().add(-6, "days"));
-    const[chartData, setChartData] = useState<ChartLayout[]>([
-      { day: "Wed", carbs: 186, protein: 80, fat: 120},
-      { day: "Thur", carbs: 305, protein: 200, fat: 130},
-      { day: "March", carbs: 237,protein: 120, fat: 231},
-      { day: "April", carbs: 73, protein: 190, fat: 321},
-      { day: "May", carbs: 209, protein: 130, fat: 212},
-      { day: "June", carbs: 214, protein: 140, fat: 103},
-    ])
+    const[chartData, setChartData] = useState<ChartLayout[]>([])
+    const[CarbsData, setCarbsData] = useState<CarbDataLayout[]>([])
+    const[FatData, setFatData] = useState<FatDataLayout[]>([])
+    const[OtherData, setOtherData] = useState<OtherDataLayout[]>([])
     const[day1, setDay1] = useState<Summary>();
     const[day2, setDay2] = useState<Summary>();
     const[day3, setDay3] = useState<Summary>();
@@ -204,13 +364,17 @@ export const WeeklyProgress = () => {
       const selectDate = DayOfTheWeek(dayjs(date))
       console.log(selectDate);
       setChartData([
-      { day: DayOfTheWeek(theDate.add(0, "days")), carbs: day1?.total_carbs ?? 0, protein: day1?.protein ?? 0, fat: day1?.total_fat ?? 0},
-      { day: DayOfTheWeek(theDate.add(1, "days")), carbs: day2?.total_carbs ?? 0, protein: day2?.protein ?? 0, fat: day2?.total_fat ?? 0},
-      { day: DayOfTheWeek(theDate.add(2, "days")), carbs: day3?.total_carbs ?? 0, protein: day3?.protein ?? 0, fat: day3?.total_fat ?? 0},
-      { day: DayOfTheWeek(theDate.add(3, "days")), carbs: day4?.total_carbs ?? 0, protein: day4?.protein ?? 0, fat: day4?.total_fat ?? 0},
-      { day: DayOfTheWeek(theDate.add(4, "days")), carbs: day5?.total_carbs ?? 0, protein: day5?.protein ?? 0, fat: day5?.total_fat ?? 0},
-      { day: DayOfTheWeek(theDate.add(5, "days")), carbs: day6?.total_carbs ?? 0, protein: day6?.protein ?? 0, fat: day6?.total_fat ?? 0},
-      { day: DayOfTheWeek(theDate.add(6, "days")), carbs: day7?.total_carbs ?? 0, protein: day7?.protein ?? 0, fat: day7?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(0, "days")), carbs: day1?.total_carbs ?? 0, protein: day1?.protein ?? 0, fat: day1?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(1, "days")), carbs: day2?.total_carbs ?? 0, protein: day2?.protein ?? 0, fat: day2?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(2, "days")), carbs: day3?.total_carbs ?? 0, protein: day3?.protein ?? 0, fat: day3?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(3, "days")), carbs: day4?.total_carbs ?? 0, protein: day4?.protein ?? 0, fat: day4?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(4, "days")), carbs: day5?.total_carbs ?? 0, protein: day5?.protein ?? 0, fat: day5?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(5, "days")), carbs: day6?.total_carbs ?? 0, protein: day6?.protein ?? 0, fat: day6?.total_fat ?? 0},
+        { day: DayOfTheWeek(theDate.add(6, "days")), carbs: day7?.total_carbs ?? 0, protein: day7?.protein ?? 0, fat: day7?.total_fat ?? 0},
+      ])
+
+      setCarbsData([
+
       ])
     }
 
@@ -275,20 +439,6 @@ export const WeeklyProgress = () => {
         }
     }
 
-    const chartConfig = {
-      protein: {
-        label: "Protein",
-        color: "orange",
-      },
-      carb: {
-        label: "Carbs",
-        color: "green",
-      },
-      fat: {
-        label: "Fat",
-        color: "blue",
-      },
-    } satisfies ChartConfig
   
     return (
       <>
@@ -334,73 +484,19 @@ export const WeeklyProgress = () => {
                   <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={day7?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(6, 'days').format(dateFormat)}/> 
                 </div>
               </div>
+
+              <div className="w-full min-w-[600px] max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
+                <TrendsSection chartData={chartData}/>
+                  <div>
+                    
+                  </div>
+              </div>
   
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">Daily Average Macronutrients</h2>
                 <div className="w-full h-full">
                   <MacronutrientSection fat={Math.round((summedData?.total_fat ?? 0) / 7)} carb={Math.round((summedData?.total_carbs ?? 0) / 7)} protein={Math.round((summedData?.protein ?? 0) / 7)} satFat={Math.round((summedData?.saturated_fat ?? 0) / 7)} polFat={Math.round((summedData?.polyunsaturated_fat ?? 0) / 7)} monFat={Math.round((summedData?.monounsaturated_fat ?? 0) / 7)} traFat={Math.round((summedData?.trans_fat ?? 0) / 7)}
                                     sodium={Math.round((summedData?.sodium ?? 0) / 7)} potassium={Math.round((summedData?.potassium ?? 0) / 7)} fiber={Math.round((summedData?.dietary_fiber ?? 0) / 7)} sugar={Math.round((summedData?.sugars ?? 0) / 7)} vitA={Math.round((summedData?.vitamin_a ?? 0) / 7)} vitC={Math.round((summedData?.vitamin_c ?? 0) / 7)} calcium={Math.round((summedData?.calcium ?? 0) / 7)} iron={Math.round((summedData?.iron ?? 0) / 7)}/>              
-                </div>
-              </div>
-
-              <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-                <div className="w-full h-fulls">
-                  {/*
-                    Code refrenced from shadui
-                    https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
-                  */}
-                  <Card className="w-full">
-                    <CardHeader>
-                      <CardTitle>Macronutirent Trends</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ChartContainer config={chartConfig}>
-                          <LineChart
-                            accessibilityLayer
-                            data={chartData}
-                            margin={{
-                              left: 12,
-                              right: 12,
-                            }}
-                          >
-                            <CartesianGrid vertical={false} />
-                            <XAxis
-                              dataKey="day"
-                              tickLine={false}
-                              axisLine={false}
-                              tickMargin={8}
-                              interval="preserveStartEnd"
-                              tickFormatter={(value) => (value.slice(0, 3))}
-                            />
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                            <Line
-                              dataKey="protein"
-                              type="monotone"
-                              stroke="var(--color-protein)"
-                              strokeWidth={2}
-                              dot={false}
-                            />
-                            <Line
-                              dataKey="carbs"
-                              type="monotone"
-                              stroke="var(--color-carb)"
-                              strokeWidth={2}
-                              dot={false}
-                            />
-                            <Line
-                              dataKey="fat"
-                              type="monotone"
-                              stroke="var(--color-fat)"
-                              strokeWidth={2}
-                              dot={false}
-                            />
-                          </LineChart>
-                        </ChartContainer>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div>
-                  
                 </div>
               </div>
             </div>
