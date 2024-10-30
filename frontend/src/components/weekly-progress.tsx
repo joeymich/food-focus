@@ -9,8 +9,11 @@ import { MacronutrientProgressBar } from "./ui/macronutirents-progressbar";
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Table, TableCell, TableHead, TableHeader, TableRow} from './ui/table';
-import { FoodLogApi, FoodLogAll } from "@/api/FoodLogApi";
+import { CartesianGrid, Line, LineChart, XAxis,  Bar, BarChart  } from "recharts"
+import {ChartConfig,  ChartContainer, ChartTooltip, ChartTooltipContent,  } from "./ui/chart";
+import { Test } from "./ui/test";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "./ui/card";
+import { Summary, SummariesApi } from "@/api/SummariesApi";
 
 const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: number; dateActual : string}) => {
     //Code referenced from https://www.youtube.com/watch?v=PraIL031lno&ab_channel=StudytonightwithAbhishek
@@ -25,24 +28,104 @@ const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: 
     )
     };
 
-  const WeekMeals = () => {
-    return (
-      <div>
-        <Tabs defaultValue="account" className="w-[400px]">
-          <TabsList>
-            <TabsTrigger value="mon">Mon</TabsTrigger>
-            <TabsTrigger value="tue">Tue</TabsTrigger>
-            <TabsTrigger value="wed">Wed</TabsTrigger>
-            <TabsTrigger value="thu">Thu</TabsTrigger>
-            <TabsTrigger value="fri">Fri</TabsTrigger>
-            <TabsTrigger value="sat">Sat</TabsTrigger>
-            <TabsTrigger value="sun">Sun</TabsTrigger>
-          </TabsList>
-            
-        </Tabs>
+const WeekMeals = () => {
+  return (
+    <div>
+      <Tabs defaultValue="account" className="w-[400px]">
+        <TabsList>
+          <TabsTrigger value="mon">Mon</TabsTrigger>
+          <TabsTrigger value="tue">Tue</TabsTrigger>
+          <TabsTrigger value="wed">Wed</TabsTrigger>
+          <TabsTrigger value="thu">Thu</TabsTrigger>
+          <TabsTrigger value="fri">Fri</TabsTrigger>
+          <TabsTrigger value="sat">Sat</TabsTrigger>
+          <TabsTrigger value="sun">Sun</TabsTrigger>
+        </TabsList>
+          
+      </Tabs>
+    </div>
+  )
+}
+
+const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; satFat: number; polFat: number;
+                                monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
+                                sugar: number; vitA: number; vitC: number; calcium: number; iron: number})=> {
+  return (
+  <div className='w-full space-y-4'>
+    <MacronutrientProgressBar fat={prop.fat} carb={prop.carb} protein={prop.protein}/>  
+    <ScrollArea className="max-h-65 w-full rounded-md border bg-gray-100">
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between px-4'>
+      <p>Average Saturated Fat</p>
+      <p>{prop.satFat}g</p>
       </div>
-    )
-  }
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between bg-gray-200 px-4'> 
+      <p>Average Polyunsaturaed Fat</p>
+      <p>{prop.polFat}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between px-4'>
+      <p>Average Monounsaturated Fat</p>
+      <p>{prop.monFat}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between bg-gray-200 px-4'>
+      <p>Average Trans Fat</p>
+      <p>{prop.traFat}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between px-4'>
+      <p>Average Sodium</p>
+      <p>{prop.sodium}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between bg-gray-200 px-4'>
+      <p>Average Potassium</p>
+      <p>{prop.potassium}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between px-4'>
+      <p>Average Dietray Fiber</p>
+      <p>{prop.fiber}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between bg-gray-200 px-4'>
+      <p>Average Sugars</p>
+      <p>{prop.sugar}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between px-4'>
+      <p>Average Vitamin A</p>
+      <p>{prop.vitA}mg</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between bg-gray-200 px-4'>
+      <p>Average Vitamin C</p>
+      <p>{prop.vitC}mg</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between px-4'>
+      <p>Average Calcium</p>
+      <p>{prop.calcium}g</p>
+      </div>
+      <Separator orientation="horizontal" />
+      <div className='flex justify-between bg-gray-200 px-4'>
+      <p>Average Iron</p>
+      <p>{prop.iron}mg</p>
+      </div>
+      <Separator orientation="horizontal" />
+    </ScrollArea>
+  </div>
+)               
+};  
+
+type ChartLayout = {
+  day: string,
+  carbs: number,
+  protein: number, 
+  fat: number,
+}
 
 export const WeeklyProgress = () => {
     const[totalCal, setTotalCal] = useState(0.0);
@@ -63,33 +146,78 @@ export const WeeklyProgress = () => {
     const[calcium, setCalcium] = useState(0.0);
     const[iron, setIron] = useState(0.0);
     const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs().add(-6, "days"));
-    const[theWeek, setTheWeek] = useState<dayjs.Dayjs[]>([]);
+    const[chartData, setChartData] = useState<ChartLayout[]>([
+      { day: "Wed", carbs: 186, protein: 80, fat: 120},
+      { day: "Thur", carbs: 305, protein: 200, fat: 130},
+      { day: "March", carbs: 237,protein: 120, fat: 231},
+      { day: "April", carbs: 73, protein: 190, fat: 321},
+      { day: "May", carbs: 209, protein: 130, fat: 212},
+      { day: "June", carbs: 214, protein: 140, fat: 103},
+    ])
+    const[day1, setDay1] = useState<Summary>();
+    const[day2, setDay2] = useState<Summary>();
+    const[day3, setDay3] = useState<Summary>();
+    const[day4, setDay4] = useState<Summary>();
+    const[day5, setDay5] = useState<Summary>();
+    const[day6, setDay6] = useState<Summary>();
+    const[day7, setDay7] = useState<Summary>();
     const dateFormat = 'MM-DD-YYYY';
     const dateDBFormat = 'YYYY-MM-DD';
 
-    const getFoodData = async (date: string) => {
+    const getSummary = async (date: string) => {
       try {
-        const results = await FoodLogApi.getFoodLogDate(date);
-        console.log(results);
+        const response = await SummariesApi.getFoodLogAll(date);
+        return response;
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     }
 
-    function fillInTheWeek() {
-      setTheWeek([...theWeek, dayjs()]);
-      
-      for(let i = 1; i < 7; i++) {
-        setTheWeek([...theWeek, dayjs().add(-i, "days")]);
-      }
+    function GetAllSummaries(startDate: string) {
+      let promise = getSummary(startDate);
+      promise.then(val => setDay1(val))
+
+      promise = getSummary(dayjs(startDate).add(1, "days").format(dateDBFormat))
+      promise.then(val => setDay2(val))
+
+      promise = getSummary(dayjs(startDate).add(2, "days").format(dateDBFormat))
+      promise.then(val => setDay3(val))
+
+      promise = getSummary(dayjs(startDate).add(3, "days").format(dateDBFormat))
+      promise.then(val => setDay4(val))
+
+      promise = getSummary(dayjs(startDate).add(4, "days").format(dateDBFormat))
+      promise.then(val => setDay5(val))
+
+      promise = getSummary(dayjs(startDate).add(5, "days").format(dateDBFormat))
+      promise.then(val => setDay6(val))
+
+      promise = getSummary(dayjs(startDate).add(6, "days").format(dateDBFormat))
+      promise.then(val => setDay7(val))
+    }
+
+    function SetUpChart(date: dayjs.Dayjs) {
+      const selectDate = DayOfTheWeek(dayjs(date))
+      console.log(selectDate);
+      setChartData([
+      { day: DayOfTheWeek(theDate.add(0, "days")), carbs: day1?.total_carbs ?? 0, protein: day1?.protein ?? 0, fat: day1?.total_fat ?? 0},
+      { day: DayOfTheWeek(theDate.add(1, "days")), carbs: day2?.total_carbs ?? 0, protein: day2?.protein ?? 0, fat: day2?.total_fat ?? 0},
+      { day: DayOfTheWeek(theDate.add(2, "days")), carbs: day3?.total_carbs ?? 0, protein: day3?.protein ?? 0, fat: day3?.total_fat ?? 0},
+      { day: DayOfTheWeek(theDate.add(3, "days")), carbs: day4?.total_carbs ?? 0, protein: day4?.protein ?? 0, fat: day4?.total_fat ?? 0},
+      { day: DayOfTheWeek(theDate.add(4, "days")), carbs: day5?.total_carbs ?? 0, protein: day5?.protein ?? 0, fat: day5?.total_fat ?? 0},
+      { day: DayOfTheWeek(theDate.add(5, "days")), carbs: day6?.total_carbs ?? 0, protein: day6?.protein ?? 0, fat: day6?.total_fat ?? 0},
+      { day: DayOfTheWeek(theDate.add(6, "days")), carbs: day7?.total_carbs ?? 0, protein: day7?.protein ?? 0, fat: day7?.total_fat ?? 0},
+      ])
     }
 
     useEffect(() => {
       PlaceHolder();
-      getFoodData(dayjs().format(dateDBFormat).toString());
-      fillInTheWeek();
-      console.log(theWeek);
+      GetAllSummaries(theDate.format(dateDBFormat));
     }, [])
+
+    useEffect(() => {
+      SetUpChart(theDate);
+    })
   
     function PlaceHolder() {
       setTotalCal(2500);
@@ -111,78 +239,7 @@ export const WeeklyProgress = () => {
       setIron(16);
     }
 
-    const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; satFat: number; polFat: number;
-                                    monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
-                                    sugar: number; vitA: number; vitC: number; calcium: number; iron: number})=> {
-      return (
-      <div className='w-full space-y-4'>
-        <MacronutrientProgressBar fat={prop.fat} carb={prop.carb} protein={prop.protein}/>  
-        <ScrollArea className="max-h-65 w-full rounded-md border bg-gray-100">
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between px-4'>
-          <p>Average Saturated Fat</p>
-          <p>{prop.satFat}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between bg-gray-200 px-4'> 
-          <p>Average Polyunsaturaed Fat</p>
-          <p>{prop.polFat}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between px-4'>
-          <p>Average Monounsaturated Fat</p>
-          <p>{prop.monFat}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between bg-gray-200 px-4'>
-          <p>Average Trans Fat</p>
-          <p>{prop.traFat}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between px-4'>
-          <p>Average Sodium</p>
-          <p>{prop.sodium}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between bg-gray-200 px-4'>
-          <p>Average Potassium</p>
-          <p>{prop.potassium}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between px-4'>
-          <p>Average Dietray Fiber</p>
-          <p>{prop.fiber}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between bg-gray-200 px-4'>
-          <p>Average Sugars</p>
-          <p>{prop.sugar}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between px-4'>
-          <p>Average Vitamin A</p>
-          <p>{prop.vitA}mg</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between bg-gray-200 px-4'>
-          <p>Average Vitamin C</p>
-          <p>{prop.vitC}mg</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between px-4'>
-          <p>Average Calcium</p>
-          <p>{prop.calcium}g</p>
-          </div>
-          <Separator orientation="horizontal" />
-          <div className='flex justify-between bg-gray-200 px-4'>
-          <p>Average Iron</p>
-          <p>{prop.iron}mg</p>
-          </div>
-          <Separator orientation="horizontal" />
-        </ScrollArea>
-      </div>
-    )               
-  };              
+            
 
     function DayOfTheWeek(date: dayjs.Dayjs) {
         switch(date.day()) {
@@ -206,12 +263,23 @@ export const WeeklyProgress = () => {
     const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     //Code for the date picker refrenced from https://ant.design/components/date-picker
         if(date != null) {
-            setTheDate(date);
+            setTheDate(date)
             console.log(date.day());
+            GetAllSummaries(date.format(dateDBFormat));
+            SetUpChart(date);
         }
     }
 
-
+    const chartConfig = {
+      protein: {
+        label: "Desktop",
+        color: "hsl(12 76% 61%)",
+      },
+      carb: {
+        label: "Mobile",
+        color: "hsl(173 58% 39%)",
+      },
+    } satisfies ChartConfig
   
     return (
       <>
@@ -226,7 +294,7 @@ export const WeeklyProgress = () => {
   
           <div className='w-full p-4 bg-secondary space-x-4 space-y-2 text-center'>
             <div className='w-full bg-secondary text-center'>
-                <h1 className="text-xl font-bold text-defaultText text-center">Select Start Date: </h1>
+                <h1 className="text-xl font-bold text-defaultText text-center">Select Start Date:</h1>
                 <DatePicker
                 format="MM-DD-YYYY"
                 minDate={dayjs('02-03-2002', dateFormat)}
@@ -265,9 +333,57 @@ export const WeeklyProgress = () => {
                 </div>
               </div>
   
-              <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
+              {/* <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Meals</h2>
                 <WeekMeals/>
+              </div> */}
+
+              <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
+                <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Trends</h2>
+                <div className="w-full h-full">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Macronutrient Trends</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer config={chartConfig}>
+                        <LineChart
+                          accessibilityLayer
+                          data={chartData}
+                          margin={{
+                            left: 12,
+                            right: 12,
+                          }}
+                        >
+                          <CartesianGrid vertical={false} />
+                          <XAxis
+                            dataKey="day"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            interval="preserveStartEnd"
+                            tickFormatter={(value) => (value.slice(0, 3))}
+                          />
+                          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                          <Line
+                            dataKey="protein"
+                            type="monotone"
+                            stroke="var(--color-protein)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="carbs"
+                            type="monotone"
+                            stroke="var(--color-carb)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ChartContainer>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
             </div>
           </div>
