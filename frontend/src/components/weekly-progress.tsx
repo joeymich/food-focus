@@ -273,23 +273,6 @@ type OtherDataLayout = {
 }
 
 export const WeeklyProgress = () => {
-    const[totalCal, setTotalCal] = useState(0.0);
-    const[calGoal, setCalGoal] = useState(0.0);
-    const[fat, setFat] = useState(0.0);
-    const[protein, setProtein] = useState(0.0);
-    const[carb, setCarb] = useState(0.0);
-    const[satFat, setSatFat] = useState(0.0);
-    const[polFat, setPolFat] = useState(0.0);
-    const[monFat, setMonFat] = useState(0.0);
-    const[traFat, setTraFat] = useState(0.0);
-    const[sodium, setSodium] = useState(0.0);
-    const[potassium, setPotassium] = useState(0.0);
-    const[fiber, setFiber] = useState(0.0);
-    const[sugar, setSugar] = useState(0.0);
-    const[vitA, setVitA] = useState(0.0);
-    const[vitC, setVitC] = useState(0.0);
-    const[calcium, setCalcium] = useState(0.0);
-    const[iron, setIron] = useState(0.0);
     const[theDate, setTheDate] = useState<dayjs.Dayjs>(dayjs().add(-6, "days"));
     const[chartData, setChartData] = useState<ChartLayout[]>([])
     const[CarbsData, setCarbsData] = useState<CarbDataLayout[]>([])
@@ -374,41 +357,44 @@ export const WeeklyProgress = () => {
       ])
 
       setCarbsData([
+        {day: DayOfTheWeek(theDate.add(0, "days")), dietary_fibers: day1?.dietary_fiber ?? 0, sugar: day1?.sugars ?? 0},
+        {day: DayOfTheWeek(theDate.add(1, "days")), dietary_fibers: day2?.dietary_fiber ?? 0, sugar: day2?.sugars ?? 0},
+        {day: DayOfTheWeek(theDate.add(2, "days")), dietary_fibers: day3?.dietary_fiber ?? 0, sugar: day3?.sugars ?? 0},
+        {day: DayOfTheWeek(theDate.add(3, "days")), dietary_fibers: day4?.dietary_fiber ?? 0, sugar: day4?.sugars ?? 0},
+        {day: DayOfTheWeek(theDate.add(4, "days")), dietary_fibers: day5?.dietary_fiber ?? 0, sugar: day5?.sugars ?? 0},
+        {day: DayOfTheWeek(theDate.add(5, "days")), dietary_fibers: day6?.dietary_fiber ?? 0, sugar: day6?.sugars ?? 0},
+        {day: DayOfTheWeek(theDate.add(6, "days")), dietary_fibers: day7?.dietary_fiber ?? 0, sugar: day7?.sugars ?? 0},
+      ])
 
+      setFatData([
+        {day: DayOfTheWeek(theDate.add(0, "days")), saturated_fat: day1?.saturated_fat ?? 0, polyunsaturated_fat: day1?.polyunsaturated_fat ?? 0, monounsaturated_fat: day1?.monounsaturated_fat ?? 0, trans_fat: day1?.trans_fat ?? 0},
+        {day: DayOfTheWeek(theDate.add(1, "days")), saturated_fat: day2?.saturated_fat ?? 0, polyunsaturated_fat: day2?.polyunsaturated_fat ?? 0, monounsaturated_fat: day2?.monounsaturated_fat ?? 0, trans_fat: day2?.trans_fat ?? 0},
+        {day: DayOfTheWeek(theDate.add(2, "days")), saturated_fat: day3?.saturated_fat ?? 0, polyunsaturated_fat: day3?.polyunsaturated_fat ?? 0, monounsaturated_fat: day3?.monounsaturated_fat ?? 0, trans_fat: day3?.trans_fat ?? 0},
+        {day: DayOfTheWeek(theDate.add(3, "days")), saturated_fat: day4?.saturated_fat ?? 0, polyunsaturated_fat: day4?.polyunsaturated_fat ?? 0, monounsaturated_fat: day4?.monounsaturated_fat ?? 0, trans_fat: day4?.trans_fat ?? 0},
+        {day: DayOfTheWeek(theDate.add(4, "days")), saturated_fat: day5?.saturated_fat ?? 0, polyunsaturated_fat: day5?.polyunsaturated_fat ?? 0, monounsaturated_fat: day5?.monounsaturated_fat ?? 0, trans_fat: day5?.trans_fat ?? 0},
+        {day: DayOfTheWeek(theDate.add(5, "days")), saturated_fat: day6?.saturated_fat ?? 0, polyunsaturated_fat: day6?.polyunsaturated_fat ?? 0, monounsaturated_fat: day6?.monounsaturated_fat ?? 0, trans_fat: day6?.trans_fat ?? 0},
+        {day: DayOfTheWeek(theDate.add(6, "days")), saturated_fat: day7?.saturated_fat ?? 0, polyunsaturated_fat: day7?.polyunsaturated_fat ?? 0, monounsaturated_fat: day7?.monounsaturated_fat ?? 0, trans_fat: day7?.trans_fat ?? 0},
+      ])
+
+      setOtherData([
+        {day: DayOfTheWeek(theDate.add(0, "days")),  sodium: day1?.sodium ?? 0, potassium: day1?.potassium ?? 0, vitamin_a: day1?.vitamin_a ?? 0,  vitamin_c: day1?.vitamin_c ?? 0,  calcium: day1?.calcium ?? 0,  iron: day1?.iron ?? 0},
+        {day: DayOfTheWeek(theDate.add(1, "days")),  sodium: day2?.sodium ?? 0, potassium: day2?.potassium ?? 0, vitamin_a: day2?.vitamin_a ?? 0,  vitamin_c: day2?.vitamin_c ?? 0,  calcium: day2?.calcium ?? 0,  iron: day2?.iron ?? 0},
+        {day: DayOfTheWeek(theDate.add(2, "days")),  sodium: day3?.sodium ?? 0, potassium: day3?.potassium ?? 0, vitamin_a: day3?.vitamin_a ?? 0,  vitamin_c: day3?.vitamin_c ?? 0,  calcium: day3?.calcium ?? 0,  iron: day3?.iron ?? 0},
+        {day: DayOfTheWeek(theDate.add(3, "days")),  sodium: day4?.sodium ?? 0, potassium: day4?.potassium ?? 0, vitamin_a: day4?.vitamin_a ?? 0,  vitamin_c: day4?.vitamin_c ?? 0,  calcium: day4?.calcium ?? 0,  iron: day4?.iron ?? 0},
+        {day: DayOfTheWeek(theDate.add(4, "days")),  sodium: day5?.sodium ?? 0, potassium: day5?.potassium ?? 0, vitamin_a: day5?.vitamin_a ?? 0,  vitamin_c: day5?.vitamin_c ?? 0,  calcium: day5?.calcium ?? 0,  iron: day5?.iron ?? 0},
+        {day: DayOfTheWeek(theDate.add(5, "days")),  sodium: day6?.sodium ?? 0, potassium: day6?.potassium ?? 0, vitamin_a: day6?.vitamin_a ?? 0,  vitamin_c: day6?.vitamin_c ?? 0,  calcium: day6?.calcium ?? 0,  iron: day6?.iron ?? 0},
+        {day: DayOfTheWeek(theDate.add(6, "days")),  sodium: day7?.sodium ?? 0, potassium: day7?.potassium ?? 0, vitamin_a: day7?.vitamin_a ?? 0,  vitamin_c: day7?.vitamin_c ?? 0,  calcium: day7?.calcium ?? 0,  iron: day7?.iron ?? 0},
       ])
     }
 
     useEffect(() => {
-      PlaceHolder();
       GetAllSummaries(theDate.format(dateDBFormat));
     }, [])
 
     useEffect(() => {
       SetUpChart(theDate);
       SumAll();
-    })
-  
-    function PlaceHolder() {
-      setTotalCal(2500);
-      setCalGoal(2500);
-      setFat(18);
-      setProtein(29);
-      setCarb(20);
-      setSatFat(16);
-      setPolFat(2);
-      setMonFat(0);
-      setTraFat(0);
-      setSodium(13);
-      setPotassium(19);
-      setFiber(12);
-      setSugar(12);
-      setVitA(13);
-      setVitC(15);
-      setCalcium(17);
-      setIron(16);
-    }
-
-            
+    })          
 
     function DayOfTheWeek(date: dayjs.Dayjs) {
         switch(date.day()) {
