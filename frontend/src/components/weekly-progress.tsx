@@ -28,25 +28,6 @@ const  HistoryProgress = (prop: {date: string, calories: number; totalCalories: 
     )
     };
 
-const WeekMeals = () => {
-  return (
-    <div>
-      <Tabs defaultValue="account" className="w-[400px]">
-        <TabsList>
-          <TabsTrigger value="mon">Mon</TabsTrigger>
-          <TabsTrigger value="tue">Tue</TabsTrigger>
-          <TabsTrigger value="wed">Wed</TabsTrigger>
-          <TabsTrigger value="thu">Thu</TabsTrigger>
-          <TabsTrigger value="fri">Fri</TabsTrigger>
-          <TabsTrigger value="sat">Sat</TabsTrigger>
-          <TabsTrigger value="sun">Sun</TabsTrigger>
-        </TabsList>
-          
-      </Tabs>
-    </div>
-  )
-}
-
 const MacronutrientSection = (prop: {fat: number; protein: number; carb: number; satFat: number; polFat: number;
                                 monFat: number; traFat: number; sodium: number; potassium: number; fiber:number;
                                 sugar: number; vitA: number; vitC: number; calcium: number; iron: number})=> {
@@ -332,15 +313,14 @@ export const WeeklyProgress = () => {
                                     sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
                 </div>
               </div>
-  
-              {/* <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
-                <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Meals</h2>
-                <WeekMeals/>
-              </div> */}
 
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Trends</h2>
                 <div className="w-full h-full">
+                  {/*
+                    Code refrenced from shadui
+                    https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
+                  */}
                   <Card>
                     <CardHeader>
                       <CardTitle>Macronutrient Trends</CardTitle>
