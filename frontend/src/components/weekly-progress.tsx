@@ -253,12 +253,16 @@ export const WeeklyProgress = () => {
 
     const chartConfig = {
       protein: {
-        label: "Desktop",
-        color: "hsl(12 76% 61%)",
+        label: "Protein",
+        color: "orange",
       },
       carb: {
-        label: "Mobile",
-        color: "hsl(173 58% 39%)",
+        label: "Carbs",
+        color: "green",
+      },
+      fat: {
+        label: "Fat",
+        color: "blue",
       },
     } satisfies ChartConfig
   
@@ -316,17 +320,13 @@ export const WeeklyProgress = () => {
 
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">This Week's Trends</h2>
-                <div className="w-full h-full">
+                <div className="w-full h-full flex flex-col items-center">
                   {/*
                     Code refrenced from shadui
                     https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
                   */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Macronutrient Trends</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ChartContainer config={chartConfig}>
+                  <h3 className="font-bold">Macronutirent Trends</h3>
+                  <ChartContainer config={chartConfig}>
                         <LineChart
                           accessibilityLayer
                           data={chartData}
@@ -359,10 +359,15 @@ export const WeeklyProgress = () => {
                             strokeWidth={2}
                             dot={false}
                           />
+                           <Line
+                            dataKey="fat"
+                            type="monotone"
+                            stroke="var(--color-fat)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
                         </LineChart>
                       </ChartContainer>
-                    </CardContent>
-                  </Card>
                 </div>
               </div>
             </div>
