@@ -338,8 +338,8 @@ export const WeeklyProgress = () => {
               <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">Daily Average Macronutrients</h2>
                 <div className="w-full h-full">
-                  <MacronutrientSection fat={fat} carb={carb} protein={protein} satFat={satFat} polFat={polFat} monFat={monFat} traFat={traFat}
-                                    sodium={sodium} potassium={potassium} fiber={fiber} sugar={sugar} vitA={vitA} vitC={vitC} calcium={calcium} iron={iron}/>              
+                  <MacronutrientSection fat={Math.round((summedData?.total_fat ?? 0) / 7)} carb={Math.round((summedData?.total_carbs ?? 0) / 7)} protein={Math.round((summedData?.protein ?? 0) / 7)} satFat={Math.round((summedData?.saturated_fat ?? 0) / 7)} polFat={Math.round((summedData?.polyunsaturated_fat ?? 0) / 7)} monFat={Math.round((summedData?.monounsaturated_fat ?? 0) / 7)} traFat={Math.round((summedData?.trans_fat ?? 0) / 7)}
+                                    sodium={Math.round((summedData?.sodium ?? 0) / 7)} potassium={Math.round((summedData?.potassium ?? 0) / 7)} fiber={Math.round((summedData?.dietary_fiber ?? 0) / 7)} sugar={Math.round((summedData?.sugars ?? 0) / 7)} vitA={Math.round((summedData?.vitamin_a ?? 0) / 7)} vitC={Math.round((summedData?.vitamin_c ?? 0) / 7)} calcium={Math.round((summedData?.calcium ?? 0) / 7)} iron={Math.round((summedData?.iron ?? 0) / 7)}/>              
                 </div>
               </div>
 
