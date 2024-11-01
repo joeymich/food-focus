@@ -19,6 +19,12 @@ def create_app() -> FastAPI:
     include_routers(app)
     attach_middleware(app)
 
+    @app.get('/')
+    async def index():
+        import asyncio
+        await asyncio.sleep(3)
+        return 'hello'
+
     return app
 
 
