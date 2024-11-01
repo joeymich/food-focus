@@ -7,7 +7,7 @@ import { AuthApi } from '@/api/AuthApi';
 import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/form/input';
 import { Button } from './ui/button';
-import { Navbar } from './ui/Navbar';
+import { Navbar } from './Navbar';
 
 export const Register = () => {
     const { login } = useAuth()
@@ -97,14 +97,14 @@ export const Register = () => {
 
     return (
         <>
-            <Navbar isAuth={false}/>
+            <Navbar isAuth={false} />
 
             <div className="bg-background min-h-screen flex flex-col justify-center items-center">
-                <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+                <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md border">
                     <h2 className="text-4xl font-bold text-defaultText text-center">Register</h2>
                     <form className="space-y-6" onSubmit={handleSubmit}>
-                        <div>
-                            <label className="block text-defaultText font-bold mb-2" htmlFor="email">
+                        <div className='flex flex-col gap-y-2'>
+                            <label className='text-muted-foreground text-sm' htmlFor="email">
                                 Email
                             </label>
                             <Input
@@ -115,7 +115,6 @@ export const Register = () => {
                                 onChange={handleChangeEmail}
                                 onBlur={handleBlurEmail}
                                 disabled={isLoading}
-                                // className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 placeholder="Enter your email"
                                 required
                             />
@@ -125,8 +124,8 @@ export const Register = () => {
                                 </p>
                             )}
                         </div>
-                        <div>
-                            <label className="block text-defaultText font-bold mb-2" htmlFor="password">
+                        <div className='flex flex-col gap-y-2'>
+                            <label className="text-muted-foreground text-sm" htmlFor="password">
                                 Password
                             </label>
                             <Input
@@ -137,7 +136,6 @@ export const Register = () => {
                                 onChange={handleChangePassword}
                                 onBlur={handleBlurPassword}
                                 disabled={isLoading}
-                                // className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 placeholder="Enter your password"
                                 required
                             />
@@ -155,7 +153,8 @@ export const Register = () => {
                         )}
                         <Button
                             type="submit"
-                            className="w-full text-defaultText bg-secondary p-3 rounded-lg font-bold text-xl"
+                            variant='default'
+                            className="font-bold text-xl w-full"
                             isLoading={isLoading}
                         >
                             Register
@@ -165,8 +164,8 @@ export const Register = () => {
                     <p className="text-defaultText text-center">
                         Already have an account? <a href="/login" className="text-primary hover:underline">Login here</a>
                     </p>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     );
 };

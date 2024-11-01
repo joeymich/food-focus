@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthApi } from '@/api/AuthApi';
 import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/form/input';
-import { Navbar } from "@/components/ui/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 
 export const Login = () => {
@@ -95,50 +95,49 @@ export const Login = () => {
 
     return (
         <>
-            <Navbar isAuth={false}/>
+            <Navbar isAuth={false} />
             <div className="bg-background h-screen w-screen flex justify-center items-center">
-                <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+                <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md border">
                     <h1 className="text-4xl font-bold text-defaultText text-center">Login</h1>
-
                     <form className="flex flex-col space-y-4 w-full" onSubmit={handleSubmit}>
-                        <label className="block text-defaultText font-bold mb-2" htmlFor="email">
-                            Email
-                        </label>
-                        <Input
-                            value={email}
-                            onChange={handleChangeEmail}
-                            onBlur={handleBlurEmail}
-                            disabled={isLoading}
-                            type="email"
-                            id="email"
-                            placeholder="Enter your email"
-                        // className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                        {emailError && (
-                            <p className='text-sm text-destructive'>
-                                {emailError}
-                            </p>
-                        )}
-
-                        <label className="block text-defaultText font-bold mb-2" htmlFor="password">
-                            Password
-                        </label>
-                        <Input
-                            value={password}
-                            onChange={handleChangePassword}
-                            onBlur={handleBlurPassword}
-                            type="password"
-                            id="password"
-                            placeholder="Enter your password"
-                        // className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                        {passwordError && (
-                            <p className='text-sm text-destructive'>
-                                {passwordError}
-                            </p>
-                        )}
-
-                        <Button className="w-full bg-secondary text-defaultText py-2 font-bold text-lg rounded-lg">
+                        <div className='flex flex-col gap-y-2'>
+                            <label className="text-sm text-muted-foreground" htmlFor="email">
+                                Email
+                            </label>
+                            <Input
+                                value={email}
+                                onChange={handleChangeEmail}
+                                onBlur={handleBlurEmail}
+                                disabled={isLoading}
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                            />
+                            {emailError && (
+                                <p className='text-sm text-destructive'>
+                                    {emailError}
+                                </p>
+                            )}
+                        </div>
+                        <div className='flex flex-col gap-y-2'>
+                            <label className="text-sm text-muted-foreground" htmlFor="password">
+                                Password
+                            </label>
+                            <Input
+                                value={password}
+                                onChange={handleChangePassword}
+                                onBlur={handleBlurPassword}
+                                type="password"
+                                id="password"
+                                placeholder="Enter your password"
+                            />
+                            {passwordError && (
+                                <p className='text-sm text-destructive'>
+                                    {passwordError}
+                                </p>
+                            )}
+                        </div>
+                        <Button variant='default' type='submit' className="font-bold text-lg" isLoading={isLoading}>
                             Login
                         </Button>
                     </form>

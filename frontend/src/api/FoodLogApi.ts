@@ -1,5 +1,6 @@
 import { createApi } from '.'
 import { Foods } from './FoodApi'
+import { ServingSize } from './ServingSizeApi'
 
 const api = createApi('')
 
@@ -27,6 +28,7 @@ export interface FoodLog {
   serving_count: number,
   date: Date,
   meal: string
+  serving_size: ServingSize
 }
 
 export interface FoodLogAll {
@@ -42,7 +44,7 @@ export const FoodLogApi = {
         const response = await api.get<FoodLog[]>('/food-logs/' + foodLogID)
         return response.data
     },
-    getFoodLogDate: async (date: string) => {
+    getFoodLogDate: async (date?: string) => {
         const response = await api.get<FoodLogAll[]>('/food-logs', {
             params: {
                 date: date

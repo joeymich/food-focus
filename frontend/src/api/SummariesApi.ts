@@ -16,6 +16,7 @@ export interface Summary {
     total_carbs: number,
     dietary_fiber: number,
     sugars: number,
+    added_sugars: number | null,
     protein: number,
     vitamin_a: number,
     vitamin_c: number,
@@ -25,7 +26,7 @@ export interface Summary {
 
 export const SummariesApi = {
 
-    getFoodLogAll: async (date: string) => {
+    getFoodLogAll: async (date?: string) => {
         const response = await api.get<Summary>('/summaries/total', {
             params: {
                 date: date

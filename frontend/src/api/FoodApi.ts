@@ -1,6 +1,7 @@
 import { createApi } from '.'
+import { ServingSize } from './ServingSizeApi'
 
-const api = createApi('')
+const api = createApi('foods')
 
 export type FoodRequest = {
     foodId: string
@@ -21,6 +22,7 @@ export interface Foods {
     total_carbs: number,
     dietary_fiber: number,
     sugars: number,
+    added_sugars: number | null,
     protein: number,
     vitamin_a: number,
     vitamin_c: number,
@@ -31,11 +33,21 @@ export interface Foods {
 
 export const FoodApi = {
     foodWithID: async (foodRequest: string) => {
-        const response = await api.get<Foods[]>('/foods/' + foodRequest)
+        const response = await api.get<Foods[]>('/' + foodRequest)
         return response.data
     },
-    food: async () => {
-        const response = await api.get<Foods[]>('/foods')
+    getAll: async (query: string | null = null, limit: number | null = null, page: number | null = null) => {
+        const response = await api.get<Foods[]>('', {
+            params: {
+                q: query,
+                limit: limit,
+                page: page,
+            }
+        })
         return response.data
     },
+    getServingSizes: async (food_id: string) => {
+        const response = await api.get<ServingSize[]>(`/serving-sizes/${food_id}`)
+        return response.data
+    }
 }
