@@ -35,12 +35,26 @@ export const createRouter = () => {
             ),
             children: [
                 {
-                    path: '',
+                    path: '/dashboard/old',
                     lazy: async () => {
                         const { Dashboard } = await import('@/components/dashboard');
                         return { Component: Dashboard };
                     },
                 },
+                {
+                    path: '/dashboard',
+                    lazy: async () => {
+                        const { Dashboard2 } = await import('@/components/Dashboard/index');
+                        return { Component: Dashboard2 };
+                    },
+                },
+                {
+                    path: '/dashboard/search',
+                    lazy: async () => {
+                        const { Search } = await import('@/components/search');
+                        return { Component: Search };
+                    }
+                }
             ],
         },
         {
