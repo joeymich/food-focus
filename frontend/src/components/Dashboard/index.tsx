@@ -239,8 +239,8 @@ export const Dashboard2 = () => {
     return (
         <>
             <div className='p-4 max-w-7xl mx-auto gap-y-4 flex flex-col'>
-                <div className=''>
-
+                <div className='flex space-x-4 items-center'>
+                    <p className="font-bold text-xl">Select Date:</p>
                     <DatePicker
                         format="MM-DD-YYYY"
                         defaultValue={dayjs(dayjs(), dateFormat)}

@@ -580,6 +580,7 @@ export const Dashboard = () => {
 				<div className='flex:col justify-center space-y-4'>
 
 					<div className='w-full p-4 bg-secondary space-x-4 text-center'>
+						<p>Select Date: </p>
 						<div className='w-full bg-secondary space-y-4 text-center'>
 							<DatePicker
 								format="MM-DD-YYYY"
