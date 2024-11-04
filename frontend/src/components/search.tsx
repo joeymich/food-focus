@@ -7,10 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { toNormalCase } from '@/utils/string'
 import { ServingSize } from '@/api/ServingSizeApi'
 import { FoodLogApi } from '@/api/FoodLogApi'
-
+import { useParams } from 'react-router-dom'
 import { calculateNutrition, NutritionLabel } from './nutrition-label'
 import { Link } from 'react-router-dom'
 import { cn } from '@/utils'
+import dayjs from 'dayjs'
 
 type MealSelectProps = {
     mealType: string,
@@ -82,13 +83,14 @@ type AddFoodDialogContentProps = {
     food: Foods,
     isOpen: boolean,
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+    date: string
 }
-const AddFoodDialogContent = ({ food, isOpen, setIsOpen }: AddFoodDialogContentProps) => {
+const AddFoodDialogContent = ({ food, isOpen, setIsOpen, date }: AddFoodDialogContentProps) => {
     const [mealType, setMealType] = useState<string>('BREAKFAST')
     const [servingSizeId, setServingSizeId] = useState<string>('');
     const [servingCount, setServingCount] = useState<number>(1);
     const [servingSizes, setServingSizes] = useState<ServingSize[]>([])
-    const formattedDate = new Date().toISOString().split('T')[0];
+    const formattedDate = date;//new Date().toISOString().split('T')[0];
     const getServingSizes = async () => {
         try {
             const servingSizes = await FoodApi.getServingSizes(food.id)
@@ -159,6 +161,10 @@ const AddFoodDialogContent = ({ food, isOpen, setIsOpen }: AddFoodDialogContentP
 
 const FoodRow = ({ food }: { food: Foods }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const {date} = useParams();
+    useEffect(() => {
+        console.log(date);
+    })
     return (
         <div className='border rounded-lg p-4 flex items-center justify-between'>
             <div>
@@ -170,7 +176,7 @@ const FoodRow = ({ food }: { food: Foods }) => {
                     <Button variant='default'>Add Food</Button>
                 </DialogTrigger>
                 {isOpen &&
-                    <AddFoodDialogContent food={food} isOpen={isOpen} setIsOpen={setIsOpen} />
+                    <AddFoodDialogContent food={food} isOpen={isOpen} setIsOpen={setIsOpen} date={date ?? dayjs().format('YYYY-MM-DD')} />
                 }
             </Dialog>
         </div>

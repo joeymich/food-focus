@@ -49,7 +49,7 @@ export const createRouter = () => {
                     },
                 },
                 {
-                    path: '/dashboard/search',
+                    path: '/dashboard/search/:date',
                     lazy: async () => {
                         const { Search } = await import('@/components/search');
                         return { Component: Search };

@@ -266,7 +266,7 @@ export const Dashboard2 = () => {
                 <div className='p-4 rounded-lg border'>
                     <div className='flex justify-between'>
                         <h3 className='text-2xl font-semibold'>Food Diary</h3>
-                        <Link to='/dashboard/search'
+                        <Link to={'/dashboard/search/' + date.format(dateDBFormat)}
                             className={buttonVariants({ variant: 'default' })}
                         >
                             Add Food
