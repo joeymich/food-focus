@@ -1,11 +1,10 @@
 import { SummariesApi, Summary } from "@/api/SummariesApi"
 import { useEffect, useState } from "react"
 import { Nutrition, NutritionLabel } from "../nutrition-label"
-import { Foods } from "@/api/FoodApi"
 import { CircularProgressBar } from "../ui/circular-pogress-bar"
 import { Button, buttonVariants } from '@/components/ui/button'
 import { MacronutrientProgressBar } from "../ui/macronutirents-progressbar"
-import { FoodLog, FoodLogAll, FoodLogApi } from "@/api/FoodLogApi"
+import {FoodLogAll, FoodLogApi } from "@/api/FoodLogApi"
 import { formatNumber } from "@/utils/number"
 import { BiChevronDown } from "react-icons/bi"
 import { cn } from "@/utils"
@@ -212,7 +211,7 @@ export const Dashboard2 = () => {
     const [date, setDate] = useState<dayjs.Dayjs>(dayjs());
     const [dateChanged, setDateChanged] = useState(false);
     const {chosenDate} = useParams();
-    const handleDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    const handleDateChange: DatePickerProps['onChange'] = (date) => {
         //Code for the date picker refrenced from https://ant.design/components/date-picker
         if (date != null) {
             setDate(date)
