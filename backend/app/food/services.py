@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Sequence
 from uuid import UUID
 
 from app.db.service import BaseService
@@ -17,6 +17,16 @@ class FoodService(BaseService[Food]):
         db_session: AsyncSession,
     ):
         super().__init__(db_session, Food)
+
+    async def get_all(self, *, limit: int = 10, page: int = 1, q: str | None = None) -> Sequence[Food]:
+        query = select(self.model)
+        if q is not None:
+            query = query.filter(self.model.name.ilike(
+                f'%{q}%') | self.model.brand.ilike(f'%{q}%'))
+
+        query = query.limit(limit)
+        query = query.offset((page - 1) * limit)
+        return (await self.db_session.scalars(query)).all()
 
     async def delete_all(self) -> None:
         query = delete(self.model)

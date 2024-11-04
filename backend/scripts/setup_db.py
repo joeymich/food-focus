@@ -120,8 +120,8 @@ async def test_db():
 
     times = []
     foods = []
-    COMMIT_EVERY = 1000
-    ROLLING_COUNT = 1000
+    COMMIT_EVERY = 10000
+    ROLLING_COUNT = 20000
     with open(filepath, 'r', encoding='utf-8') as f:
         for i, food_data in enumerate(ijson.items(f, 'BrandedFoods.item')):
             start_time = time.perf_counter()

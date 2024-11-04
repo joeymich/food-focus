@@ -5,14 +5,14 @@ from .schemas import ServingSizeRead
 from .services import ServingSizeServiceDep
 
 
-@router.get(
-    '',
-    response_model=list[ServingSizeRead]
-)
-async def get_all(
-    serving_size_service: ServingSizeServiceDep,
-):
-    return await serving_size_service.get_all()
+# @router.get(
+#     '',
+#     response_model=list[ServingSizeRead]
+# )
+# async def get_all(
+#     serving_size_service: ServingSizeServiceDep,
+# ):
+#     return await serving_size_service.get_all()
 
 
 @router.get(
