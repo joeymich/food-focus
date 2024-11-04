@@ -189,6 +189,7 @@ export const Search = () => {
     const [page, setPage] = useState<number>(1)
     const limit = 10
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const {date} = useParams();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPage(1)
         setQuery(e.target.value)
@@ -212,7 +213,7 @@ export const Search = () => {
             <div className='text-left'>
                 <h1 className='text-2xl font-semibold'>Search</h1>
                 <Link
-                    to='/dashboard'
+                    to={'/dashboard/' + date}
                     className={cn(buttonVariants({ variant: 'link' }), 'w-fit px-0')}
                 >
                     Back to Dashboard

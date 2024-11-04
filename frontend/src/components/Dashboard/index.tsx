@@ -14,6 +14,7 @@ import { TbPencil } from 'react-icons/tb'
 import { Link } from "react-router-dom"
 import { DatePicker, DatePickerProps } from "antd"
 import dayjs from "dayjs"
+import { useParams } from "react-router-dom"
 
 const dateFormat = 'MM-DD-YYYY';
 const dateDBFormat = 'YYYY-MM-DD';
@@ -209,6 +210,8 @@ export const Dashboard2 = () => {
     const [summary, setSummary] = useState<Summary>()
     const [foods, setFoods] = useState<FoodLogAll[]>([])
     const [date, setDate] = useState<dayjs.Dayjs>(dayjs());
+    const [dateChanged, setDateChanged] = useState(false);
+    const {chosenDate} = useParams();
     const handleDateChange: DatePickerProps['onChange'] = (date, dateString) => {
         //Code for the date picker refrenced from https://ant.design/components/date-picker
         if (date != null) {
@@ -232,8 +235,16 @@ export const Dashboard2 = () => {
         }
     }
     useEffect(() => {
-        getSummary(date.format(dateDBFormat))
-        getFoods(date.format(dateDBFormat))
+        if(chosenDate != undefined && dateChanged == false) {
+            getSummary(chosenDate)
+            getFoods(chosenDate)
+            setDate(dayjs(chosenDate))
+            setDateChanged(true)
+        } else {
+            getSummary(date.format(dateDBFormat))
+            getFoods(date.format(dateDBFormat))
+        }
+        
     }, [date])
 
     return (
@@ -241,13 +252,23 @@ export const Dashboard2 = () => {
             <div className='p-4 max-w-7xl mx-auto gap-y-4 flex flex-col'>
                 <div className='flex space-x-4 items-center'>
                     <p className="font-bold text-xl">Select Date:</p>
-                    <DatePicker
-                        format="MM-DD-YYYY"
-                        defaultValue={dayjs(dayjs(), dateFormat)}
-                        minDate={dayjs('02-03-2002', dateFormat)}
-                        maxDate={dayjs(dayjs(), dateFormat)}
-                        onChange={handleDateChange}
-                    />
+                    {(chosenDate != undefined) ? (
+                        <DatePicker
+                            format="MM-DD-YYYY"
+                            defaultValue={dayjs(dayjs(chosenDate).format(dateFormat), dateFormat)}
+                            minDate={dayjs('02-03-2002', dateFormat)}
+                            maxDate={dayjs(dayjs(), dateFormat)}
+                            onChange={handleDateChange}
+                        />
+                    ): (
+                        <DatePicker
+                            format="MM-DD-YYYY"
+                            defaultValue={dayjs(date, dateFormat)}
+                            minDate={dayjs('02-03-2002', dateFormat)}
+                            maxDate={dayjs(dayjs(), dateFormat)}
+                            onChange={handleDateChange}
+                         />
+                     )}
                 </div>
                 <div className='flex gap-x-4 justify-between'>
                     <div className='flex flex-col gap-y-4 rounded-lg p-8 border flex-1'>
