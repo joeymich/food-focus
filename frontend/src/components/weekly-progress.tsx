@@ -1,17 +1,15 @@
 import { Navbar } from "./Navbar";
 import { ProgressBar } from "./ui/progress-bar";
-import { Button } from "./ui/button";
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
-import {SetStateAction, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { MacronutrientProgressBar } from "./ui/macronutirents-progressbar";
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { CartesianGrid, Line, LineChart, XAxis,  Bar, BarChart  } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis} from "recharts"
 import {ChartConfig,  ChartContainer, ChartTooltip, ChartTooltipContent,  } from "./ui/chart";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "./ui/card";
+import {Card, CardContent,CardHeader, CardTitle, } from "./ui/card";
 import { Summary, SummariesApi } from "@/api/SummariesApi";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, } from "./ui/carousel";
 
