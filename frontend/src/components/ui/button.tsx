@@ -11,7 +11,7 @@ import { Spinner } from '@/components/ui/spinner'
 */
 
 export const buttonVariants = cva(
-  'flex gap-x-2 items-center justify-center whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-150 px-4 py-2',
+  'flex gap-x-2 items-center justify-center whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-150 px-4 py-2 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
       variants: {
           variant: {

@@ -1,4 +1,4 @@
-import { Navbar } from "./ui/Navbar";
+import { Navbar } from "./Navbar";
 import { ProgressBar } from "./ui/progress-bar";
 import { Button } from "./ui/button";
 import type { DatePickerProps } from 'antd';
@@ -11,7 +11,6 @@ import { Separator } from './ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { CartesianGrid, Line, LineChart, XAxis,  Bar, BarChart  } from "recharts"
 import {ChartConfig,  ChartContainer, ChartTooltip, ChartTooltipContent,  } from "./ui/chart";
-import { Test } from "./ui/test";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "./ui/card";
 import { Summary, SummariesApi } from "@/api/SummariesApi";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, } from "./ui/carousel";
@@ -411,8 +410,8 @@ const TrendsSection =  (prop: {chartData: ChartLayout[]; carbsData: CarbDataLayo
               </Card>
             </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious className="bg-gray-200"/>
-          <CarouselNext className="bg-gray-200"/>
+          <CarouselPrevious className="bg-blue-100"/>
+          <CarouselNext className="bg-blue-200"/>
         </Carousel>
         </div>
       </>
@@ -513,6 +512,7 @@ export const WeeklyProgress = () => {
         total_carbs: (day1?.total_carbs ?? 0) + (day2?.total_carbs ?? 0) + (day3?.total_carbs ?? 0) + (day4?.total_carbs ?? 0) + (day5?.total_carbs ?? 0) + (day6?.total_carbs ?? 0) + (day7?.total_carbs ?? 0),
         dietary_fiber: (day1?.dietary_fiber ?? 0) + (day2?.dietary_fiber ?? 0) + (day3?.dietary_fiber ?? 0) + (day4?.dietary_fiber ?? 0) + (day5?.dietary_fiber ?? 0) + (day6?.dietary_fiber ?? 0) + (day7?.dietary_fiber ?? 0),
         sugars: (day1?.sugars ?? 0) + (day2?.sugars ?? 0) + (day3?.sugars ?? 0) + (day4?.sugars ?? 0) + (day5?.sugars ?? 0) + (day6?.sugars ?? 0) + (day7?.sugars ?? 0),
+        added_sugars: (day1?.added_sugars ?? 0) + (day2?.added_sugars ?? 0) + (day3?.added_sugars ?? 0) + (day4?.added_sugars ?? 0) + (day5?.added_sugars ?? 0) + (day6?.added_sugars ?? 0) + (day7?.added_sugars ?? 0),
         protein: (day1?.protein ?? 0) + (day2?.protein ?? 0) + (day3?.protein ?? 0) + (day4?.protein ?? 0) + (day5?.protein ?? 0) + (day6?.protein ?? 0) + (day7?.protein ?? 0),
         vitamin_a:(day1?.vitamin_a ?? 0) + (day2?.vitamin_a ?? 0) + (day3?.vitamin_a ?? 0) + (day4?.vitamin_a ?? 0) + (day5?.vitamin_a ?? 0) + (day6?.vitamin_a ?? 0) + (day7?.vitamin_a ?? 0),
         vitamin_c: (day1?.vitamin_c ?? 0) + (day2?.vitamin_c ?? 0) + (day3?.vitamin_c ?? 0) + (day4?.vitamin_c ?? 0) + (day5?.vitamin_c ?? 0) + (day6?.vitamin_c ?? 0) + (day7?.vitamin_c ?? 0),
@@ -593,7 +593,7 @@ export const WeeklyProgress = () => {
         }
     } 
 
-    const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    const onChange: DatePickerProps['onChange'] = (date) => {
     //Code for the date picker refrenced from https://ant.design/components/date-picker
         if(date != null) {
             setTheDate(date)
@@ -606,34 +606,30 @@ export const WeeklyProgress = () => {
   
     return (
       <>
-        {/*
-          Navbar not yet updated to include sessions
-          Once sessions are implemented, the contents of the navbar will change
-        */}
         <div className="w-screen h-screen bg-background">
-        <Navbar isAuth={true}/>
+          <Navbar isAuth={true}/>
 
           <div className='flex-1 justify-center space-y-4'>
   
-          <div className='w-full p-4 bg-secondary space-x-4 space-y-2 text-center'>
-            <div className='w-full bg-secondary text-center'>
-                <h1 className="text-xl font-bold text-defaultText text-center">Select Start Date:</h1>
-                <DatePicker
-                format="MM-DD-YYYY"
-                minDate={dayjs('02-03-2002', dateFormat)}
-                maxDate={dayjs(dayjs().add(-6, "days"), dateFormat)}
-                onChange={onChange}
-                defaultValue={dayjs(dayjs().add(-6, "days"),dateFormat)}
-                />
+            <div className='w-full p-4 space-x-4 space-y-2 text-center'>
+              <div className='w-full text-center'>
+                  <h1 className="text-xl font-bold text-defaultText text-center">Select Start Date:</h1>
+                  <DatePicker
+                  format="MM-DD-YYYY"
+                  minDate={dayjs('02-03-2002', dateFormat)}
+                  maxDate={dayjs(dayjs().add(-6, "days"), dateFormat)}
+                  onChange={onChange}
+                  defaultValue={dayjs(dayjs().add(-6, "days"),dateFormat)}
+                  />
 
+              </div>
+
+                  < h1 className="text-3xl font-bold text-defaultText text-center"> Progress from <br/> {DayOfTheWeek(theDate)} ({theDate.format(dateFormat)}) - {DayOfTheWeek(theDate.add(6, 'days'))} ({theDate.add(6, 'days').format(dateFormat)}) </h1>
             </div>
-
-                < h1 className="text-3xl font-bold text-defaultText text-center"> Progress from <br/> {DayOfTheWeek(theDate)} ({theDate.format(dateFormat)}) - {DayOfTheWeek(theDate.add(6, 'days'))} ({theDate.add(6, 'days').format(dateFormat)}) </h1>
-          </div>
   
             <div className='flex justify-center space-x-4'>
   
-              <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-lg shadow-md flex flex-col items-center">
+              <div className="w-full max-w-md p-8 space-y-4 rounded-lg border flex flex-col items-center">
                 <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1> 
                 {/* Make it gray out when the day not passed */}
                 {/* The weekly calories */}
@@ -649,14 +645,14 @@ export const WeeklyProgress = () => {
                 </div>
               </div>
 
-              <div className="w-full min-w-[600px] max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
+              <div className="w-full min-w-[600px] max-w-md p-8 space-y-6 rounded-lg border shadow-md flex flex-col items-center">
                 <TrendsSection chartData={chartData} carbsData={carbsData} fatsData={fatData} otherData={otherData}/>
                   <div>
                     
                   </div>
               </div>
   
-              <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md flex flex-col items-center">
+              <div className="w-full max-w-md p-8 space-y-6 rounded-lg border shadow-md flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">Daily Average Macronutrients</h2>
                 <div className="w-full h-full">
                   <MacronutrientSection fat={Math.round((summedData?.total_fat ?? 0) / 7)} carb={Math.round((summedData?.total_carbs ?? 0) / 7)} protein={Math.round((summedData?.protein ?? 0) / 7)} satFat={Math.round((summedData?.saturated_fat ?? 0) / 7)} polFat={Math.round((summedData?.polyunsaturated_fat ?? 0) / 7)} monFat={Math.round((summedData?.monounsaturated_fat ?? 0) / 7)} traFat={Math.round((summedData?.trans_fat ?? 0) / 7)}
