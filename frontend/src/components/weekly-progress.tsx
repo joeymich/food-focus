@@ -176,133 +176,76 @@ const TrendsSection =  (prop: {chartData: ChartLayout[]; carbsData: CarbDataLayo
 
     return (
       <>
-        <div className="w-full h-1/2">
-          {/*
-            Code refrenced from shadui
-            https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
-          */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Macronutirent Trends</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="w-full h-[150px]">
-                  <LineChart
-                    accessibilityLayer
-                    data={prop.chartData}
-                    margin={{
-                      left: 12,
-                      right: 12,
-                    }}
-                  >
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="day"
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                      interval="preserveStartEnd"
-                      tickFormatter={(value) => (value.slice(0, 3))}
-                    />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                    <Line
-                      dataKey="protein"
-                      type="monotone"
-                      stroke="var(--color-protein)"
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                    <Line
-                      dataKey="carbs"
-                      type="monotone"
-                      stroke="var(--color-carb)"
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                    <Line
-                      dataKey="fat"
-                      type="monotone"
-                      stroke="var(--color-fat)"
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ChartContainer>
-            </CardContent>
-          </Card>
-        </div>
+        <div className="flex space-x-8">
+          <div className="w-1/2 max-h-md">
+            {/*
+              Code refrenced from shadui
+              https://ui.shadcn.com/charts#line-chart - Line Chart - Multiple
+            */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Macronutirent Trends</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="w-full max-h-80">
+                    <LineChart
+                      accessibilityLayer
+                      data={prop.chartData}
+                      margin={{
+                        left: 12,
+                        right: 12,
+                      }}
+                    >
+                      <CartesianGrid vertical={false} />
+                      <XAxis
+                        dataKey="day"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        interval="preserveStartEnd"
+                        tickFormatter={(value) => (value.slice(0, 3))}
+                      />
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                      <Line
+                        dataKey="protein"
+                        type="monotone"
+                        stroke="var(--color-protein)"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line
+                        dataKey="carbs"
+                        type="monotone"
+                        stroke="var(--color-carb)"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line
+                        dataKey="fat"
+                        type="monotone"
+                        stroke="var(--color-fat)"
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
 
-        <div className="w-full h-1/2 flex justify-center">
-        <Carousel className="w-[92%]">
-          <CarouselContent>
-            <CarouselItem>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Total Fats Trends</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ChartContainer config={fatConfig} className="w-full h-[150px]">
-                      <LineChart
-                        accessibilityLayer
-                        data={prop.fatsData}
-                        margin={{
-                          left: 12,
-                          right: 12,
-                        }}
-                      >
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                          dataKey="day"
-                          tickLine={false}
-                          axisLine={false}
-                          tickMargin={8}
-                          interval="preserveStartEnd"
-                          tickFormatter={(value) => (value.slice(0, 3))}
-                        />
-                        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <Line
-                          dataKey="saturated_fat"
-                          type="monotone"
-                          stroke="var(--color-satFat)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="polyunsaturated_fat"
-                          type="monotone"
-                          stroke="var(--color-polFat)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="trans_fat"
-                          type="monotone"
-                          stroke="var(--color-traFat)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="monounsaturated_fat"
-                          type="monotone"
-                          stroke="var(--color-monFat)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ChartContainer>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-            <CarouselItem>
-              <Card>
+          <div className="w-1/2 flex justify-center">
+          <Carousel className="w-[92%]">
+            <CarouselContent>
+              <CarouselItem>
+                <Card>
                   <CardHeader>
-                    <CardTitle>Total Carbs Trends</CardTitle>
+                    <CardTitle>Total Fats Trends</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ChartContainer config={carbsConfig} className="w-full h-[150px]">
+                    <ChartContainer config={fatConfig} className="w-full  max-h-80">
                         <LineChart
                           accessibilityLayer
-                          data={prop.carbsData}
+                          data={prop.fatsData}
                           margin={{
                             left: 12,
                             right: 12,
@@ -319,16 +262,30 @@ const TrendsSection =  (prop: {chartData: ChartLayout[]; carbsData: CarbDataLayo
                           />
                           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                           <Line
-                            dataKey="dietary_fibers"
+                            dataKey="saturated_fat"
                             type="monotone"
-                            stroke="var(--color-fiber)"
+                            stroke="var(--color-satFat)"
                             strokeWidth={2}
                             dot={false}
                           />
                           <Line
-                            dataKey="sugar"
+                            dataKey="polyunsaturated_fat"
                             type="monotone"
-                            stroke="var(--color-sugars)"
+                            stroke="var(--color-polFat)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="trans_fat"
+                            type="monotone"
+                            stroke="var(--color-traFat)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="monounsaturated_fat"
+                            type="monotone"
+                            stroke="var(--color-monFat)"
                             strokeWidth={2}
                             dot={false}
                           />
@@ -336,83 +293,128 @@ const TrendsSection =  (prop: {chartData: ChartLayout[]; carbsData: CarbDataLayo
                       </ChartContainer>
                   </CardContent>
                 </Card>
-            </CarouselItem>
-            <CarouselItem>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Other Trends</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ChartContainer config={otherConfig} className="w-full h-[150px]">
-                      <LineChart
-                        accessibilityLayer
-                        data={prop.otherData}
-                        margin={{
-                          left: 12,
-                          right: 12,
-                        }}
-                      >
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                          dataKey="day"
-                          tickLine={false}
-                          axisLine={false}
-                          tickMargin={8}
-                          interval="preserveStartEnd"
-                          tickFormatter={(value) => (value.slice(0, 3))}
-                        />
-                        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        <Line
-                          dataKey="sodium"
-                          type="monotone"
-                          stroke="var(--color-sodium)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="potassium"
-                          type="monotone"
-                          stroke="var(--color-potassium)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="vitamin_a"
-                          type="monotone"
-                          stroke="var(--color-vitA)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="vitamin_c"
-                          type="monotone"
-                          stroke="var(--color-vitC)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="calcium"
-                          type="monotone"
-                          stroke="var(--color-calcium)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                        <Line
-                          dataKey="iron"
-                          type="monotone"
-                          stroke="var(--color-iron)"
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ChartContainer>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          </CarouselContent>
-          <CarouselPrevious className="bg-blue-100"/>
-          <CarouselNext className="bg-blue-200"/>
-        </Carousel>
+              </CarouselItem>
+              <CarouselItem>
+                <Card>
+                    <CardHeader>
+                      <CardTitle>Total Carbs Trends</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer config={carbsConfig} className="w-full max-h-80">
+                          <LineChart
+                            accessibilityLayer
+                            data={prop.carbsData}
+                            margin={{
+                              left: 12,
+                              right: 12,
+                            }}
+                          >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                              dataKey="day"
+                              tickLine={false}
+                              axisLine={false}
+                              tickMargin={8}
+                              interval="preserveStartEnd"
+                              tickFormatter={(value) => (value.slice(0, 3))}
+                            />
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                            <Line
+                              dataKey="dietary_fibers"
+                              type="monotone"
+                              stroke="var(--color-fiber)"
+                              strokeWidth={2}
+                              dot={false}
+                            />
+                            <Line
+                              dataKey="sugar"
+                              type="monotone"
+                              stroke="var(--color-sugars)"
+                              strokeWidth={2}
+                              dot={false}
+                            />
+                          </LineChart>
+                        </ChartContainer>
+                    </CardContent>
+                  </Card>
+              </CarouselItem>
+              <CarouselItem>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Other Trends</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartContainer config={otherConfig} className="w-full max-h-80">
+                        <LineChart
+                          accessibilityLayer
+                          data={prop.otherData}
+                          margin={{
+                            left: 12,
+                            right: 12,
+                          }}
+                        >
+                          <CartesianGrid vertical={false} />
+                          <XAxis
+                            dataKey="day"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            interval="preserveStartEnd"
+                            tickFormatter={(value) => (value.slice(0, 3))}
+                          />
+                          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                          <Line
+                            dataKey="sodium"
+                            type="monotone"
+                            stroke="var(--color-sodium)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="potassium"
+                            type="monotone"
+                            stroke="var(--color-potassium)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="vitamin_a"
+                            type="monotone"
+                            stroke="var(--color-vitA)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="vitamin_c"
+                            type="monotone"
+                            stroke="var(--color-vitC)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="calcium"
+                            type="monotone"
+                            stroke="var(--color-calcium)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                          <Line
+                            dataKey="iron"
+                            type="monotone"
+                            stroke="var(--color-iron)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ChartContainer>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious className="bg-blue-200"/>
+            <CarouselNext className="bg-blue-200"/>
+          </Carousel>
+          </div>
         </div>
       </>
     )
@@ -610,9 +612,7 @@ export const WeeklyProgress = () => {
           <Navbar isAuth={true}/>
 
           <div className='flex-1 justify-center space-y-4'>
-  
-            <div className='w-full p-4 space-x-4 space-y-2 text-center'>
-              <div className='w-full text-center'>
+            <div className='w-full p-4 space-x-4 space-y-2 text-center text-center'>
                   <h1 className="text-xl font-bold text-defaultText text-center">Select Start Date:</h1>
                   <DatePicker
                   format="MM-DD-YYYY"
@@ -621,43 +621,33 @@ export const WeeklyProgress = () => {
                   onChange={onChange}
                   defaultValue={dayjs(dayjs().add(-6, "days"),dateFormat)}
                   />
-
-              </div>
-
                   < h1 className="text-3xl font-bold text-defaultText text-center"> Progress from <br/> {DayOfTheWeek(theDate)} ({theDate.format(dateFormat)}) - {DayOfTheWeek(theDate.add(6, 'days'))} ({theDate.add(6, 'days').format(dateFormat)}) </h1>
             </div>
-  
-            <div className='flex justify-center space-x-4'>
-  
-              <div className="w-full max-w-md p-8 space-y-4 rounded-lg border flex flex-col items-center">
-                <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1> 
-                {/* Make it gray out when the day not passed */}
-                {/* The weekly calories */}
-                <p className="font-bold ">Daily Average: {Math.round((summedData?.calories ?? 0) / 7)} kcals</p>
-                <div className="w-full max-w-md  space-y-6">
-                  <HistoryProgress date={DayOfTheWeek(theDate)} calories={day1?.calories ?? 0} totalCalories={2500} dateActual={theDate.format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={day2?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(1, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={day3?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(2, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={day4?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(3, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={day5?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(4, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={day6?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(5, 'days').format(dateFormat)}/>
-                  <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={day7?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(6, 'days').format(dateFormat)}/> 
-                </div>
-              </div>
 
-              <div className="w-full min-w-[600px] max-w-md p-8 space-y-6 rounded-lg border shadow-md flex flex-col items-center">
-                <TrendsSection chartData={chartData} carbsData={carbsData} fatsData={fatData} otherData={otherData}/>
-                  <div>
-                    
+            <div className='flex gap-x-4 justify-center'>
+              <div className="rounded-lg border w-3/4 py-4 px-8">
+                    <TrendsSection chartData={chartData} carbsData={carbsData} fatsData={fatData} otherData={otherData}/>
+              </div>
+            </div>
+
+            <div className='flex gap-x-4 justify-center'>
+              <div className="w-1/2 max-w-2xl p-8 space-y-4 rounded-lg border flex-1 flex flex-col justify-center items-center">
+                  <h1 className="text-4xl font-bold text-defaultText text-center">This Week's Calorie History</h1> 
+                  <p className="font-bold ">Daily Average: {Math.round((summedData?.calories ?? 0) / 7)} kcals</p>
+                  <div className="w-full space-y-6">
+                    <HistoryProgress date={DayOfTheWeek(theDate)} calories={day1?.calories ?? 0} totalCalories={2500} dateActual={theDate.format(dateFormat)}/>
+                    <HistoryProgress date={DayOfTheWeek(theDate.add(1, 'days'))} calories={day2?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(1, 'days').format(dateFormat)}/>
+                    <HistoryProgress date={DayOfTheWeek(theDate.add(2, 'days'))} calories={day3?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(2, 'days').format(dateFormat)}/>
+                    <HistoryProgress date={DayOfTheWeek(theDate.add(3, 'days'))} calories={day4?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(3, 'days').format(dateFormat)}/>
+                    <HistoryProgress date={DayOfTheWeek(theDate.add(4, 'days'))} calories={day5?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(4, 'days').format(dateFormat)}/>
+                    <HistoryProgress date={DayOfTheWeek(theDate.add(5, 'days'))} calories={day6?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(5, 'days').format(dateFormat)}/>
+                    <HistoryProgress date={DayOfTheWeek(theDate.add(6, 'days'))} calories={day7?.calories ?? 0} totalCalories={2500} dateActual={theDate.add(6, 'days').format(dateFormat)}/> 
                   </div>
               </div>
-  
-              <div className="w-full max-w-md p-8 space-y-6 rounded-lg border shadow-md flex flex-col items-center">
+              <div className="w-1/2 max-w-2xl p-8 space-y-6 rounded-lg border flex flex-col items-center">
                 <h2 className="text-4xl font-bold text-defaultText text-center">Daily Average Macronutrients</h2>
-                <div className="w-full h-full">
                   <MacronutrientSection fat={Math.round((summedData?.total_fat ?? 0) / 7)} carb={Math.round((summedData?.total_carbs ?? 0) / 7)} protein={Math.round((summedData?.protein ?? 0) / 7)} satFat={Math.round((summedData?.saturated_fat ?? 0) / 7)} polFat={Math.round((summedData?.polyunsaturated_fat ?? 0) / 7)} monFat={Math.round((summedData?.monounsaturated_fat ?? 0) / 7)} traFat={Math.round((summedData?.trans_fat ?? 0) / 7)}
                                     sodium={Math.round((summedData?.sodium ?? 0) / 7)} potassium={Math.round((summedData?.potassium ?? 0) / 7)} fiber={Math.round((summedData?.dietary_fiber ?? 0) / 7)} sugar={Math.round((summedData?.sugars ?? 0) / 7)} vitA={Math.round((summedData?.vitamin_a ?? 0) / 7)} vitC={Math.round((summedData?.vitamin_c ?? 0) / 7)} calcium={Math.round((summedData?.calcium ?? 0) / 7)} iron={Math.round((summedData?.iron ?? 0) / 7)}/>              
-                </div>
               </div>
             </div>
           </div>
