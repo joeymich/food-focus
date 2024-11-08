@@ -42,14 +42,14 @@ export const createRouter = () => {
                     },
                 },
                 {
-                    path: '/dashboard',
+                    path: '/dashboard/:chosenDate?',
                     lazy: async () => {
                         const { Dashboard2 } = await import('@/components/Dashboard/index');
                         return { Component: Dashboard2 };
                     },
                 },
                 {
-                    path: '/dashboard/search',
+                    path: '/dashboard/search/:date',
                     lazy: async () => {
                         const { Search } = await import('@/components/search');
                         return { Component: Search };
