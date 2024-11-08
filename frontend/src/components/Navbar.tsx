@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, buttonVariants } from './ui/button';
-import { useAuth } from '@/hooks/useAuth';
 import { AuthApi } from '@/api/AuthApi';
 
 const LogoutButton = () => {
@@ -60,7 +59,14 @@ export function Navbar(prop: { isAuth: boolean }) {
     return (
         <nav className='bg-background w-screen p-3 border-2 border-gray-24'>
             <div className='flex items-center bg-background justify-between'>
-                <div className='text-defaultText text-2xl font-bold px-4'>FOOD FOCUS</div>
+                <div className='text-defaultText text-2xl font-bold px-4'>
+                    {prop.isAuth ? (
+                        <Link to='/dashboard'>Food Focus</Link>
+                    ): (
+                        <Link to='/'>Food Focus</Link>
+                    )}
+                    
+                </div>
 
                 {/*Hamburger symbol - appears when the screen is less than half the size*/}
                 <div className='md:hidden'>
