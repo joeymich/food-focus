@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.auth import auth_router
 from app.food import router as food_router
 from app.food_log import router as food_log_router
+from app.goal import router as goal_router
 from app.middleware import RedisMiddleware
 from app.serving_size import router as serving_size_router
 from app.summary import router as summary_router
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
 def include_routers(app: FastAPI) -> None:
     """Method to include all routers to FastAPI application."""
     app.include_router(auth_router, prefix='/auth', tags=['auth'])
+    app.include_router(goal_router, prefix='/goals', tags=['goals'])
     app.include_router(food_router, prefix='/foods', tags=['foods'])
     app.include_router(
         food_log_router,
