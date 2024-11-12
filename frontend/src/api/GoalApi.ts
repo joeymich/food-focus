@@ -23,15 +23,19 @@ export interface Goals {
 export const GoalApi = {
     postGoal: async (goalsRequest: GoalsRequest) => {
         const response = await api.post("/goals", goalsRequest)
-        return response
+        return response.data
     },
     patchGoal: async (goalsRequest: GoalsRequest, goal_id: string) => {
         const response = await api.patch("/goals/" + goal_id, goalsRequest)
-        return response
+        return response.data
     }
     ,
-    getGoal: async () => {
-        const response = await api.get<Goals>("/goals")
-        return response
+    getGoal: async (date? : string) => {
+        const response = await api.get<Goals[]>("/goals",  {
+            params: {
+                date: date
+            }
+        })
+        return response.data
     }
 }
