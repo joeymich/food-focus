@@ -32,8 +32,8 @@ const DailyStats = ({ summary }: { summary: Summary }) => {
                     <CircularProgressBar numerator={summary.calories} denominator={2500} />
                 </div>
             </div>
-            <Button>Adjust Calorie Goal</Button>
             <MacronutrientProgressBar carb={300} fat={80} protein={200} />
+            <Link to="/create-goals" className="w-full"><Button className="w-full">Adjust Goals</Button></Link>
         </>
     )
 }
