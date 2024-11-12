@@ -6,6 +6,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { BiError } from 'react-icons/bi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
+import { GoalApi } from "@/api/GoalApi";
+import dayjs from "dayjs";
 
 export const CreateGoals = () => {
     const [calGoal, setCalGoal] = useState(2000);
@@ -60,9 +62,25 @@ export const CreateGoals = () => {
         setAge(Number(e.target.value));
     }
 
+    const SubmitGoal = async (cal: number, protein: number, fat: number, carb: number) => {
+        try {
+            const response = await GoalApi.postGoal({
+                cal_goal: cal,
+                protein_goal: protein,
+                fat_goal: fat,
+                carb_goal: carb,
+                goal_start: dayjs().format('YYYY-MM-DD'),
+                goal_end: dayjs().add(12, 'month').format('YYYY-MM-DD'),
+            })
+        } catch(e: any) {
+            console.error(e)
+        }
+    }
+
     const handleGoalForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //Save goal information into the backend
+        SubmitGoal(calGoal, proteinGoal, fatsGoal, carbGoal);
         navigate(redirect || '/dashboard')
     }
 
@@ -113,11 +131,8 @@ export const CreateGoals = () => {
     }
 
     const handleYes = async () => {
-        setCalGoal(calcCal);
-        setProteinGoal(calcProtein);
-        setFatsGoal(calcFat);
-        setCarbGoal(calcCarbs);
         //save goal information into the backend
+        SubmitGoal(calcCal, calcProtein, calcFat, calcCarbs);
         navigate(redirect || '/dashboard')
     }
 
@@ -185,7 +200,7 @@ export const CreateGoals = () => {
                                     </div>
                                 </div>
 
-                                <Button className="w-1/3 bg-secondary text-black">Set Goals</Button>
+                                <Button className="w-1/3 text-black">Set Goals</Button>
                             </form>
                         </div>
                         <div className="bg-blue-100 w-1/2 h-full flex flex-col justify-start items-center space-y-4">
@@ -276,7 +291,7 @@ export const CreateGoals = () => {
                                             (
                                                 <Button disabled className="w-1/3 bg-gray-300 text-black">Calculate</Button>
                                             ) : (
-                                                <Button className="w-1/3 bg-secondary text-black">Calculate</Button>
+                                                <Button className="w-1/3  text-black">Calculate</Button>
                                             )}
                                     </DialogTrigger>
                                     <DialogContent>
@@ -295,8 +310,8 @@ export const CreateGoals = () => {
                                                 <div>
                                                     <p className="text-black text-xl">Do you want to set these values as your goals?</p>
                                                     <div className="flex space-x-4 justify-center items-center">
-                                                        <Button className="bg-secondary text-black" onClick={handleYes}> Yes </Button>
-                                                        <Button className="bg-secondary text-black" onClick={handleNo}> No </Button>
+                                                        <Button className="text-black" onClick={handleYes}> Yes </Button>
+                                                        <Button className="text-black" onClick={handleNo}> No </Button>
                                                     </div>
                                                 </div>
                                             </DialogDescription>
