@@ -30,10 +30,10 @@ const DailyStats = ({ summary, goals}: { summary: Summary, goals: Goals}) => {
         <>
             <div className='flex justify-center w-full'>
                 <div className='max-w-sm'>
-                    <CircularProgressBar numerator={summary.calories} denominator={goals?.cal_goal ?? 0} />
+                    <CircularProgressBar numerator={summary.calories} denominator={goals?.cal_goal ?? 2000} />
                 </div>
             </div>
-            <MacronutrientProgressBar carb={summary.total_carbs ?? 0} fat={summary.total_fat ?? 0} protein={summary.protein ?? 0} carb_goal={goals?.carb_goal ?? 0} fat_goal={goals?.fat_goal ?? 0} protein_goal={goals?.protein_goal ?? 0}/>
+            <MacronutrientProgressBar carb={summary.total_carbs ?? 0} fat={summary.total_fat ?? 0} protein={summary.protein ?? 0} carb_goal={goals?.carb_goal ?? 225} fat_goal={goals?.fat_goal ?? 65} protein_goal={goals?.protein_goal ?? 50}/>
             <Link to="/create-goals" className="w-full"><Button className="w-full">Adjust Goals</Button></Link>
         </>
     )
