@@ -14,6 +14,7 @@ import { Link } from "react-router-dom"
 import { DatePicker, DatePickerProps } from "antd"
 import dayjs from "dayjs"
 import { useParams } from "react-router-dom"
+import { GoalApi, Goals } from "@/api/GoalApi"
 
 const dateFormat = 'MM-DD-YYYY';
 const dateDBFormat = 'YYYY-MM-DD';
@@ -24,16 +25,16 @@ const DailyNutrition = ({ summary }: { summary: Summary }) => {
     )
 }
 
-const DailyStats = ({ summary }: { summary: Summary }) => {
+const DailyStats = ({ summary, goals}: { summary: Summary, goals: Goals}) => {
     return (
         <>
             <div className='flex justify-center w-full'>
                 <div className='max-w-sm'>
-                    <CircularProgressBar numerator={summary.calories} denominator={2500} />
+                    <CircularProgressBar numerator={summary.calories} denominator={goals?.cal_goal ?? 2000} />
                 </div>
             </div>
-            <Button>Adjust Calorie Goal</Button>
-            <MacronutrientProgressBar carb={300} fat={80} protein={200} />
+            <MacronutrientProgressBar carb={summary.total_carbs ?? 0} fat={summary.total_fat ?? 0} protein={summary.protein ?? 0} carb_goal={goals?.carb_goal ?? 225} fat_goal={goals?.fat_goal ?? 65} protein_goal={goals?.protein_goal ?? 50}/>
+            <Link to="/create-goals" className="w-full"><Button className="w-full">Adjust Goals</Button></Link>
         </>
     )
 }
@@ -209,6 +210,7 @@ export const Dashboard2 = () => {
     const [summary, setSummary] = useState<Summary>()
     const [foods, setFoods] = useState<FoodLogAll[]>([])
     const [date, setDate] = useState<dayjs.Dayjs>(dayjs());
+    const [goals, setGoals] = useState<Goals[]>([]);
     const [dateChanged, setDateChanged] = useState(false);
     const {chosenDate} = useParams();
     const handleDateChange: DatePickerProps['onChange'] = (date) => {
@@ -233,15 +235,26 @@ export const Dashboard2 = () => {
             console.error(e)
         }
     }
+    const getGoals = async (date?: string) => {
+        try{
+            const goals = await GoalApi.getGoal(date)
+            setGoals(goals)
+        }  catch (e: any) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         if(chosenDate != undefined && dateChanged == false) {
             getSummary(chosenDate)
             getFoods(chosenDate)
+            getGoals(chosenDate)
             setDate(dayjs(chosenDate))
             setDateChanged(true)
         } else {
             getSummary(date.format(dateDBFormat))
             getFoods(date.format(dateDBFormat))
+            getGoals(date.format(dateDBFormat))
         }
         
     }, [date])
@@ -279,7 +292,7 @@ export const Dashboard2 = () => {
                     <div className='flex flex-col gap-y-4 rounded-lg p-8 border flex-1'>
                         <h3 className='text-2xl font-semibold'>Daily Stats</h3>
                         {summary &&
-                            <DailyStats summary={summary} />
+                            <DailyStats summary={summary} goals={goals[0]}/>
                         }
                     </div>
                 </div>

@@ -37,7 +37,7 @@ export const Register = () => {
                 const response = await AuthApi.register({ email, password })
                 login(response)
                 setErrorMessage('')
-                navigate(redirect || '/dashboard')
+                navigate(redirect || '/create-goals')
             } catch (e: any) {
                 console.error(e)
                 if (e?.response?.data?.detail) {

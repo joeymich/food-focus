@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 
 
 //Code refrecned from https://github.com/whoisseth/progressbar-compoent/blob/master/src/components/ProgressBar.tsx
-export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb:number}) {
+export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb:number, fat_goal: number, protein_goal:number, carb_goal: number}) {
     const fat = prop.fat;
     const protein = prop.protein;
     const carb = prop.carb;
@@ -41,9 +41,9 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
 
             <div className='flex justify-between'>
                 {/* Code referenced from https://flowbite.com/docs/components/indicators/ */}
-                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-green-400 rounded-full me-1.5 flex-shrink-0"></span>Carbs: {carb}g</span>
-                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-yellow-400 rounded-full me-1.5 flex-shrink-0"></span>Protein: {protein}g</span>
-                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-blue-400 rounded-full me-1.5 flex-shrink-0"></span>Fat: {fat}g</span> 
+                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-green-400 rounded-full me-1.5 flex-shrink-0"></span>Carbs: {carb}g/{prop.carb_goal}g</span>
+                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-yellow-400 rounded-full me-1.5 flex-shrink-0"></span>Protein: {protein}g/{prop.protein_goal}g</span>
+                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-blue-400 rounded-full me-1.5 flex-shrink-0"></span>Fat: {fat}g/{prop.fat_goal}g</span> 
             </div>
         </div>
 

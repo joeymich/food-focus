@@ -1,11 +1,15 @@
 import { Navbar } from "./Navbar"
 import { Input } from './ui/form/input';
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { BiError } from 'react-icons/bi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
+import { GoalApi, Goals } from "@/api/GoalApi";
+import dayjs from "dayjs";
+
+const dateDBFormat = 'YYYY-MM-DD';
 
 export const CreateGoals = () => {
     const [calGoal, setCalGoal] = useState(2000);
@@ -25,8 +29,22 @@ export const CreateGoals = () => {
     const [calcErrorMessage, setCalcErrorMessage] = useState("");
     const [open, setOpen] = useState(false);
     const [searchParams, _] = useSearchParams()
+    const [goals, setGoals] = useState<Goals[]>([]);
     const navigate = useNavigate()
     const redirect = searchParams.get('redirect')
+
+    const getGoals = async (date?: string) => {
+        try{
+            const goals = await GoalApi.getGoal(date)
+            setGoals(goals)
+        }  catch (e: any) {
+            console.error(e)
+        }
+    }
+
+    useEffect(() => {
+        getGoals(dayjs().format(dateDBFormat));
+    }, [])
 
     const handleChangeCalGoal = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCalGoal(Number(e.target.value));
@@ -60,9 +78,68 @@ export const CreateGoals = () => {
         setAge(Number(e.target.value));
     }
 
+    const UpdateGoal = async(cal: number, protein: number, fat: number, carb: number, goal_end: string | null) => {
+        if(goals.length != 0) {
+            //If there is a goal that exits for this date, then update the end date
+            try{
+                const update = await GoalApi.patchGoal({
+                        cal_goal: cal,
+                        protein_goal: protein,
+                        fat_goal: fat,
+                        carb_goal: carb,
+                        goal_start: goals[0].goal_start,
+                        goal_end: goal_end
+                    },
+                    goals[0].id)
+                console.log(update)
+            }  catch (e: any) {
+                console.error(e)
+            }
+        }
+    }
+
+    const SubmitGoal = async (cal: number, protein: number, fat: number, carb: number) => {
+        try {
+            const response = await GoalApi.postGoal({
+                cal_goal: cal,
+                protein_goal: protein,
+                fat_goal: fat,
+                carb_goal: carb,
+                goal_start: dayjs().format(dateDBFormat),
+                goal_end: dayjs().add(12, 'month').format(dateDBFormat),
+            })
+        } catch(e: any) {
+            console.error(e)
+        }
+    
+    }
+
+    const SetUpGoals = (cal: number, protein: number, fat: number, carb: number) => {
+        /*
+            If the goal existfor today's date (goals.lenght != 0) and the start_date is the same as today
+                replace all old goal data with new date
+                don't create a new goal
+            else If the goal only exist for today's date
+                change the goal_end date
+                create a new goal
+            else (the goal does not exist for today's date)
+                only create a new goal
+        */
+
+        if(goals.length != 0 && goals[0].goal_start == dayjs().format(dateDBFormat)) {
+            UpdateGoal(cal, protein, fat, carb, goals[0].goal_end)
+        } else if(goals.length != 0) {
+            UpdateGoal(goals[0].cal_goal, goals[0].protein_goal, goals[0].fat_goal, goals[0].carb_goal, dayjs().format(dateDBFormat))
+            SubmitGoal(cal, protein, fat, carb)
+        } else {
+            SubmitGoal(cal, protein, fat, carb)
+        }
+    }
+
     const handleGoalForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //Save goal information into the backend
+        SetUpGoals(calGoal, proteinGoal, fatsGoal, carbGoal);
         navigate(redirect || '/dashboard')
     }
 
@@ -113,11 +190,8 @@ export const CreateGoals = () => {
     }
 
     const handleYes = async () => {
-        setCalGoal(calcCal);
-        setProteinGoal(calcProtein);
-        setFatsGoal(calcFat);
-        setCarbGoal(calcCarbs);
         //save goal information into the backend
+        SetUpGoals(calcCal, calcProtein, calcFat, calcCarbs)
         navigate(redirect || '/dashboard')
     }
 
@@ -185,7 +259,7 @@ export const CreateGoals = () => {
                                     </div>
                                 </div>
 
-                                <Button className="w-1/3 bg-secondary text-black">Set Goals</Button>
+                                <Button className="w-1/3 text-black">Set Goals</Button>
                             </form>
                         </div>
                         <div className="bg-blue-100 w-1/2 h-full flex flex-col justify-start items-center space-y-4">
@@ -276,7 +350,7 @@ export const CreateGoals = () => {
                                             (
                                                 <Button disabled className="w-1/3 bg-gray-300 text-black">Calculate</Button>
                                             ) : (
-                                                <Button className="w-1/3 bg-secondary text-black">Calculate</Button>
+                                                <Button className="w-1/3  text-black">Calculate</Button>
                                             )}
                                     </DialogTrigger>
                                     <DialogContent>
@@ -295,8 +369,8 @@ export const CreateGoals = () => {
                                                 <div>
                                                     <p className="text-black text-xl">Do you want to set these values as your goals?</p>
                                                     <div className="flex space-x-4 justify-center items-center">
-                                                        <Button className="bg-secondary text-black" onClick={handleYes}> Yes </Button>
-                                                        <Button className="bg-secondary text-black" onClick={handleNo}> No </Button>
+                                                        <Button className="text-black" onClick={handleYes}> Yes </Button>
+                                                        <Button className="text-black" onClick={handleNo}> No </Button>
                                                     </div>
                                                 </div>
                                             </DialogDescription>

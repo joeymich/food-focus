@@ -35,7 +35,7 @@ class GoalService(BaseService[Goal]):
         query = query.filter(self.model.user_id == self.user_id)
         if date:
             query = query.filter(self.model.goal_start <= date)
-            query = query.filter(self.model.goal_end >= date)
+            query = query.filter(self.model.goal_end > date)
         return (await self.db_session.scalars(query)).all()
 
     def create(
