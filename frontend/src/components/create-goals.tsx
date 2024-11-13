@@ -1,13 +1,15 @@
 import { Navbar } from "./Navbar"
 import { Input } from './ui/form/input';
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { BiError } from 'react-icons/bi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
-import { GoalApi } from "@/api/GoalApi";
+import { GoalApi, Goals } from "@/api/GoalApi";
 import dayjs from "dayjs";
+
+const dateDBFormat = 'YYYY-MM-DD';
 
 export const CreateGoals = () => {
     const [calGoal, setCalGoal] = useState(2000);
@@ -27,8 +29,24 @@ export const CreateGoals = () => {
     const [calcErrorMessage, setCalcErrorMessage] = useState("");
     const [open, setOpen] = useState(false);
     const [searchParams, _] = useSearchParams()
+    const [goals, setGoals] = useState<Goals[]>([]);
     const navigate = useNavigate()
     const redirect = searchParams.get('redirect')
+
+    const getGoals = async (date?: string) => {
+        try{
+            const goals = await GoalApi.getGoal(date)
+            console.log(date)
+            console.log(goals)
+            setGoals(goals)
+        }  catch (e: any) {
+            console.error(e)
+        }
+    }
+
+    useEffect(() => {
+        getGoals(dayjs().format(dateDBFormat));
+    }, [])
 
     const handleChangeCalGoal = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCalGoal(Number(e.target.value));
@@ -62,6 +80,26 @@ export const CreateGoals = () => {
         setAge(Number(e.target.value));
     }
 
+    const UpdateGoal = async(cal: number, protein: number, fat: number, carb: number, goal_end: string | null) => {
+        if(goals.length != 0) {
+            //If there is a goal that exits for this date, then update the end date
+            try{
+                const update = await GoalApi.patchGoal({
+                        cal_goal: cal,
+                        protein_goal: protein,
+                        fat_goal: fat,
+                        carb_goal: carb,
+                        goal_start: goals[0].goal_start,
+                        goal_end: goal_end
+                    },
+                    goals[0].id)
+                console.log(update)
+            }  catch (e: any) {
+                console.error(e)
+            }
+        }
+    }
+
     const SubmitGoal = async (cal: number, protein: number, fat: number, carb: number) => {
         try {
             const response = await GoalApi.postGoal({
@@ -69,18 +107,41 @@ export const CreateGoals = () => {
                 protein_goal: protein,
                 fat_goal: fat,
                 carb_goal: carb,
-                goal_start: dayjs().format('YYYY-MM-DD'),
-                goal_end: dayjs().add(12, 'month').format('YYYY-MM-DD'),
+                goal_start: dayjs().format(dateDBFormat),
+                goal_end: dayjs().add(12, 'month').format(dateDBFormat),
             })
         } catch(e: any) {
             console.error(e)
+        }
+    
+    }
+
+    const SetUpGoals = (cal: number, protein: number, fat: number, carb: number) => {
+        /*
+            If the goal existfor today's date (goals.lenght != 0) and the start_date is the same as today
+                replace all old goal data with new date
+                don't create a new goal
+            else If the goal only exist for today's date
+                change the goal_end date
+                create a new goal
+            else (the goal does not exist for today's date)
+                only create a new goal
+        */
+
+        if(goals.length != 0 && goals[0].goal_start == dayjs().format(dateDBFormat)) {
+            UpdateGoal(cal, protein, fat, carb, goals[0].goal_end)
+        } else if(goals.length != 0) {
+            UpdateGoal(goals[0].cal_goal, goals[0].protein_goal, goals[0].fat_goal, goals[0].carb_goal, dayjs().format(dateDBFormat))
+            SubmitGoal(cal, protein, fat, carb)
+        } else {
+            SubmitGoal(cal, protein, fat, carb)
         }
     }
 
     const handleGoalForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //Save goal information into the backend
-        SubmitGoal(calGoal, proteinGoal, fatsGoal, carbGoal);
+        SetUpGoals(calGoal, proteinGoal, fatsGoal, carbGoal);
         navigate(redirect || '/dashboard')
     }
 

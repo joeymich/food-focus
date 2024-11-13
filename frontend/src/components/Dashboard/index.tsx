@@ -238,7 +238,6 @@ export const Dashboard2 = () => {
     const getGoals = async (date?: string) => {
         try{
             const goals = await GoalApi.getGoal(date)
-            console.log(goals)
             setGoals(goals)
         }  catch (e: any) {
             console.error(e)
