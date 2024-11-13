@@ -193,7 +193,7 @@ export const CreateGoals = () => {
 
     const handleYes = async () => {
         //save goal information into the backend
-        SubmitGoal(calcCal, calcProtein, calcFat, calcCarbs);
+        SetUpGoals(calcCal, calcProtein, calcFat, calcCarbs)
         navigate(redirect || '/dashboard')
     }
 
