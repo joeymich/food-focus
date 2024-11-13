@@ -36,8 +36,6 @@ export const CreateGoals = () => {
     const getGoals = async (date?: string) => {
         try{
             const goals = await GoalApi.getGoal(date)
-            console.log(date)
-            console.log(goals)
             setGoals(goals)
         }  catch (e: any) {
             console.error(e)
