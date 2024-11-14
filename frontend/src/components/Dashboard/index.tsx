@@ -1,6 +1,6 @@
 import { SummariesApi, Summary } from "@/api/SummariesApi"
 import { useEffect, useState } from "react"
-import { Nutrition, NutritionLabel } from "../nutrition-label"
+import { Nutrition, NutritionLabel, calculateNutrition } from "../nutrition-label"
 import { CircularProgressBar } from "../ui/circular-pogress-bar"
 import { Button, buttonVariants } from '@/components/ui/button'
 import { MacronutrientProgressBar } from "../ui/macronutirents-progressbar"
@@ -15,6 +15,7 @@ import { DatePicker, DatePickerProps } from "antd"
 import dayjs from "dayjs"
 import { useParams } from "react-router-dom"
 import { GoalApi, Goals } from "@/api/GoalApi"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 
 const dateFormat = 'MM-DD-YYYY';
 const dateDBFormat = 'YYYY-MM-DD';
@@ -51,6 +52,7 @@ type NutritionRowProps = {
     entry: FoodLogAll
 }
 const NutritionRow = ({ entry }: NutritionRowProps) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false)
     const multiplier = entry.serving_count * entry.serving_size.ratio;
     const protein = (entry.serving_size.food.protein || 0) * multiplier;
     const carbs = (entry.serving_size.food.total_carbs || 0) * multiplier;
@@ -64,13 +66,64 @@ const NutritionRow = ({ entry }: NutritionRowProps) => {
             <MacroCell value={fat} />
             <CalorieCell value={calories} />
             <td>
-                <Button
-                    variant='ghost'
-                    icon={<TbPencil className='size-4' />}
-                    className='p-1 hidden group-hover:block'
-                />
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                    <DialogTrigger>
+                        <Button
+                            variant='ghost'
+                            icon={<TbPencil className='size-4' />}
+                            className='p-1 hidden group-hover:block'
+                        />
+                    </DialogTrigger>
+                    <NutritionRowDailog entry={entry} setIsOpen={setIsOpen}/>
+                </Dialog>
             </td>
         </tr>
+    )
+}
+
+type NutritionRowDialogProps = {
+    entry: FoodLogAll
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+const NutritionRowDailog = ({entry, setIsOpen}: NutritionRowDialogProps) => {
+    const brand = entry.serving_size.food.brand;
+    const food = entry.serving_size.food;
+    const name = food.name;
+    const servingSizeRatio = entry.serving_size.ratio;
+    const servingCount = entry.serving_count;
+    const servingSize = entry.serving_size.name;
+    const cals = food.calories;
+    const id = entry.id;
+    const handleClick = async() => {
+        try{
+            const response = await FoodLogApi.deleteFoodLog(id);
+            
+        } catch(e) {
+            console.log(e)
+        }
+        setIsOpen(false);
+    }
+
+    return (
+        <>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>
+                    {name}
+                </DialogTitle>
+                <DialogDescription>
+                    {brand}
+                </DialogDescription>
+            </DialogHeader>
+            <div  className="flex space-x-2 justify-between">
+                <p>Serving Size: {servingSize}</p>
+                <p>Calories per serving: {cals}</p>
+                <p>Servings: {servingCount}</p>
+            </div>
+            <NutritionLabel food={calculateNutrition(food, servingSizeRatio, servingCount)} />
+            <Button className="bg-red-500" onClick={handleClick}>Delete</Button>
+        </DialogContent>
+        </>
     )
 }
 
@@ -157,7 +210,7 @@ const CalorieCell = ({ value }: { value: number }) => {
     )
 }
 
-const Diary = ({ summary, foods }: { summary: Summary, foods: FoodLogAll[] }) => {
+const Diary = ({ summary, foods, date }: { summary: Summary, foods: FoodLogAll[], date: dayjs.Dayjs }) => {
     const totals = foods.reduce<MealNutrition>(
         (acc, entry) => {
             const multiplier = entry.serving_count * entry.serving_size.ratio;
@@ -306,7 +359,7 @@ export const Dashboard2 = () => {
                         </Link>
                     </div>
                     {summary &&
-                        <Diary summary={summary} foods={foods} />
+                        <Diary summary={summary} foods={foods} date={date}/>
                     }
                 </div>
             </div>
