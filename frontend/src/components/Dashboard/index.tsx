@@ -10,7 +10,7 @@ import { BiChevronDown } from "react-icons/bi"
 import { cn } from "@/utils"
 import { toNormalCase } from "@/utils/string"
 import { TbPencil } from 'react-icons/tb'
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { DatePicker, DatePickerProps } from "antd"
 import dayjs from "dayjs"
 import { useParams } from "react-router-dom"
@@ -50,8 +50,9 @@ const formatFoodName = (foodName: string): string => {
 
 type NutritionRowProps = {
     entry: FoodLogAll
+    date: dayjs.Dayjs
 }
-const NutritionRow = ({ entry }: NutritionRowProps) => {
+const NutritionRow = ({ entry, date }: NutritionRowProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const multiplier = entry.serving_count * entry.serving_size.ratio;
     const protein = (entry.serving_size.food.protein || 0) * multiplier;
@@ -74,7 +75,7 @@ const NutritionRow = ({ entry }: NutritionRowProps) => {
                             className='p-1 hidden group-hover:block'
                         />
                     </DialogTrigger>
-                    <NutritionRowDailog entry={entry} setIsOpen={setIsOpen}/>
+                    <NutritionRowDailog entry={entry} setIsOpen={setIsOpen} date={date}/>
                 </Dialog>
             </td>
         </tr>
@@ -84,8 +85,10 @@ const NutritionRow = ({ entry }: NutritionRowProps) => {
 type NutritionRowDialogProps = {
     entry: FoodLogAll
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+    date: dayjs.Dayjs
 }
-const NutritionRowDailog = ({entry, setIsOpen}: NutritionRowDialogProps) => {
+const NutritionRowDailog = ({entry, setIsOpen, date}: NutritionRowDialogProps) => {
+    const [searchParams, _] = useSearchParams();
     const brand = entry.serving_size.food.brand;
     const food = entry.serving_size.food;
     const name = food.name;
@@ -94,10 +97,13 @@ const NutritionRowDailog = ({entry, setIsOpen}: NutritionRowDialogProps) => {
     const servingSize = entry.serving_size.name;
     const cals = food.calories;
     const id = entry.id;
+    const redirect = searchParams.get('redirect');
+    const navigate = useNavigate();
     const handleClick = async() => {
         try{
             const response = await FoodLogApi.deleteFoodLog(id);
-            
+            navigate(redirect || '/dashboard/' + date.format(dateDBFormat));
+            window.location.reload();
         } catch(e) {
             console.log(e)
         }
@@ -118,8 +124,8 @@ const NutritionRowDailog = ({entry, setIsOpen}: NutritionRowDialogProps) => {
             <div  className="flex space-x-2 justify-between">
                 <p>Serving Size: {servingSize}</p>
                 <p>Calories per serving: {cals}</p>
-                <p>Servings: {servingCount}</p>
             </div>
+            <p>Servings: {servingCount}</p>
             <NutritionLabel food={calculateNutrition(food, servingSizeRatio, servingCount)} />
             <Button className="bg-red-500" onClick={handleClick}>Delete</Button>
         </DialogContent>
@@ -153,7 +159,7 @@ interface MealNutrition {
     calories: number;
 }
 
-const MealRows = ({ foods, name }: { foods: FoodLogAll[], name: string }) => {
+const MealRows = ({ foods, name, date }: { foods: FoodLogAll[], name: string, date: dayjs.Dayjs }) => {
     const [show, setShow] = useState<boolean>(true)
     const handleClick = () => {
         setShow(prevShow => !prevShow)
@@ -187,7 +193,7 @@ const MealRows = ({ foods, name }: { foods: FoodLogAll[], name: string }) => {
             </tr>
             {show &&
                 foods.map((food) => (
-                    <NutritionRow entry={food} key={food.id} />
+                    <NutritionRow entry={food} key={food.id} date={date}/>
                 ))
             }
         </>
@@ -232,18 +238,22 @@ const Diary = ({ summary, foods, date }: { summary: Summary, foods: FoodLogAll[]
                     <MealRows
                         foods={foods.filter(food => food.meal === 'BREAKFAST')}
                         name='Breakfast'
+                        date={date}
                     />
                     <MealRows
                         foods={foods.filter(food => food.meal === 'LUNCH')}
                         name='Lunch'
+                        date={date}
                     />
                     <MealRows
                         foods={foods.filter(food => food.meal === 'DINNER')}
                         name='Dinner'
+                        date={date}
                     />
                     <MealRows
                         foods={foods.filter(food => food.meal === 'SNACKS')}
                         name='Snacks'
+                        date={date}
                     />
                 </tbody>
                 <tfoot className='font-semibold bg-secondary'>
