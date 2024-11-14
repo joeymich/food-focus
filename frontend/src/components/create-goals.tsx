@@ -26,7 +26,6 @@ export const CreateGoals = () => {
     const [calcProtein, setCalcProtein] = useState(0);
     const [calcFat, setCalcFat] = useState(0);
     const [calcCarbs, setCalcCarbs] = useState(0);
-    const [calcErrorMessage, setCalcErrorMessage] = useState("");
     const [open, setOpen] = useState(false);
     const [searchParams, _] = useSearchParams()
     const [goals, setGoals] = useState<Goals[]>([]);
@@ -149,44 +148,39 @@ export const CreateGoals = () => {
         e.preventDefault();
         //Calorie formulas are from https://www.convertcalculator.com/templates/calorie-calculator/
         //Macronutrient calculation from https://www.healthline.com/nutrition/best-macronutrient-ratio#ideal-macro-ratio
-        if (weight == 0 || heightFeet == 0 || HeightInches == 0 || age == 0 || gender === "" || lifestyle == "") {
-            setCalcErrorMessage("Please Fill in All Fields");
+        const calcW = (10 * (weight / 2.205));
+        const calcH = (6.25 * ((heightFeet * 30.48) + (HeightInches * 2.54)));
+        const calcA = (5 * age);
+        let calc = calcW + calcH - calcA;
+        if (gender === "female") {
+            calc = calc - 161;
         } else {
-            setCalcErrorMessage("");
-
-            const calcW = (10 * (weight / 2.205));
-            const calcH = (6.25 * ((heightFeet * 30.48) + (HeightInches * 2.54)));
-            const calcA = (5 * age);
-            let calc = calcW + calcH - calcA;
-            if (gender === "female") {
-                calc = calc - 161;
-            } else {
-                calc = calc + 5;
-            }
-
-            if (lifestyle === "sedentary") {
-                calc = calc * 1.2;
-            } else if (lifestyle === "lightly-active") {
-                calc = calc * 1.375;
-            } else if (lifestyle === "moderately-active") {
-                calc = calc * 1.55;
-            } else if (lifestyle === "very-active") {
-                calc * 1.725;
-            } else if (lifestyle === "extra-active") {
-                calc = calc * 1.9;
-            }
-
-            setCalcCal(Math.round(calc));
-
-            if (age <= 18) {
-                setCalcProtein(Math.round(calc * 0.30));
-            } else {
-                setCalcProtein(Math.round(calc * .35));
-            }
-
-            setCalcFat(Math.round(calc * .35));
-            setCalcCarbs(Math.round(calc * .65));
+            calc = calc + 5;
         }
+
+        if (lifestyle === "sedentary") {
+            calc = calc * 1.2;
+        } else if (lifestyle === "lightly-active") {
+            calc = calc * 1.375;
+        } else if (lifestyle === "moderately-active") {
+            calc = calc * 1.55;
+        } else if (lifestyle === "very-active") {
+            calc * 1.725;
+        } else if (lifestyle === "extra-active") {
+            calc = calc * 1.9;
+        }
+
+        setCalcCal(Math.round(calc));
+
+        if (age <= 18) {
+            setCalcProtein(Math.round(calc * 0.30));
+        } else {
+            setCalcProtein(Math.round(calc * .35));
+        }
+
+        setCalcFat(Math.round(calc * .35));
+        setCalcCarbs(Math.round(calc * .65));
+    
     }
 
     const handleYes = async () => {
@@ -285,7 +279,7 @@ export const CreateGoals = () => {
                                         <Input
                                             className='bg-gray-100 w-[70px]'
                                             type="number"
-                                            min={1}
+                                            min={0}
                                             max={10}
                                             onChange={handleChangeHeightFeet}
                                         />
@@ -293,7 +287,7 @@ export const CreateGoals = () => {
                                         <Input
                                             className='bg-gray-100 w-[70px]'
                                             type="number"
-                                            min={1}
+                                            min={0}
                                             max={11}
                                             onChange={handleChangeHeightInches}
                                         />
@@ -337,16 +331,9 @@ export const CreateGoals = () => {
                                         </Select>
                                     </div>
                                 </div>
-                                {calcErrorMessage && (
-                                    <div className='flex items-center gap-x-2 rounded-lg bg-destructive/20 px-3 py-2 text-sm font-semibold text-destructive'>
-                                        <BiError className='text-destructive' />
-                                        <p>{calcErrorMessage}</p>
-                                    </div>
-                                )}
-
                                 <Dialog open={open} onOpenChange={setOpen}>
                                     <DialogTrigger className="w-full flex justify-center items-center">
-                                        {(weight == 0 || heightFeet == 0 || HeightInches == 0 || age == 0 || gender === "" || lifestyle == "") ?
+                                        {(weight == 0 || heightFeet < 0 || HeightInches < 0 || age == 0 || gender === "" || lifestyle == "") ?
                                             (
                                                 <Button disabled className="w-1/3 bg-gray-300 text-black">Calculate</Button>
                                             ) : (
