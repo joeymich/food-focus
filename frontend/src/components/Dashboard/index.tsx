@@ -16,6 +16,7 @@ import dayjs from "dayjs"
 import { useParams } from "react-router-dom"
 import { GoalApi, Goals } from "@/api/GoalApi"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Input } from "../ui/form/input"
 
 const dateFormat = 'MM-DD-YYYY';
 const dateDBFormat = 'YYYY-MM-DD';
@@ -89,6 +90,7 @@ type NutritionRowDialogProps = {
 }
 const NutritionRowDailog = ({entry, setIsOpen, date}: NutritionRowDialogProps) => {
     const [searchParams, _] = useSearchParams();
+    const [newServing, setNewServing] = useState(0);
     const brand = entry.serving_size.food.brand;
     const food = entry.serving_size.food;
     const name = food.name;
@@ -98,16 +100,37 @@ const NutritionRowDailog = ({entry, setIsOpen, date}: NutritionRowDialogProps) =
     const cals = food.calories;
     const id = entry.id;
     const redirect = searchParams.get('redirect');
+    const meal = entry.meal
     const navigate = useNavigate();
-    const handleClick = async() => {
+
+    const handleDelete = async() => {
         try{
             const response = await FoodLogApi.deleteFoodLog(id);
             navigate(redirect || '/dashboard/' + date.format(dateDBFormat));
             window.location.reload();
         } catch(e) {
-            console.log(e)
+            console.log(e);
         }
         setIsOpen(false);
+    }
+
+    const handleSave = async() => {
+        try{
+            const response = await FoodLogApi.patchFoodLog(id, {
+                serving_count: newServing,
+                date: date.format(dateDBFormat),
+                meal: meal 
+            })
+            navigate(redirect || '/dashboard/' + date.format(dateDBFormat));
+            window.location.reload();
+        } catch(e) {
+            console.log(e);
+        }
+        setIsOpen(false)
+    }
+
+    const handleChangeServing = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewServing(Number(e.target.value));
     }
 
     return (
@@ -125,9 +148,22 @@ const NutritionRowDailog = ({entry, setIsOpen, date}: NutritionRowDialogProps) =
                 <p>Serving Size: {servingSize}</p>
                 <p>Calories per serving: {cals}</p>
             </div>
-            <p>Servings: {servingCount}</p>
-            <NutritionLabel food={calculateNutrition(food, servingSizeRatio, servingCount)} />
-            <Button className="bg-red-500" onClick={handleClick}>Delete</Button>
+            <div className="flex space-x-2 items-center justify-center">
+            <p>Servings:</p>
+                <Input
+                    className='bg-gray-100 w-[100px]'
+                    type="number"
+                    min={1}
+                    defaultValue={servingCount}
+                    onChange={handleChangeServing}
+                />
+            </div>
+            <NutritionLabel food={calculateNutrition(food, servingSizeRatio, servingCount)}/>
+            <div className="flex space-x-4 justify-between">
+                <Button className="w-1/2" onClick={handleSave}>Save Changes</Button>
+                <Button className="bg-red-500 w-1/2" onClick={handleDelete}>Delete</Button>
+            </div>
+            
         </DialogContent>
         </>
     )
