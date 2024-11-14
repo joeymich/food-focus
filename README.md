@@ -46,12 +46,12 @@ Make sure to have python installed with `python`
 
 If Python is not installed go to https://www.python.org/downloads/ and follow the instructions
 
-Run `pip install -r requirements.txt` on your local machine and within the docker exec
+Run `pip install -r requirements.txt` on your local machine
 
 ### Frontend:
 Navigate to the frontend with `cd frontend` from the food-focus directory
 
-Run `npm i` or `npm install` on your local machine and within the docker exec
+Run `npm i` or `npm install` on your local machine
 
 
 ## Production Setup
