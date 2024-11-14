@@ -38,6 +38,21 @@ If not, follow the [instructions](https://docs.docker.com/compose/install/) from
     - Password: password
     - Database: postgres
 
+### Installing the Dependencies:
+#### Backend:
+Navigate to the backend with `cd backend` from the food-focus directory
+
+Make sure to have python installed with `python`
+
+If Python is not installed go to https://www.python.org/downloads/ and follow the instructions
+
+Run `pip install -r requirements.txt` on your local machine
+
+### Frontend:
+Navigate to the frontend with `cd frontend` from the food-focus directory
+
+Run `npm i` or `npm install` on your local machine
+
 
 ## Production Setup
 Production will be at [foodfocus.pro](https://foodfocus.pro)
