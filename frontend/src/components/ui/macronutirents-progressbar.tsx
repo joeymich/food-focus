@@ -41,9 +41,9 @@ export function MacronutrientProgressBar(prop: {fat:number; protein:number; carb
 
             <div className='flex justify-between'>
                 {/* Code referenced from https://flowbite.com/docs/components/indicators/ */}
-                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-green-400 rounded-full me-1.5 flex-shrink-0"></span>Carbs: {Math.round(carb * 10)/ 10}g/{prop.carb_goal}g</span>
-                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-yellow-400 rounded-full me-1.5 flex-shrink-0"></span>Protein: {Math.round(protein * 10)/ 10}g/{prop.protein_goal}g</span>
-                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-blue-400 rounded-full me-1.5 flex-shrink-0"></span>Fat: {Math.round(fat * 10)/ 10}g/{prop.fat_goal}g</span> 
+                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-green-400 rounded-full me-1.5 flex-shrink-0"></span>Carbs: {Math.round(carb * 10)/ 10}g{prop.carb_goal != -1 ? (<>/{prop.carb_goal}g</>) : null}</span>
+                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-yellow-400 rounded-full me-1.5 flex-shrink-0"></span>Protein: {Math.round(protein * 10)/ 10}g{prop.protein_goal != -1 ? (<>/{prop.protein_goal}g</>) : null}</span>
+                <span className="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span className="flex w-2.5 h-2.5 bg-blue-400 rounded-full me-1.5 flex-shrink-0"></span>Fat: {Math.round(fat * 10)/ 10}g{prop.fat_goal != -1 ? (<>/{prop.fat_goal}g</>) : null}</span> 
             </div>
         </div>
 
