@@ -422,7 +422,7 @@ export const Dashboard2 = () => {
                         </Link>
                     </div>
                     {summary &&
-                        <Diary summary={summary} foods={foods} date={date}/>
+                        <Diary foods={foods} date={date}/>
                     }
                 </div>
             </div>
