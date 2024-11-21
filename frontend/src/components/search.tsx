@@ -81,11 +81,10 @@ const ServingCountInput = ({ servingCount, setServingCount }: ServingCountInputP
 
 type AddFoodDialogContentProps = {
     food: Foods,
-    isOpen: boolean,
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
     date: string
 }
-const AddFoodDialogContent = ({ food, isOpen, setIsOpen, date }: AddFoodDialogContentProps) => {
+const AddFoodDialogContent = ({ food, setIsOpen, date }: AddFoodDialogContentProps) => {
     const [mealType, setMealType] = useState<string>('BREAKFAST')
     const [servingSizeId, setServingSizeId] = useState<string>('');
     const [servingCount, setServingCount] = useState<number>(1);
@@ -111,7 +110,7 @@ const AddFoodDialogContent = ({ food, isOpen, setIsOpen, date }: AddFoodDialogCo
         e.preventDefault()
         setIsLoading(true)
         try {
-            const response = await FoodLogApi.postFoodLog({
+            await FoodLogApi.postFoodLog({
                 serving_size_id: servingSizeId,
                 serving_count: servingCount,
                 date: formattedDate,
@@ -176,7 +175,7 @@ const FoodRow = ({ food }: { food: Foods }) => {
                     <Button variant='default'>Add Food</Button>
                 </DialogTrigger>
                 {isOpen &&
-                    <AddFoodDialogContent food={food} isOpen={isOpen} setIsOpen={setIsOpen} date={date ?? dayjs().format('YYYY-MM-DD')} />
+                    <AddFoodDialogContent food={food} setIsOpen={setIsOpen} date={date ?? dayjs().format('YYYY-MM-DD')} />
                 }
             </Dialog>
         </div>
@@ -188,7 +187,7 @@ export const Search = () => {
     const [foods, setFoods] = useState<Foods[]>([]);
     const [page, setPage] = useState<number>(1)
     const limit = 10
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, ] = useState<boolean>(false)
     const {date} = useParams();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPage(1)
