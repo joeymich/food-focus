@@ -102,12 +102,11 @@ const NutritionRowDailog = ({entry, setIsOpen, date}: NutritionRowDialogProps) =
     const cals = food.calories;
     const id = entry.id;
     const redirect = searchParams.get('redirect');
-    const meal = entry.meal
     const navigate = useNavigate();
 
     const handleDelete = async() => {
         try{
-            const response = await FoodLogApi.deleteFoodLog(id);
+            await FoodLogApi.deleteFoodLog(id);
             navigate(redirect || '/dashboard/' + date.format(dateDBFormat));
             window.location.reload();
         } catch(e) {
@@ -118,7 +117,7 @@ const NutritionRowDailog = ({entry, setIsOpen, date}: NutritionRowDialogProps) =
 
     const handleSave = async() => {
         try{
-            const response = await FoodLogApi.patchFoodLog(id, {
+            await FoodLogApi.patchFoodLog(id, {
                 serving_count: newServing,
                 date: date.format(dateDBFormat),
                 meal: mealType 
@@ -270,7 +269,7 @@ const CalorieCell = ({ value }: { value: number }) => {
     )
 }
 
-const Diary = ({ summary, foods, date }: { summary: Summary, foods: FoodLogAll[], date: dayjs.Dayjs }) => {
+const Diary = ({foods, date }: {foods: FoodLogAll[], date: dayjs.Dayjs }) => {
     const totals = foods.reduce<MealNutrition>(
         (acc, entry) => {
             const multiplier = entry.serving_count * entry.serving_size.ratio;
