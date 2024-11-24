@@ -4,8 +4,7 @@ import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { BiError } from 'react-icons/bi';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from './ui/dialog';
 import { GoalApi, Goals } from "@/api/GoalApi";
 import dayjs from "dayjs";
 
@@ -99,7 +98,7 @@ export const CreateGoals = () => {
 
     const SubmitGoal = async (cal: number, protein: number, fat: number, carb: number) => {
         try {
-            const response = await GoalApi.postGoal({
+            await GoalApi.postGoal({
                 cal_goal: cal,
                 protein_goal: protein,
                 fat_goal: fat,

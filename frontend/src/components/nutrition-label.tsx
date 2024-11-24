@@ -1,4 +1,3 @@
-import { Foods } from "@/api/FoodApi"
 import { cn } from "@/utils"
 import { formatNumber } from "@/utils/number"
 

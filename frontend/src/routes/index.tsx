@@ -35,13 +35,6 @@ export const createRouter = () => {
             ),
             children: [
                 {
-                    path: '/dashboard/old',
-                    lazy: async () => {
-                        const { Dashboard } = await import('@/components/dashboard');
-                        return { Component: Dashboard };
-                    },
-                },
-                {
                     path: '/dashboard/:chosenDate?',
                     lazy: async () => {
                         const { Dashboard2 } = await import('@/components/Dashboard/index');
