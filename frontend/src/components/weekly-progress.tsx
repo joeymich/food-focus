@@ -31,7 +31,7 @@ const MacronutrientSection = (prop: {fat: number; protein: number; carb: number;
                                 sugar: number; vitA: number; vitC: number; calcium: number; iron: number})=> {
   return (
   <div className='w-full space-y-4'>
-    <MacronutrientProgressBar fat={prop.fat} carb={prop.carb} protein={prop.protein}/>  
+    <MacronutrientProgressBar fat={prop.fat} carb={prop.carb} protein={prop.protein} carb_goal={-1} protein_goal={-1} fat_goal={-1}/>  
     <ScrollArea className="max-h-65 w-full rounded-md border bg-gray-100">
       <Separator orientation="horizontal" />
       <div className='flex justify-between px-4'>
