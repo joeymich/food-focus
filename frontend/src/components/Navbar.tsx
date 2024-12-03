@@ -34,7 +34,6 @@ const ListOfLinks = (prop: { isAuth: boolean }) => {
                     <li><Link to='/dashboard' className={buttonVariants({ variant: 'link' })}>Dashboard</Link></li>
                     <li><Link to='/create-goals' className={buttonVariants({ variant: 'link' })}>Set Goals</Link></li>
                     <li><Link to='/weekly-progress' className={buttonVariants({ variant: 'link' })}>Weekly Progress</Link></li>
-                    <li><Link to='/dashboard' className={buttonVariants({ variant: 'link' })}>Profile</Link></li>
                     <li><LogoutButton /></li>
                 </>
             ) : (
