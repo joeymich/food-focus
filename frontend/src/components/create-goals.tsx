@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from './ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { GoalApi, Goals } from "@/api/GoalApi";
 import dayjs from "dayjs";
 
@@ -32,10 +32,10 @@ export const CreateGoals = () => {
     const redirect = searchParams.get('redirect')
 
     const getGoals = async (date?: string) => {
-        try{
+        try {
             const goals = await GoalApi.getGoal(date)
             setGoals(goals)
-        }  catch (e: any) {
+        } catch (e: any) {
             console.error(e)
         }
     }
@@ -76,21 +76,21 @@ export const CreateGoals = () => {
         setAge(Number(e.target.value));
     }
 
-    const UpdateGoal = async(cal: number, protein: number, fat: number, carb: number, goal_end: string | null) => {
-        if(goals.length != 0) {
+    const UpdateGoal = async (cal: number, protein: number, fat: number, carb: number, goal_end: string | null) => {
+        if (goals.length != 0) {
             //If there is a goal that exits for this date, then update the end date
-            try{
+            try {
                 const update = await GoalApi.patchGoal({
-                        cal_goal: cal,
-                        protein_goal: protein,
-                        fat_goal: fat,
-                        carb_goal: carb,
-                        goal_start: goals[0].goal_start,
-                        goal_end: goal_end
-                    },
+                    cal_goal: cal,
+                    protein_goal: protein,
+                    fat_goal: fat,
+                    carb_goal: carb,
+                    goal_start: goals[0].goal_start,
+                    goal_end: goal_end
+                },
                     goals[0].id)
                 console.log(update)
-            }  catch (e: any) {
+            } catch (e: any) {
                 console.error(e)
             }
         }
@@ -106,10 +106,10 @@ export const CreateGoals = () => {
                 goal_start: dayjs().format(dateDBFormat),
                 goal_end: dayjs().add(12, 'month').format(dateDBFormat),
             })
-        } catch(e: any) {
+        } catch (e: any) {
             console.error(e)
         }
-    
+
     }
 
     const SetUpGoals = (cal: number, protein: number, fat: number, carb: number) => {
@@ -124,9 +124,9 @@ export const CreateGoals = () => {
                 only create a new goal
         */
 
-        if(goals.length != 0 && goals[0].goal_start == dayjs().format(dateDBFormat)) {
+        if (goals.length != 0 && goals[0].goal_start == dayjs().format(dateDBFormat)) {
             UpdateGoal(cal, protein, fat, carb, goals[0].goal_end)
-        } else if(goals.length != 0) {
+        } else if (goals.length != 0) {
             UpdateGoal(goals[0].cal_goal, goals[0].protein_goal, goals[0].fat_goal, goals[0].carb_goal, dayjs().format(dateDBFormat))
             SubmitGoal(cal, protein, fat, carb)
         } else {
@@ -172,14 +172,14 @@ export const CreateGoals = () => {
         setCalcCal(Math.round(calc));
 
         if (age <= 18) {
-            setCalcProtein(Math.round(calc * 0.30));
+            setCalcProtein(Math.round(calc * 0.30 / 4));
         } else {
-            setCalcProtein(Math.round(calc * .35));
+            setCalcProtein(Math.round(calc * .35 / 4));
         }
 
-        setCalcFat(Math.round(calc * .35));
-        setCalcCarbs(Math.round(calc * .65));
-    
+        setCalcFat(Math.round(calc * .35 / 9));
+        setCalcCarbs(Math.round(calc * .30 / 4));
+
     }
 
     const handleYes = async () => {
@@ -350,7 +350,7 @@ export const CreateGoals = () => {
                                                         {age >= 18 ? (<p>{("(30% of caloric intake)")}</p>) : (<p>{("(35% of caloric intake)")}</p>)}
                                                     </div>
                                                     <p>Total Fats: {calcFat} grams {"(35% of caloric intake)"}</p>
-                                                    <p>Total Carbs: {calcCarbs} grams {"(65% of caloric intake)"}</p>
+                                                    <p>Total Carbs: {calcCarbs} grams {"(30% of caloric intake)"}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-black text-xl">Do you want to set these values as your goals?</p>
