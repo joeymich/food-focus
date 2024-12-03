@@ -63,7 +63,7 @@ const MacronutrientSection = (prop: {
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
           <p>Average Potassium</p>
-          <p>{prop.potassium}g</p>
+          <p>{prop.potassium}mg</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
@@ -78,7 +78,7 @@ const MacronutrientSection = (prop: {
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
           <p>Average Vitamin A</p>
-          <p>{prop.vitA}mg</p>
+          <p>{prop.vitA}μg</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>
@@ -88,7 +88,7 @@ const MacronutrientSection = (prop: {
         <Separator orientation="horizontal" />
         <div className='flex justify-between px-4'>
           <p>Average Calcium</p>
-          <p>{prop.calcium}g</p>
+          <p>{prop.calcium}mg</p>
         </div>
         <Separator orientation="horizontal" />
         <div className='flex justify-between bg-gray-200 px-4'>

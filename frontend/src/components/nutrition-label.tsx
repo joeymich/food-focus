@@ -84,10 +84,10 @@ export const NutritionLabel = ({ food }: NutritionLabelProps) => {
                 <NutritionRow name='Added Sugars' value={food.added_sugars} unit='g' className='pl-8 text-sm' />
                 <NutritionRow name='Protein' value={food.protein} unit='g' className='font-semibold' />
                 <hr />
-                <NutritionRow name='Vitamin A' value={food.vitamin_a} unit='g' className='font-semibold' />
-                <NutritionRow name='Vitamin C' value={food.vitamin_c} unit='g' className='font-semibold' />
-                <NutritionRow name='Calcium' value={food.calcium} unit='g' className='font-semibold' />
-                <NutritionRow name='Iron' value={food.iron} unit='g' className='font-semibold' />
+                <NutritionRow name='Vitamin A' value={food.vitamin_a} unit='μg' className='font-semibold' />
+                <NutritionRow name='Vitamin C' value={food.vitamin_c} unit='mg' className='font-semibold' />
+                <NutritionRow name='Calcium' value={food.calcium} unit='mg' className='font-semibold' />
+                <NutritionRow name='Iron' value={food.iron} unit='mg' className='font-semibold' />
             </div>
         </>
     )
